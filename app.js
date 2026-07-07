@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
 
 const firebaseConfig = {
@@ -18,7 +17,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-
 const analytics = getAnalytics(app); 
 
 let booksData = [];
@@ -29,6 +27,12 @@ let activeBookTitle = "";
 
 let IS_SUPER_ADMIN = false;
 let isUserLoggedIn = false; 
+
+// --- NAYA LOGIC: Admin details track karne ke liye ---
+let CURRENT_ADMIN_NAME = "USER";
+let CURRENT_ADMIN_EMAIL = "";
+let CURRENT_ADMIN_PHOTO = "https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png";
+// -----------------------------------------------------
 
 let adminFilteredBooks = [];
 let adminCurrentPage = 1;
@@ -42,7 +46,6 @@ if (isDeepLinkLoad) {
     document.getElementById('mainAppWrapper').style.display = 'none';
     document.getElementById('downloadModal').style.display = 'none';
 }
-
 
 let loadingProgress = 0;
 let loaderInterval;
@@ -70,7 +73,6 @@ loaderInterval = setInterval(() => {
         updateLoaderUI(loadingProgress);
     }
 }, 150);
-/* ========================================= */
 
 const quotes = [
     { text: "Be the change that you wish to see in the world.", author: "Mahatma Gandhi" },
@@ -158,9 +160,14 @@ onAuthStateChanged(auth, async (user) => {
         let dName = user.displayName;
         if (!dName || dName.trim() === "") { dName = user.email.split('@')[0]; }
         document.getElementById('sidebarProfileName').innerText = dName;
+        
+        // --- NAYA LOGIC: Current user detail save karna logActivity ke liye ---
+        CURRENT_ADMIN_NAME = dName;
+        CURRENT_ADMIN_EMAIL = user.email;
+        if(user.photoURL) CURRENT_ADMIN_PHOTO = user.photoURL;
+        // ----------------------------------------------------------------------
 
         try {
-            // NAYI LOGIC: User ka data Firebase me auto-save karna
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
 
@@ -173,7 +180,6 @@ onAuthStateChanged(auth, async (user) => {
                 });
             }
 
-            // Firebase Firestore se check kar rahe hain ki kya user email admins collection me hai
             const adminDocRef = doc(db, "admins", user.email);
             const adminDocSnap = await getDoc(adminDocRef);
 
@@ -271,7 +277,9 @@ onAuthStateChanged(auth, async (user) => {
         window.generateNotifications();
         
         adminFilteredBooks = [...booksData];
-        document.getElementById('adminSearchBook').value = '';
+        if(document.getElementById('adminSearchBook')) {
+            document.getElementById('adminSearchBook').value = '';
+        }
         renderAdminBooksTable(); 
         
         isAppReady.data = true;
@@ -655,6 +663,7 @@ window.closeDownloadPage = function() {
         }, 1500); 
     }
 }
+
 window.shareBook = function() {
     const shareUrl = window.location.origin + window.location.pathname + "?book=" + activeBookSlug;
     if (navigator.share) navigator.share({ title: activeBookTitle, text: "Download free book", url: shareUrl });
@@ -673,6 +682,26 @@ function showToast(message) {
     toast.classList.add('show'); 
     setTimeout(() => { toast.classList.remove('show'); }, 3000);
 }
+
+// --- NAYA LOGIC: logActivity function jo database me entry karega ---
+async function logActivity(action, bookTitle, imageUrl = "", deletedData = null) {
+    try {
+        await addDoc(collection(db, "activity_logs"), {
+            action,
+            bookTitle,
+            image: imageUrl,
+            deletedData,
+            adminName: CURRENT_ADMIN_NAME,
+            adminEmail: CURRENT_ADMIN_EMAIL,
+            adminPhoto: CURRENT_ADMIN_PHOTO,
+            timestamp: new Date().getTime(),
+            dateStr: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' })
+        });
+    } catch(e) {
+        console.error("Logging Error:", e);
+    }
+}
+// --------------------------------------------------------------------
 
 document.getElementById('addBookForm').addEventListener('submit', async (e) => {
     e.preventDefault(); 
@@ -710,6 +739,7 @@ document.getElementById('addBookForm').addEventListener('submit', async (e) => {
 
     try { 
         await addDoc(collection(db, "books"), newBook); 
+        await logActivity("ADD", newBook.title, newBook.image); // NAYA LINE JODA HAI
         showToast("Book Published Successfully!"); 
         e.target.reset(); 
     } catch (error) { 
@@ -775,7 +805,9 @@ function renderAdminBooksTable() {
 window.deleteBookRecord = async function(id) { 
     if(confirm("Delete this book permanently?")) { 
         try { 
+            const bookToDelete = booksData.find(x => x.id === id); // NAYA LINE JODA HAI
             await deleteDoc(doc(db, "books", id)); 
+            if(bookToDelete) { await logActivity("DELETE", bookToDelete.title, bookToDelete.image, bookToDelete); } // NAYA LINE JODA HAI
             showToast("Deleted Successfully!"); 
         } catch (error) { showToast("Failed: Rules Blocked Delete!"); } 
     } 
@@ -826,6 +858,7 @@ document.getElementById('editBookForm').addEventListener('submit', async (e) => 
 
     try { 
         await updateDoc(doc(db, "books", docId), updatedData); 
+        await logActivity("EDIT", updatedData.title, updatedData.image); // NAYA LINE JODA HAI
         document.getElementById('adminEditModal').style.display='none'; 
         showToast("Updated Successfully!"); 
     } catch (error) { showToast("Failed: Rules Blocked Update!"); } finally {
