@@ -188,13 +188,13 @@
                     <!-- Dev Style Back Button -->
                     <button class="back-btn dev-back-btn" id="closeProfileBtn" style="z-index: 100;"><i class="fas fa-arrow-left"></i></button>
                     
-                    <!-- Profile Banner & Avatar -->
+                    <!-- Profile Banner & Avatar (CENTERED) -->
                     <div class="dev-hero-banner" style="background-image: url('https://i.postimg.cc/ydWN7sF8/file-00000000639481f8b111b8b824545a9a.png'); min-height: 220px;">
                         <div class="banner-fade-bottom"></div>
                         <div class="hero-content-wrapper" style="justify-content: center; padding-bottom: 0;">
                             
-                            <!-- MODIFIED AVATAR SHIELD FIX -->
-                            <div class="profile-avatar-container" style="position: relative; width: 110px; height: 110px; transform: translateY(35px);">
+                            <!-- CENTERED AVATAR SHIELD FIX -->
+                            <div class="profile-avatar-container" style="position: relative; width: 110px; height: 110px; transform: translateY(35px); margin: 0 auto;">
                                 <div class="dev-profile-img-wrapper" style="width: 100%; height: 100%;">
                                     <img id="profile-avatar-ui" src="https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png" class="dev-profile-img" oncontextmenu="return false;" draggable="false">
                                 </div>
@@ -204,15 +204,14 @@
                         </div>
                     </div>
 
-                    <!-- MODIFIED: ADDED EMAIL & PREMIUM DIVIDER -->
                     <div class="premium-bio-section" style="margin-top: 35px; padding-bottom: 25px;">
                         <div class="bio-greeting" id="profile-name-ui" style="font-size: 1.6rem; font-family: 'Plus Jakarta Sans', sans-serif;">Loading...</div>
                         
                         <!-- Logged-in User Email display -->
                         <div id="profile-email-ui" style="display: none; font-size: 0.95rem; color: #a1a1aa; font-weight: 600; margin-top: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;"></div>
                         
-                        <!-- Premium Divider -->
-                        <div class="premium-divider" style="margin: 22px auto 0; width: 85%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); box-shadow: 0 0 10px rgba(255,255,255,0.2);"></div>
+                        <!-- ATTRACTIVE PREMIUM DIVIDER 1 -->
+                        <div class="premium-divider-new"></div>
                     </div>
 
                     <!-- Stat Cards Grid -->
@@ -250,8 +249,8 @@
                         </div>
                     </div>
                     
-                    <!-- MODIFIED: PREMIUM DIVIDER LINE -->
-                    <div class="premium-divider" style="margin: 0px auto 25px; width: 85%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); box-shadow: 0 0 10px rgba(255,255,255,0.2);"></div>
+                    <!-- ATTRACTIVE PREMIUM DIVIDER 2 -->
+                    <div class="premium-divider-new"></div>
 
                     <!-- NEW TOP 10 LEADERBOARD -->
                     <div style="padding: 0 20px 30px;">
@@ -351,8 +350,9 @@
                     
                     <div class="dev-hero-banner">
                         <div class="banner-fade-bottom"></div>
-                        <div class="hero-content-wrapper">
-                            <div class="profile-avatar-container" style="position: relative; width: 110px; height: 110px;">
+                        <div class="hero-content-wrapper" style="justify-content: flex-end; padding-right: 20px;">
+                            <!-- MODIFIED: AVATAR ON THE RIGHT SIDE FOR DEV PANEL -->
+                            <div class="profile-avatar-container" style="position: relative; width: 110px; height: 110px; margin: 0 0 0 auto; transform: translateY(30px);">
                                 <div class="dev-profile-img-wrapper" style="width: 100%; height: 100%;">
                                     <img src="https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png" class="dev-profile-img" oncontextmenu="return false;" draggable="false">
                                 </div>
@@ -554,7 +554,6 @@
                         </div>
                     </div>
 
-                    <!-- MODIFIED MANAGE SECTION: Removed .adm-card and matched Add Book aesthetics -->
                     <div id="sectionManageBooks" class="adm-section">
                         <div class="seamless-header">
                             <div class="icon-wrapper" style="color: #60a5fa; background: rgba(96, 165, 250, 0.15); border-color: rgba(96, 165, 250, 0.3); box-shadow: 0 0 15px rgba(96, 165, 250, 0.2);"><i class="fas fa-list"></i></div>
@@ -618,9 +617,9 @@
         </div>
     </div>
 
+    <!-- TOAST CONTAINER FOR NOTIFICATIONS -->
     <div id="toast"></div>
 
-    <!-- MODIFIED UPLOAD POPUP (White Theme) -->
     <div class="ug-overlay hidden" id="uploadPopup">
         <div class="ug-card">
             <button class="ug-close-btn" id="closeUploadPopupBtn">✕</button>
