@@ -247,14 +247,16 @@ main .premium-copyright { width: calc(100% + 40px); margin-left: -20px; margin-r
 .banner-fade-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: linear-gradient(to bottom, transparent, #000000); z-index: 1; pointer-events: none; }
 .hero-content-wrapper { width: 100%; padding: 0 20px 15px 20px; display: flex; justify-content: flex-end; align-items: flex-end; position: relative; z-index: 2; }
 
-/* FIX 1: Avatar Container and Shield Placement */
-.profile-avatar-container { position: relative; width: 110px; height: 110px; flex-shrink: 0; transform: translateY(30px); z-index: 5; margin: 0 auto; }
+/* Avatar Container - Shield Alignment */
+.profile-avatar-container { position: relative; width: 110px; height: 110px; flex-shrink: 0; transform: translateY(30px); z-index: 5; }
 .dev-profile-img-wrapper { position: relative; width: 100%; height: 100%; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: 0 0 25px rgba(139, 92, 246, 0.5); background: linear-gradient(135deg, #0ea5e9, #6366f1, #a855f7); padding: 4px; }
 .dev-profile-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background-color: #000; z-index: 1; border: 3px solid #000000; }
 .profile-shield { position: absolute; bottom: 0px; right: 2px; width: 34px; height: 34px; background: linear-gradient(135deg, #0ea5e9, #3b82f6); border: 3px solid #000000; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #ffffff; font-size: 14px; z-index: 10; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.6); }
 
-/* FIX 2: Premium Separator Line */
+/* ATTRACTIVE PREMIUM DIVIDER CLASSES */
 .premium-divider { width: 75%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); margin: 25px auto; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
+.premium-divider-new { width: 85%; height: 2px; margin: 25px auto; background: linear-gradient(90deg, transparent, #7c3aed, #0ea5e9, transparent); position: relative; border-radius: 2px; box-shadow: 0 0 15px rgba(124, 58, 237, 0.5); }
+.premium-divider-new::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 12px; height: 12px; background: #ffffff; border-radius: 50%; box-shadow: 0 0 10px #ffffff, 0 0 20px #0ea5e9; }
 
 .social-bar-left { display: flex; gap: 12px; padding: 0px 20px 0px; margin-top: -15px; justify-content: flex-start; position: relative; z-index: 10; flex-shrink: 0; }
 .hero-soc-btn { width: 40px; height: 40px; border-radius: 50%; background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.25); display: flex; justify-content: center; align-items: center; font-size: 16px; text-decoration: none; transition: 0.2s ease; backdrop-filter: blur(4px); }
@@ -385,7 +387,6 @@ main .premium-copyright { width: calc(100% + 40px); margin-left: -20px; margin-r
 .seamless-header h2 { font-size: 1.25rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; margin: 0; font-family: 'Poppins', sans-serif; }
 .seamless-form-container { width: 100%; }
 
-/* Note: .adm-card has been completely stripped from manage section in HTML, kept here just in case */
 .adm-card { background: #121212; border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid #7c3aed; border-radius: 16px; padding: 25px; margin-bottom: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); position: relative; }
 .adm-card-title { font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 15px; }
 
@@ -542,7 +543,6 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 .lb-name { font-size: 15px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Plus Jakarta Sans', sans-serif;}
 .lb-uploads { background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); color: #d8b4fe; font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 12px; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.2); flex-shrink: 0; }
 
-/* FIX 3: POPUP UPLOAD STYLES - WHITE PREMIUM THEME */
 .ug-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 9999999; opacity: 1; transition: opacity 0.4s ease; padding: 20px; }
 .ug-overlay.hidden { opacity: 0; pointer-events: none; }
 .ug-card { 
@@ -593,3 +593,37 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 }
 .ug-action-btn:active { transform: translateY(1px); box-shadow: 0 2px 5px rgba(255, 255, 255, 0.4); }
 .ug-action-btn svg { stroke: #000000 !important; }
+
+/* ------------------------------------- */
+/* TOAST NOTIFICATION CSS - NEWLY ADDED  */
+/* ------------------------------------- */
+#toast {
+    position: fixed;
+    bottom: 30px;
+    right: -350px; /* Hidden off-screen to the right by default */
+    background: rgba(20, 20, 20, 0.95);
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), border: 2px solid rgba(255,255,255,0.2);
+    z-index: 99999999; /* Extremely high z-index to stay on top */
+    transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy slide-in effect */
+    font-family: 'Poppins', sans-serif;
+    max-width: 90%;
+    width: max-content;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+}
+
+#toast.show {
+    right: 20px; /* Slides in to the right side gracefully */
+}
+
+#toast i {
+    font-size: 22px;
+}
