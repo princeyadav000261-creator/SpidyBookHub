@@ -255,8 +255,7 @@ main .premium-copyright { width: calc(100% + 40px); margin-left: -20px; margin-r
 
 /* ATTRACTIVE PREMIUM DIVIDER CLASSES */
 .premium-divider { width: 75%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); margin: 25px auto; box-shadow: 0 0 8px rgba(255,255,255,0.2); }
-.premium-divider-new { width: 85%; height: 2px; margin: 25px auto; background: linear-gradient(90deg, transparent, #7c3aed, #0ea5e9, transparent); position: relative; border-radius: 2px; box-shadow: 0 0 15px rgba(124, 58, 237, 0.5); }
-.premium-divider-new::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 12px; height: 12px; background: #ffffff; border-radius: 50%; box-shadow: 0 0 10px #ffffff, 0 0 20px #0ea5e9; }
+.premium-divider-new { width: 85%; height: 1.5px; margin: 30px auto; background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.8), rgba(14, 165, 233, 0.8), transparent); position: relative; border-radius: 2px; box-shadow: 0 0 12px rgba(124, 58, 237, 0.4), 0 0 12px rgba(14, 165, 233, 0.4); }
 
 .social-bar-left { display: flex; gap: 12px; padding: 0px 20px 0px; margin-top: -15px; justify-content: flex-start; position: relative; z-index: 10; flex-shrink: 0; }
 .hero-soc-btn { width: 40px; height: 40px; border-radius: 50%; background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.25); display: flex; justify-content: center; align-items: center; font-size: 16px; text-decoration: none; transition: 0.2s ease; backdrop-filter: blur(4px); }
@@ -595,12 +594,12 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 .ug-action-btn svg { stroke: #000000 !important; }
 
 /* ------------------------------------- */
-/* TOAST NOTIFICATION CSS - NEWLY ADDED  */
+/* TOAST NOTIFICATION CSS                */
 /* ------------------------------------- */
 #toast {
     position: fixed;
     bottom: 30px;
-    right: -350px; /* Hidden off-screen to the right by default */
+    right: -350px;
     background: rgba(20, 20, 20, 0.95);
     color: #fff;
     padding: 16px 24px;
@@ -611,8 +610,8 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
     font-size: 15px;
     font-weight: 700;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), border: 2px solid rgba(255,255,255,0.2);
-    z-index: 99999999; /* Extremely high z-index to stay on top */
-    transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy slide-in effect */
+    z-index: 99999999;
+    transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     font-family: 'Poppins', sans-serif;
     max-width: 90%;
     width: max-content;
@@ -621,7 +620,7 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 }
 
 #toast.show {
-    right: 20px; /* Slides in to the right side gracefully */
+    right: 20px;
 }
 
 #toast i {
