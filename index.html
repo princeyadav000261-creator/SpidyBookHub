@@ -76,7 +76,7 @@
 
         <div class="app-container">
             <!-- PERSISTENT TOP HEADER -->
-            <header>
+            <header id="main-header">
                 <div class="header-left">
                     <div class="icon-box" id="open-menu"><i class="fas fa-bars"></i></div>
                     <span class="header-title">SPIDY BOOK HUB</span>
@@ -166,16 +166,17 @@
                         <div class="section-header-title" style="margin-bottom: 0;"><i class="fas fa-layer-group" style="color: #a855f7;"></i> Study Categories</div>
                     </div>
                     <div class="category-grid" id="categoryGrid">
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-university"></i></div><div class="cat-title">BIHAR BOARD</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-school"></i></div><div class="cat-title">CBSE BOARD</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-user-md"></i></div><div class="cat-title">NEET</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-laptop-code"></i></div><div class="cat-title">JEE</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-graduation-cap"></i></div><div class="cat-title">JEE ADVANCED</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-book-reader"></i></div><div class="cat-title">UP BOARD</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-book"></i></div><div class="cat-title">MP BOARD</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-chalkboard-teacher"></i></div><div class="cat-title">TN BOARD</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-landmark"></i></div><div class="cat-title">KARNATAKA BOARD</div></div>
-                        <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-layer-group"></i></div><div class="cat-title">OTHER BOARDS</div></div>
+                        <!-- Replaced FontAwesome Icons with Real HQ Logos -->
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/en/5/5a/Bihar_School_Examination_Board_logo.png" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="BSEB"></div><div class="cat-title">BIHAR BOARD</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/en/9/95/CBSE_new_logo.svg" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="CBSE"></div><div class="cat-title">CBSE BOARD</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/NTA_logo.svg/1200px-NTA_logo.svg.png" style="width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(255,255,255,0.2));" alt="NEET"></div><div class="cat-title">NEET</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/NTA_logo.svg/1200px-NTA_logo.svg.png" style="width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(255,255,255,0.2));" alt="JEE"></div><div class="cat-title">JEE</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/en/6/69/IIT_Madras_Logo.svg" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="JEE Adv"></div><div class="cat-title">JEE ADVANCED</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Government_Of_Uttar_Pradesh_Seal.svg/1200px-Government_Of_Uttar_Pradesh_Seal.svg.png" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="UP Board"></div><div class="cat-title">UP BOARD</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Madhya_Pradesh_State_Seal.svg/1200px-Madhya_Pradesh_State_Seal.svg.png" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="MP Board"></div><div class="cat-title">MP BOARD</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Tamil_Nadu_Government_Logo.svg/1200px-Tamil_Nadu_Government_Logo.svg.png" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="TN Board"></div><div class="cat-title">TN BOARD</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_Karnataka.svg/1200px-Seal_of_Karnataka.svg.png" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="Karnataka Board"></div><div class="cat-title">KARNATAKA BOARD</div></div>
+                        <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/1200px-Emblem_of_India.svg.png" style="width: 35px; height: 45px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="Other"></div><div class="cat-title">OTHER BOARDS</div></div>
                     </div>
                     
                     <!-- Spacer for bottom navigation overlap -->
@@ -183,16 +184,17 @@
                 </div>
 
                 <!-- TAB 3: UPLOAD (Vault Panel) -->
-                <div id="tab-upload" class="app-tab" style="display: none;">
-                    <div class="adm-tabs-container">
-                        <div class="adm-tabs">
+                <div id="tab-upload" class="app-tab" style="display: none; padding-top: 0px;">
+                    <!-- Fixed Admin Tabs Layout for premium edge-to-edge look -->
+                    <div class="adm-tabs-container" style="padding: 15px 20px 0px; margin: 0 -20px; width: calc(100% + 40px); border-bottom: 1px solid rgba(255,255,255,0.08); background: #000000;">
+                        <div class="adm-tabs" style="justify-content: flex-start; gap: 12px; padding-bottom: 12px; margin-bottom: 0;">
                             <button class="adm-tab-btn active" id="admTabAdd"><i class="fas fa-plus"></i> Add Book</button>
                             <button class="adm-tab-btn" id="admTabPrompt"><i class="fas fa-terminal"></i> Prompts</button>
                             <button class="adm-tab-btn" id="admTabManage" style="display: none;"><i class="fas fa-list"></i> Manage</button>
                         </div>
                     </div>
 
-                    <div class="adm-content-area">
+                    <div class="adm-content-area" style="padding-top: 25px;">
                         <div id="sectionAddBook" class="adm-section active">
                             <div class="seamless-header">
                                 <div class="icon-wrapper"><i class="fas fa-pen-nib"></i></div>
@@ -299,11 +301,14 @@
                 </div>
 
                 <!-- TAB 4: ABOUT -->
-                <div id="tab-about" class="app-tab" style="display: none;">
-                    <div class="dev-hero-banner" style="margin: -15px -20px 0; width: calc(100% + 40px);">
+                <!-- Padded 0 from top to bleed header to screen edge -->
+                <div id="tab-about" class="app-tab" style="display: none; padding-top: 0;">
+                    <!-- Negative margin ensures the banner starts from the absolute top when header is hidden -->
+                    <div class="dev-hero-banner" style="margin: -20px -20px 0; width: calc(100% + 40px);">
                         <div class="banner-fade-bottom"></div>
                         <div class="hero-content-wrapper" style="justify-content: flex-end; padding-right: 20px;">
-                            <div class="profile-avatar-container" style="position: relative; width: 110px; height: 110px; margin: 0 0 0 auto; transform: translateY(30px);">
+                            <!-- Increased translateY to push avatar lower inside background -->
+                            <div class="profile-avatar-container" style="position: relative; width: 110px; height: 110px; margin: 0 0 0 auto; transform: translateY(48px);">
                                 <div class="dev-profile-img-wrapper" style="width: 100%; height: 100%;">
                                     <img src="https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png" class="dev-profile-img" oncontextmenu="return false;" draggable="false">
                                 </div>
@@ -312,7 +317,7 @@
                         </div>
                     </div>
 
-                    <div class="social-bar-left" style="margin-top: 5px;">
+                    <div class="social-bar-left" style="margin-top: 25px;">
                         <a href="https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A" target="_blank" class="hero-soc-btn"><i class="fab fa-whatsapp"></i></a>
                         <a href="https://t.me/MADxPRINCE" target="_blank" class="hero-soc-btn"><i class="fab fa-telegram-plane"></i></a>
                         <a href="https://www.instagram.com/madxprince_3030" target="_blank" class="hero-soc-btn"><i class="fab fa-instagram"></i></a>
@@ -326,7 +331,8 @@
                         </div>
                     </div>
 
-                    <div class="dev-cards-container">
+                    <!-- Increased gap and padding for Premium professional separation -->
+                    <div class="dev-cards-container" style="gap: 22px; padding: 25px 20px 35px;">
                         <div class="dev-info-card">
                             <div class="dev-icon-box"><i class="fas fa-graduation-cap"></i></div>
                             <div class="dev-card-content">
@@ -636,3 +642,4 @@
     <script type="module" src="./app.js"></script>
 </body>
 </html>
+
