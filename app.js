@@ -210,12 +210,10 @@ onAuthStateChanged(auth, async (user) => {
             if (adminDocSnap.exists()) {
                 IS_SUPER_ADMIN = true;
                 document.getElementById('sidebarRoleText').innerText = "Super Admin";
-                document.getElementById('uploadMenuText').innerText = "Manage Vault";
                 document.getElementById('admTabManage').style.display = 'inline-flex';
             } else {
                 IS_SUPER_ADMIN = false;
                 document.getElementById('sidebarRoleText').innerText = "Verified User";
-                document.getElementById('uploadMenuText').innerText = "Upload Books";
                 document.getElementById('admTabManage').style.display = 'none';
                 switchAdminTabLocal('add');
             }
@@ -224,7 +222,6 @@ onAuthStateChanged(auth, async (user) => {
         isUserLoggedIn = false; IS_SUPER_ADMIN = false; localStorage.removeItem('isUserLoggedIn');
         document.getElementById('sidebarProfileName').innerText = "Guest User";
         document.getElementById('sidebarRoleText').innerText = "Please Login";
-        document.getElementById('uploadMenuText').innerText = "Upload Books";
         document.getElementById('sidebarProfileImg').src = "https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png";
     }
 
@@ -319,6 +316,7 @@ document.getElementById('admin-logout-btn').addEventListener('click', () => {
         signOut(auth).then(() => { 
             document.getElementById('admin-dashboard-panel').classList.remove('active'); 
             showToast("Logged out successfully");
+            setNavActive('nav-home');
         });
     }
 });
@@ -455,6 +453,18 @@ document.getElementById('bookContainer').addEventListener('click', (e) => {
     }
 });
 
+// Category Grid Click Listener
+document.getElementById('categoryGrid').addEventListener('click', (e) => {
+    const card = e.target.closest('.cat-card');
+    if(card) {
+        const catTitle = card.querySelector('.cat-title').innerText;
+        document.getElementById('app-search-input').value = catTitle;
+        applyMasterFilter();
+        // Scroll to trending books section
+        document.getElementById('bookContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+});
+
 function renderSavedBooksUI() {
     const container = document.getElementById("savedBooksContainer");
     const noMsg = document.getElementById("no-saved-msg");
@@ -509,10 +519,7 @@ async function openMyProfileLocal() {
     document.getElementById('sidebar').classList.remove('active');
     document.getElementById('sidebar-overlay').classList.remove('active');
 
-    // Display Name, Email & Avatar logic
     document.getElementById('profile-name-ui').innerText = sanitizeHTML(CURRENT_ADMIN_NAME);
-    
-    // Add logged in email securely beneath the name
     const emailUi = document.getElementById('profile-email-ui');
     emailUi.innerText = auth.currentUser.email || "No Email linked";
     emailUi.style.display = 'block';
@@ -600,32 +607,24 @@ document.getElementById('open-noti').addEventListener('click', () => { history.p
 const sidebar = document.getElementById('sidebar'); const sidebarOverlay = document.getElementById('sidebar-overlay');
 document.getElementById('open-menu').addEventListener('click', () => { history.pushState({ popup: 'sidebar' }, ''); sidebar.classList.add('active'); sidebarOverlay.classList.add('active'); });
 sidebarOverlay.addEventListener('click', () => { history.back(); });
-document.getElementById('menu-home').addEventListener('click', (e) => { e.preventDefault(); history.back(); });
-document.getElementById('menu-about-dev').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'dev' }, ''); document.getElementById('about-dev-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
-document.getElementById('close-dev-btn').addEventListener('click', () => { history.back(); });
+document.getElementById('menu-home').addEventListener('click', (e) => { e.preventDefault(); history.back(); setNavActive('nav-home'); closeAllPanels();});
 document.getElementById('menu-dmca').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'dmca' }, ''); document.getElementById('dmca-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
 document.getElementById('close-dmca-btn').addEventListener('click', () => { history.back(); });
 document.getElementById('menu-bookmarks').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'bookmarks' }, ''); document.getElementById('bookmarks-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); renderSavedBooksUI(); });
 document.getElementById('close-bookmarks-btn').addEventListener('click', () => { history.back(); });
 
-document.getElementById('menu-admin-panel').addEventListener('click', (e) => {
-    e.preventDefault();
-    if(!isUserLoggedIn) {
-        sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active');
-        document.getElementById('loginOverlay').style.display = 'flex';
-        setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10);
-        return;
-    }
-    history.pushState({ popup: 'admin' }, '');
-    document.getElementById('admin-dashboard-panel').classList.add('active');
-    sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active');
-    
-    setTimeout(() => { document.getElementById('uploadPopup').classList.remove('hidden'); }, 300);
-});
-document.getElementById('close-admin-btn').addEventListener('click', () => { history.back(); });
-document.getElementById('closeUploadPopupBtn').addEventListener('click', () => { document.getElementById('uploadPopup').classList.add('hidden'); });
+// BOTTOM NAVIGATION LOGIC
+const navHome = document.getElementById('nav-home');
+const navNotes = document.getElementById('nav-notes');
+const navUpload = document.getElementById('nav-upload');
+const navDev = document.getElementById('nav-dev');
 
-window.addEventListener('popstate', (e) => {
+function setNavActive(id) {
+    document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function closeAllPanels() {
     document.getElementById('noti-panel').classList.remove('active'); 
     document.getElementById('sidebar').classList.remove('active'); 
     document.getElementById('sidebar-overlay').classList.remove('active'); 
@@ -635,6 +634,47 @@ window.addEventListener('popstate', (e) => {
     document.getElementById('admin-dashboard-panel').classList.remove('active'); 
     document.getElementById('search-box').classList.remove('active');
     document.getElementById('my-profile-panel').classList.remove('active'); 
+}
+
+navHome.addEventListener('click', () => {
+    setNavActive('nav-home');
+    closeAllPanels();
+    window.history.replaceState({}, '', window.location.pathname);
+});
+
+navNotes.addEventListener('click', () => {
+    setNavActive('nav-notes');
+    closeAllPanels();
+    showToast("Notes section coming soon!");
+});
+
+navUpload.addEventListener('click', () => {
+    setNavActive('nav-upload');
+    if(!isUserLoggedIn) {
+        document.getElementById('loginOverlay').style.display = 'flex';
+        setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10);
+        setNavActive('nav-home'); // Revert nav visually
+        return;
+    }
+    history.pushState({ popup: 'admin' }, '');
+    document.getElementById('admin-dashboard-panel').classList.add('active');
+    setTimeout(() => { document.getElementById('uploadPopup').classList.remove('hidden'); }, 300);
+});
+
+navDev.addEventListener('click', () => {
+    setNavActive('nav-dev');
+    history.pushState({ popup: 'dev' }, '');
+    document.getElementById('about-dev-panel').classList.add('active');
+});
+
+// Sidebar panel close handlers
+document.getElementById('close-dev-btn').addEventListener('click', () => { history.back(); setNavActive('nav-home'); });
+document.getElementById('close-admin-btn').addEventListener('click', () => { history.back(); setNavActive('nav-home'); });
+document.getElementById('closeUploadPopupBtn').addEventListener('click', () => { document.getElementById('uploadPopup').classList.add('hidden'); });
+
+window.addEventListener('popstate', (e) => {
+    closeAllPanels();
+    setNavActive('nav-home');
     
     applyMasterFilter();
     const sBook = new URLSearchParams(window.location.search).get('book');
@@ -683,10 +723,7 @@ function openDownloadPageLocal(slug, skipPushState = false) {
                 if (downloads >= allowedDownloads && !IS_SUPER_ADMIN) {
                     showToast("Limit Reached! Upload 1 book to get 2 more downloads.");
                     closeDownloadPageLocal();
-                    history.pushState({ popup: 'admin' }, '');
-                    document.getElementById('admin-dashboard-panel').classList.add('active');
-                    switchAdminTabLocal('add');
-                    setTimeout(() => { document.getElementById('uploadPopup').classList.remove('hidden'); }, 500);
+                    navUpload.click(); // Redirect to upload via nav bar
                     btn.innerHTML = originalText; btn.disabled = false; return; 
                 }
                 await updateDoc(userRef, { lifetimeDownloads: increment(1) }).catch(e => console.log("Stats error ignored"));
