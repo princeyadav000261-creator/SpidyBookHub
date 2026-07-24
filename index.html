@@ -160,11 +160,8 @@
                     <div class="nav-scroll-spacer"></div>
                 </div>
 
-                <!-- TAB 2: NOTES (Category Grid) -->
-                <div id="tab-notes" class="app-tab" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 10px;">
-                        <div class="section-header-title" style="margin-bottom: 0;"><i class="fas fa-layer-group" style="color: #a855f7;"></i> Study Categories</div>
-                    </div>
+                <!-- TAB 2: NOTES (Category Grid) - Removed Study Category text -->
+                <div id="tab-notes" class="app-tab" style="display: none; padding-top: 20px;">
                     <div class="category-grid" id="categoryGrid">
                         <!-- Real HQ Logos -->
                         <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/en/5/5a/Bihar_School_Examination_Board_logo.png" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="BSEB"></div><div class="cat-title">BIHAR BOARD</div></div>
@@ -183,24 +180,18 @@
                     <div class="nav-scroll-spacer"></div>
                 </div>
 
-                <!-- TAB 3: UPLOAD (Vault Panel) -->
-                <!-- Removed fixed width calc and margins that caused horizontal scroll -->
-                <div id="tab-upload" class="app-tab" style="display: none; padding-top: 0px;">
-                    <div class="adm-tabs-container">
-                        <div class="adm-tabs">
+                <!-- TAB 3: UPLOAD (Vault Panel) - Full Width Tabs Setup -->
+                <div id="tab-upload" class="app-tab" style="display: none; padding: 0;">
+                    <div class="adm-tabs-container" style="padding: 15px 12px 0px; background: #000000; border-bottom: 1px solid rgba(255,255,255,0.08); width: 100%; box-sizing: border-box;">
+                        <div class="adm-tabs" style="display: flex; gap: 10px; padding-bottom: 12px; margin-bottom: 0;">
                             <button class="adm-tab-btn active" id="admTabAdd"><i class="fas fa-plus"></i> Add Book</button>
                             <button class="adm-tab-btn" id="admTabPrompt"><i class="fas fa-terminal"></i> Prompts</button>
                             <button class="adm-tab-btn" id="admTabManage" style="display: none;"><i class="fas fa-list"></i> Manage</button>
                         </div>
                     </div>
 
-                    <div class="adm-content-area">
+                    <div class="adm-content-area" style="padding: 20px 15px 0;">
                         <div id="sectionAddBook" class="adm-section active">
-                            <div class="seamless-header">
-                                <div class="icon-wrapper"><i class="fas fa-pen-nib"></i></div>
-                                <h2>Enter Book Details</h2>
-                            </div>
-
                             <form id="addBookForm" class="seamless-form-container">
                                 <div class="adm-form-group"><label class="adm-label">Book Title</label><input type="text" id="inTitle" class="adm-input" placeholder="e.g. Vocab - 15000+ Vocabularies" required autocomplete="off"></div>
                                 <div class="adm-form-group"><label class="adm-label">Author Name</label><input type="text" id="inAuthor" class="adm-input" placeholder="e.g. Neetu Singh Mam" required autocomplete="off"></div>
@@ -302,7 +293,7 @@
 
                 <!-- TAB 4: ABOUT -->
                 <div id="tab-about" class="app-tab" style="display: none; padding: 0;">
-                    <div class="dev-hero-banner" id="aboutBanner">
+                    <div class="dev-hero-banner" id="aboutBanner" style="width: 100%; margin: 0;">
                         <div class="banner-fade-bottom"></div>
                         <div class="hero-content-wrapper">
                             <div class="profile-avatar-container">
@@ -348,6 +339,14 @@
                             <div class="dev-card-content">
                                 <div class="dev-card-title">Birthday</div>
                                 <div class="dev-card-desc"><span class="dev-small-caps">6 December</span> 💐💖</div>
+                            </div>
+                        </div>
+                        <!-- SKILLS CARD ADDED BACK -->
+                        <div class="dev-info-card">
+                            <div class="dev-icon-box"><i class="fas fa-tools"></i></div>
+                            <div class="dev-card-content">
+                                <div class="dev-card-title">Skills</div>
+                                <div class="dev-card-desc" style="font-family: serif; font-style: italic; font-size: 0.95rem; font-weight: 600; color: #a1a1aa;">Hehe... Nothing ☠️</div>
                             </div>
                         </div>
                     </div>
@@ -400,7 +399,7 @@
                     <!-- Logout button next to profile back button -->
                     <button class="back-btn dev-back-btn" id="admin-logout-btn" style="right: 20px; left: auto; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); z-index: 100;"><i class="fas fa-power-off"></i></button>
 
-                    <div class="dev-hero-banner" id="profileBanner" style="background-image: url('https://i.postimg.cc/ydWN7sF8/file-00000000639481f8b111b8b824545a9a.png'); min-height: 220px;">
+                    <div class="dev-hero-banner" id="profileBanner" style="background-image: url('https://i.postimg.cc/ydWN7sF8/file-00000000639481f8b111b8b824545a9a.png'); min-height: 220px; margin: 0; width: 100%;">
                         <div class="banner-fade-bottom"></div>
                         <div class="hero-content-wrapper" style="justify-content: center; padding-bottom: 0;">
                             <div class="profile-avatar-container" style="margin: 0 auto;">
