@@ -166,7 +166,7 @@
                         <div class="section-header-title" style="margin-bottom: 0;"><i class="fas fa-layer-group" style="color: #a855f7;"></i> Study Categories</div>
                     </div>
                     <div class="category-grid" id="categoryGrid">
-                        <!-- Replaced FontAwesome Icons with Real HQ Logos -->
+                        <!-- Real HQ Logos -->
                         <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/en/5/5a/Bihar_School_Examination_Board_logo.png" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="BSEB"></div><div class="cat-title">BIHAR BOARD</div></div>
                         <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/en/9/95/CBSE_new_logo.svg" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));" alt="CBSE"></div><div class="cat-title">CBSE BOARD</div></div>
                         <div class="cat-card"><div class="cat-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/NTA_logo.svg/1200px-NTA_logo.svg.png" style="width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(255,255,255,0.2));" alt="NEET"></div><div class="cat-title">NEET</div></div>
@@ -184,17 +184,17 @@
                 </div>
 
                 <!-- TAB 3: UPLOAD (Vault Panel) -->
+                <!-- Removed fixed width calc and margins that caused horizontal scroll -->
                 <div id="tab-upload" class="app-tab" style="display: none; padding-top: 0px;">
-                    <!-- Fixed Admin Tabs Layout for premium edge-to-edge look -->
-                    <div class="adm-tabs-container" style="padding: 15px 20px 0px; margin: 0 -20px; width: calc(100% + 40px); border-bottom: 1px solid rgba(255,255,255,0.08); background: #000000;">
-                        <div class="adm-tabs" style="justify-content: flex-start; gap: 12px; padding-bottom: 12px; margin-bottom: 0;">
+                    <div class="adm-tabs-container">
+                        <div class="adm-tabs">
                             <button class="adm-tab-btn active" id="admTabAdd"><i class="fas fa-plus"></i> Add Book</button>
                             <button class="adm-tab-btn" id="admTabPrompt"><i class="fas fa-terminal"></i> Prompts</button>
                             <button class="adm-tab-btn" id="admTabManage" style="display: none;"><i class="fas fa-list"></i> Manage</button>
                         </div>
                     </div>
 
-                    <div class="adm-content-area" style="padding-top: 25px;">
+                    <div class="adm-content-area">
                         <div id="sectionAddBook" class="adm-section active">
                             <div class="seamless-header">
                                 <div class="icon-wrapper"><i class="fas fa-pen-nib"></i></div>
@@ -301,23 +301,20 @@
                 </div>
 
                 <!-- TAB 4: ABOUT -->
-                <!-- Padded 0 from top to bleed header to screen edge -->
-                <div id="tab-about" class="app-tab" style="display: none; padding-top: 0;">
-                    <!-- Negative margin ensures the banner starts from the absolute top when header is hidden -->
-                    <div class="dev-hero-banner" style="margin: -20px -20px 0; width: calc(100% + 40px);">
+                <div id="tab-about" class="app-tab" style="display: none; padding: 0;">
+                    <div class="dev-hero-banner" id="aboutBanner">
                         <div class="banner-fade-bottom"></div>
-                        <div class="hero-content-wrapper" style="justify-content: flex-end; padding-right: 20px;">
-                            <!-- Increased translateY to push avatar lower inside background -->
-                            <div class="profile-avatar-container" style="position: relative; width: 110px; height: 110px; margin: 0 0 0 auto; transform: translateY(48px);">
-                                <div class="dev-profile-img-wrapper" style="width: 100%; height: 100%;">
+                        <div class="hero-content-wrapper">
+                            <div class="profile-avatar-container">
+                                <div class="dev-profile-img-wrapper">
                                     <img src="https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png" class="dev-profile-img" oncontextmenu="return false;" draggable="false">
                                 </div>
-                                <div class="profile-shield" style="position: absolute; bottom: 0; right: 0; z-index: 10;"><i class="fas fa-shield-alt"></i></div>
+                                <div class="profile-shield"><i class="fas fa-shield-alt"></i></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="social-bar-left" style="margin-top: 25px;">
+                    <div class="social-bar-left">
                         <a href="https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A" target="_blank" class="hero-soc-btn"><i class="fab fa-whatsapp"></i></a>
                         <a href="https://t.me/MADxPRINCE" target="_blank" class="hero-soc-btn"><i class="fab fa-telegram-plane"></i></a>
                         <a href="https://www.instagram.com/madxprince_3030" target="_blank" class="hero-soc-btn"><i class="fab fa-instagram"></i></a>
@@ -331,8 +328,7 @@
                         </div>
                     </div>
 
-                    <!-- Increased gap and padding for Premium professional separation -->
-                    <div class="dev-cards-container" style="gap: 22px; padding: 25px 20px 35px;">
+                    <div class="dev-cards-container">
                         <div class="dev-info-card">
                             <div class="dev-icon-box"><i class="fas fa-graduation-cap"></i></div>
                             <div class="dev-card-content">
@@ -352,13 +348,6 @@
                             <div class="dev-card-content">
                                 <div class="dev-card-title">Birthday</div>
                                 <div class="dev-card-desc"><span class="dev-small-caps">6 December</span> 💐💖</div>
-                            </div>
-                        </div>
-                        <div class="dev-info-card">
-                            <div class="dev-icon-box"><i class="fas fa-tools"></i></div>
-                            <div class="dev-card-content">
-                                <div class="dev-card-title">Skills</div>
-                                <div class="dev-card-desc" style="font-family: serif; font-style: italic; font-size: 0.95rem; font-weight: 600; color: #a1a1aa;">Hehe... Nothing ☠️</div>
                             </div>
                         </div>
                     </div>
@@ -406,19 +395,19 @@
 
             <!-- MY PROFILE PANEL -->
             <div class="overlay-panel" id="my-profile-panel">
-                <div class="dev-scroll-area">
+                <div class="dev-scroll-area" style="padding-top: 0;">
                     <button class="back-btn dev-back-btn" id="closeProfileBtn" style="z-index: 100;"><i class="fas fa-arrow-left"></i></button>
                     <!-- Logout button next to profile back button -->
                     <button class="back-btn dev-back-btn" id="admin-logout-btn" style="right: 20px; left: auto; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); z-index: 100;"><i class="fas fa-power-off"></i></button>
 
-                    <div class="dev-hero-banner" style="background-image: url('https://i.postimg.cc/ydWN7sF8/file-00000000639481f8b111b8b824545a9a.png'); min-height: 220px;">
+                    <div class="dev-hero-banner" id="profileBanner" style="background-image: url('https://i.postimg.cc/ydWN7sF8/file-00000000639481f8b111b8b824545a9a.png'); min-height: 220px;">
                         <div class="banner-fade-bottom"></div>
                         <div class="hero-content-wrapper" style="justify-content: center; padding-bottom: 0;">
-                            <div class="profile-avatar-container" style="position: relative; width: 110px; height: 110px; transform: translateY(35px); margin: 0 auto;">
-                                <div class="dev-profile-img-wrapper" style="width: 100%; height: 100%;">
+                            <div class="profile-avatar-container" style="margin: 0 auto;">
+                                <div class="dev-profile-img-wrapper">
                                     <img id="profile-avatar-ui" src="https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png" class="dev-profile-img" oncontextmenu="return false;" draggable="false">
                                 </div>
-                                <div class="profile-shield" style="position: absolute; bottom: 0; right: 0; background: linear-gradient(135deg, #ec4899, #8b5cf6); border-color: #000; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.5); z-index: 10;"><i class="fas fa-shield-alt"></i></div>
+                                <div class="profile-shield" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); border-color: #000; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.5); z-index: 10;"><i class="fas fa-shield-alt"></i></div>
                             </div>
                         </div>
                     </div>
@@ -426,36 +415,35 @@
                     <div class="premium-bio-section" style="margin-top: 35px; padding-bottom: 25px;">
                         <div class="bio-greeting" id="profile-name-ui" style="font-size: 1.6rem; font-family: 'Plus Jakarta Sans', sans-serif;">Loading...</div>
                         <div id="profile-email-ui" style="display: none; font-size: 0.95rem; color: #a1a1aa; font-weight: 600; margin-top: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;"></div>
-                        <div class="premium-divider-new"></div>
                     </div>
 
-                    <div class="stats-container" style="padding: 0 20px 25px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%;">
-                        <div class="stat-card card-upload" style="backdrop-filter: blur(10px); border-radius: 16px; padding: 12px 10px; display: flex; align-items: center; gap: 10px;">
-                            <div class="icon-box" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <div class="stat-info" style="display: flex; flex-direction: column; justify-content: center;">
-                                <div class="stat-label" style="font-size: 10px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">Upload</div>
-                                <div class="stat-value" id="profile-uploads" style="font-size: 17px; font-weight: 800; color: #ffffff;">0</div>
+                    <div class="stats-container">
+                        <div class="stat-card card-upload">
+                            <div class="icon-box"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Upload</div>
+                                <div class="stat-value" id="profile-uploads">0</div>
                             </div>
                         </div>
-                        <div class="stat-card card-download" style="backdrop-filter: blur(10px); border-radius: 16px; padding: 12px 10px; display: flex; align-items: center; gap: 10px;">
-                            <div class="icon-box" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i class="fas fa-cloud-download-alt"></i></div>
-                            <div class="stat-info" style="display: flex; flex-direction: column; justify-content: center;">
-                                <div class="stat-label" style="font-size: 10px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">Download</div>
-                                <div class="stat-value" id="profile-downloads" style="font-size: 17px; font-weight: 800; color: #ffffff;">0</div>
+                        <div class="stat-card card-download">
+                            <div class="icon-box"><i class="fas fa-cloud-download-alt"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Download</div>
+                                <div class="stat-value" id="profile-downloads">0</div>
                             </div>
                         </div>
-                        <div class="stat-card card-bookmark" style="backdrop-filter: blur(10px); border-radius: 16px; padding: 12px 10px; display: flex; align-items: center; gap: 10px;">
-                            <div class="icon-box" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i class="fas fa-bookmark"></i></div>
-                            <div class="stat-info" style="display: flex; flex-direction: column; justify-content: center;">
-                                <div class="stat-label" style="font-size: 10px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">Save</div>
-                                <div class="stat-value" id="profile-saved" style="font-size: 17px; font-weight: 800; color: #ffffff;">0</div>
+                        <div class="stat-card card-bookmark">
+                            <div class="icon-box"><i class="fas fa-bookmark"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Save</div>
+                                <div class="stat-value" id="profile-saved">0</div>
                             </div>
                         </div>
-                        <div class="stat-card card-premium" style="backdrop-filter: blur(10px); border-radius: 16px; padding: 12px 10px; display: flex; align-items: center; gap: 10px;">
-                            <div class="icon-box" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 15px;"><i class="fas fa-crown"></i></div>
-                            <div class="stat-info" style="display: flex; flex-direction: column; justify-content: center;">
-                                <div class="stat-label" style="font-size: 10px; color: #9ca3af; font-weight: 800; text-transform: uppercase;">Rank</div>
-                                <div class="stat-value premium-text" id="profile-rank" style="font-size: 17px; font-weight: 800;">#--</div>
+                        <div class="stat-card card-premium">
+                            <div class="icon-box"><i class="fas fa-crown"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Rank</div>
+                                <div class="stat-value premium-text" id="profile-rank">#--</div>
                             </div>
                         </div>
                     </div>
@@ -642,4 +630,3 @@
     <script type="module" src="./app.js"></script>
 </body>
 </html>
-
