@@ -115,7 +115,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .card-insta { background-color: var(--insta-bg); box-shadow: inset 0 0 0 1px rgba(225, 48, 108, 0.1); } .card-insta i, .card-insta span { color: var(--insta-pink); }
 .card-youtube { background-color: var(--youtube-bg); box-shadow: inset 0 0 0 1px rgba(255, 0, 0, 0.1); } .card-youtube i, .card-youtube span { color: var(--youtube-red); }
 
-/* SIDEBAR FOOTER RESTORED */
 .sidebar-footer { margin-top: auto; padding: 15px 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; background-color: var(--spidy-sidebar-bg); z-index: 10; position: relative; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
 .system-status { display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--text-primary); font-size: 10px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
 .dot { width: 6px; height: 6px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e; animation: pulse 2s infinite; }
@@ -132,7 +131,7 @@ main::-webkit-scrollbar { display: none; }
 .app-tab.active { display: flex; }
 @keyframes fadeInTab { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* NAVIGATION SPACER (Fixes bottom cutoff) */
+/* NAVIGATION SPACER */
 .nav-scroll-spacer { height: 95px; width: 100%; flex-shrink: 0; }
 
 /* BOTTOM NAVIGATION BAR */
@@ -313,7 +312,7 @@ main::-webkit-scrollbar { display: none; }
 
 .premium-divider-new { width: 85%; height: 1.5px; margin: 30px auto; background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.8), rgba(14, 165, 233, 0.8), transparent); position: relative; border-radius: 2px; box-shadow: 0 0 12px rgba(124, 58, 237, 0.4), 0 0 12px rgba(14, 165, 233, 0.4); }
 
-.social-bar-left { display: flex; gap: 12px; padding: 0px 20px; margin-top: 25px; justify-content: flex-start; position: relative; z-index: 10; flex-shrink: 0; }
+.social-bar-left { display: flex; gap: 12px; padding: 0px 20px 0px; margin-top: 25px; justify-content: flex-start; position: relative; z-index: 10; flex-shrink: 0; }
 .hero-soc-btn { width: 40px; height: 40px; border-radius: 50%; background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.25); display: flex; justify-content: center; align-items: center; font-size: 16px; text-decoration: none; transition: 0.2s ease; backdrop-filter: blur(4px); }
 .hero-soc-btn:active { transform: scale(0.9); background-color: rgba(255, 255, 255, 0.1); }
 .hero-soc-btn .fa-whatsapp { color: #25D366; }
