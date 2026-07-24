@@ -311,16 +311,6 @@ document.getElementById('googleSignInBtn').addEventListener('click', async () =>
     } catch(err) { showToast("Failed: Google Sign-In Error."); btn.innerHTML = originalContent; } 
 });
 
-document.getElementById('admin-logout-btn').addEventListener('click', () => { 
-    if(confirm("Are you sure you want to logout?")) {
-        signOut(auth).then(() => { 
-            document.getElementById('admin-dashboard-panel').classList.remove('active'); 
-            showToast("Logged out successfully");
-            setNavActive('nav-home');
-        });
-    }
-});
-
 document.getElementById('joinWhatsappBtn').addEventListener('click', () => { window.open('https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A', '_blank'); });
 document.getElementById('laterPopupBtn').addEventListener('click', () => { document.getElementById("popupOverlay").style.display = "none"; });
 
@@ -453,13 +443,18 @@ document.getElementById('bookContainer').addEventListener('click', (e) => {
     }
 });
 
-// Category Grid Click Listener
+// Category Grid Click Listener (Now inside Notes Tab)
 document.getElementById('categoryGrid').addEventListener('click', (e) => {
     const card = e.target.closest('.cat-card');
     if(card) {
         const catTitle = card.querySelector('.cat-title').innerText;
         document.getElementById('app-search-input').value = catTitle;
+        
+        // Switch back to Home Tab to see search results
+        setNavActive('nav-home');
+        switchTab('tab-home');
         applyMasterFilter();
+        
         // Scroll to trending books section
         document.getElementById('bookContainer').scrollIntoView({ behavior: 'smooth' });
     }
@@ -571,27 +566,6 @@ async function openMyProfileLocal() {
         else if (rank === 3 && uploads > 0) { rankElement.style.color = "#b45309"; rankElement.innerText = "#" + rank; } 
         else { rankElement.style.color = ""; rankElement.innerText = "#" + rank; }
 
-        let lbHtml = "";
-        const top10 = allUsers.slice(0, 10);
-        top10.forEach((u, idx) => {
-            let rnk = idx + 1;
-            let rankClass = rnk <= 3 ? `rank-${rnk}` : '';
-            let rankDisplay = rnk === 1 ? '<i class="fas fa-crown"></i>' : `#${rnk}`;
-            let userUploads = parseInt(u.totalUploads) || 0;
-            let photo = u.photo || "https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png";
-            
-            lbHtml += `
-            <div class="leaderboard-card">
-                <div class="lb-rank ${rankClass}">${rankDisplay}</div>
-                <img src="${photo}" class="lb-avatar" oncontextmenu="return false;" draggable="false">
-                <div class="lb-info">
-                    <div class="lb-name">${sanitizeHTML(u.name || "User")}</div>
-                </div>
-                <div class="lb-uploads"><i class="fas fa-upload"></i> ${userUploads}</div>
-            </div>`;
-        });
-        document.getElementById('leaderboard-container').innerHTML = lbHtml;
-
     } catch (error) { console.error("Error fetching profile stats:", error); showToast("Error loading profile data"); }
 }
 
@@ -607,13 +581,17 @@ document.getElementById('open-noti').addEventListener('click', () => { history.p
 const sidebar = document.getElementById('sidebar'); const sidebarOverlay = document.getElementById('sidebar-overlay');
 document.getElementById('open-menu').addEventListener('click', () => { history.pushState({ popup: 'sidebar' }, ''); sidebar.classList.add('active'); sidebarOverlay.classList.add('active'); });
 sidebarOverlay.addEventListener('click', () => { history.back(); });
-document.getElementById('menu-home').addEventListener('click', (e) => { e.preventDefault(); history.back(); setNavActive('nav-home'); closeAllPanels();});
+
+// Sidebar links
+document.getElementById('menu-home-side').addEventListener('click', (e) => { e.preventDefault(); history.back(); setNavActive('nav-home'); switchTab('tab-home'); closeAllPanels();});
 document.getElementById('menu-dmca').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'dmca' }, ''); document.getElementById('dmca-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
 document.getElementById('close-dmca-btn').addEventListener('click', () => { history.back(); });
 document.getElementById('menu-bookmarks').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'bookmarks' }, ''); document.getElementById('bookmarks-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); renderSavedBooksUI(); });
 document.getElementById('close-bookmarks-btn').addEventListener('click', () => { history.back(); });
 
-// BOTTOM NAVIGATION LOGIC
+// ==========================================
+// NEW: BOTTOM NAVIGATION LOGIC (TABS)
+// ==========================================
 const navHome = document.getElementById('nav-home');
 const navNotes = document.getElementById('nav-notes');
 const navUpload = document.getElementById('nav-upload');
@@ -624,14 +602,27 @@ function setNavActive(id) {
     document.getElementById(id).classList.add('active');
 }
 
+function switchTab(tabId) {
+    // Hide all tabs
+    document.querySelectorAll('.app-tab').forEach(tab => {
+        tab.style.display = 'none';
+        tab.classList.remove('active');
+    });
+    // Show specific tab
+    const target = document.getElementById(tabId);
+    if(target) {
+        target.style.display = 'flex';
+        // Delay for smooth fade in animation
+        setTimeout(() => target.classList.add('active'), 10);
+    }
+}
+
 function closeAllPanels() {
     document.getElementById('noti-panel').classList.remove('active'); 
     document.getElementById('sidebar').classList.remove('active'); 
     document.getElementById('sidebar-overlay').classList.remove('active'); 
-    document.getElementById('about-dev-panel').classList.remove('active'); 
     document.getElementById('dmca-panel').classList.remove('active'); 
     document.getElementById('bookmarks-panel').classList.remove('active'); 
-    document.getElementById('admin-dashboard-panel').classList.remove('active'); 
     document.getElementById('search-box').classList.remove('active');
     document.getElementById('my-profile-panel').classList.remove('active'); 
 }
@@ -639,42 +630,43 @@ function closeAllPanels() {
 navHome.addEventListener('click', () => {
     setNavActive('nav-home');
     closeAllPanels();
+    switchTab('tab-home');
     window.history.replaceState({}, '', window.location.pathname);
 });
 
 navNotes.addEventListener('click', () => {
     setNavActive('nav-notes');
     closeAllPanels();
-    showToast("Notes section coming soon!");
+    switchTab('tab-notes');
 });
 
 navUpload.addEventListener('click', () => {
-    setNavActive('nav-upload');
     if(!isUserLoggedIn) {
         document.getElementById('loginOverlay').style.display = 'flex';
         setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10);
-        setNavActive('nav-home'); // Revert nav visually
+        setNavActive('nav-home');
         return;
     }
-    history.pushState({ popup: 'admin' }, '');
-    document.getElementById('admin-dashboard-panel').classList.add('active');
+    setNavActive('nav-upload');
+    closeAllPanels();
+    switchTab('tab-upload');
     setTimeout(() => { document.getElementById('uploadPopup').classList.remove('hidden'); }, 300);
 });
 
 navDev.addEventListener('click', () => {
     setNavActive('nav-dev');
-    history.pushState({ popup: 'dev' }, '');
-    document.getElementById('about-dev-panel').classList.add('active');
+    closeAllPanels();
+    switchTab('tab-about');
 });
 
-// Sidebar panel close handlers
-document.getElementById('close-dev-btn').addEventListener('click', () => { history.back(); setNavActive('nav-home'); });
-document.getElementById('close-admin-btn').addEventListener('click', () => { history.back(); setNavActive('nav-home'); });
+// Close popups
 document.getElementById('closeUploadPopupBtn').addEventListener('click', () => { document.getElementById('uploadPopup').classList.add('hidden'); });
 
 window.addEventListener('popstate', (e) => {
     closeAllPanels();
+    // Default fallback to Home tab
     setNavActive('nav-home');
+    switchTab('tab-home');
     
     applyMasterFilter();
     const sBook = new URLSearchParams(window.location.search).get('book');
@@ -723,7 +715,7 @@ function openDownloadPageLocal(slug, skipPushState = false) {
                 if (downloads >= allowedDownloads && !IS_SUPER_ADMIN) {
                     showToast("Limit Reached! Upload 1 book to get 2 more downloads.");
                     closeDownloadPageLocal();
-                    navUpload.click(); // Redirect to upload via nav bar
+                    navUpload.click(); // Programmatically switches to upload tab
                     btn.innerHTML = originalText; btn.disabled = false; return; 
                 }
                 await updateDoc(userRef, { lifetimeDownloads: increment(1) }).catch(e => console.log("Stats error ignored"));
