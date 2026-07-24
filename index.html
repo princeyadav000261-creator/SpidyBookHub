@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <div class="sidebar-footer">
-                    <div class="system-status"><div class="dot"></div>SYSTEM SECURE</div>
+                    <div class="system-status">SYSTEM SECURE</div>
                     <div class="credits">SPIDY BOOK HUB • MADxPRINCE</div>
                 </div>
             </div>
@@ -155,6 +155,10 @@
                             <div class="no-results-badge">❁ POWERED BY : MADxPRINCE ❁</div>
                         </div>
                     </div>
+                    
+                    <div class="premium-copyright">© 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE</div>
+                    <!-- Spacer for bottom navigation overlap -->
+                    <div class="nav-scroll-spacer"></div>
                 </div>
 
                 <!-- TAB 2: NOTES (Category Grid) -->
@@ -174,17 +178,23 @@
                         <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-landmark"></i></div><div class="cat-title">KARNATAKA BOARD</div></div>
                         <div class="cat-card"><div class="cat-icon-wrapper"><i class="fas fa-layer-group"></i></div><div class="cat-title">OTHER BOARDS</div></div>
                     </div>
+                    
+                    <div class="premium-copyright">© 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE</div>
+                    <!-- Spacer for bottom navigation overlap -->
+                    <div class="nav-scroll-spacer"></div>
                 </div>
 
                 <!-- TAB 3: UPLOAD (Vault Panel) -->
                 <div id="tab-upload" class="app-tab" style="display: none;">
-                    <div class="adm-tabs">
-                        <button class="adm-tab-btn active" id="admTabAdd"><i class="fas fa-plus"></i> Add Book</button>
-                        <button class="adm-tab-btn" id="admTabPrompt"><i class="fas fa-terminal"></i> Prompts</button>
-                        <button class="adm-tab-btn" id="admTabManage" style="display: none;"><i class="fas fa-list"></i> Manage</button>
+                    <div class="adm-tabs-container">
+                        <div class="adm-tabs">
+                            <button class="adm-tab-btn active" id="admTabAdd"><i class="fas fa-plus"></i> Add Book</button>
+                            <button class="adm-tab-btn" id="admTabPrompt"><i class="fas fa-terminal"></i> Prompts</button>
+                            <button class="adm-tab-btn" id="admTabManage" style="display: none;"><i class="fas fa-list"></i> Manage</button>
+                        </div>
                     </div>
 
-                    <div class="adm-content-area" style="padding: 20px 0;">
+                    <div class="adm-content-area">
                         <div id="sectionAddBook" class="adm-section active">
                             <div class="seamless-header">
                                 <div class="icon-wrapper"><i class="fas fa-pen-nib"></i></div>
@@ -272,7 +282,7 @@
                                         <input type="text" id="adminSearchBook" class="adm-input" placeholder="Search titles, authors..." style="padding-left: 40px;">
                                     </div>
                                 </div>
-                                <div style="overflow-x: auto;">
+                                <div style="overflow-x: auto; padding-bottom: 10px;">
                                     <table class="adm-table">
                                         <thead><tr><th>Cover</th><th>Info</th><th>Actions</th></tr></thead>
                                         <tbody id="adminBooksTableBody"></tbody>
@@ -286,6 +296,8 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Spacer for bottom navigation overlap -->
+                    <div class="nav-scroll-spacer"></div>
                 </div>
 
                 <!-- TAB 4: ABOUT -->
@@ -347,9 +359,9 @@
                         </div>
                     </div>
                     
-                    <div class="premium-copyright" style="margin-bottom: 20px;">
-                        © 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
-                    </div>
+                    <div class="premium-copyright">© 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE</div>
+                    <!-- Spacer for bottom navigation overlap -->
+                    <div class="nav-scroll-spacer"></div>
                 </div>
 
             </main>
@@ -393,6 +405,9 @@
             <div class="overlay-panel" id="my-profile-panel">
                 <div class="dev-scroll-area">
                     <button class="back-btn dev-back-btn" id="closeProfileBtn" style="z-index: 100;"><i class="fas fa-arrow-left"></i></button>
+                    <!-- Logout button next to profile back button -->
+                    <button class="back-btn dev-back-btn" id="admin-logout-btn" style="right: 20px; left: auto; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); z-index: 100;"><i class="fas fa-power-off"></i></button>
+
                     <div class="dev-hero-banner" style="background-image: url('https://i.postimg.cc/ydWN7sF8/file-00000000639481f8b111b8b824545a9a.png'); min-height: 220px;">
                         <div class="banner-fade-bottom"></div>
                         <div class="hero-content-wrapper" style="justify-content: center; padding-bottom: 0;">
@@ -499,7 +514,7 @@
                             <p class="no-results-desc">You haven't bookmarked any books yet. Click the bookmark icon on any book to save it here!</p>
                         </div>
                     </div>
-                    <div class="premium-copyright" style="margin-bottom: 80px;">
+                    <div class="premium-copyright" style="margin-bottom: 20px;">
                         © 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
@@ -553,7 +568,7 @@
                         <a href="https://t.me/SpidyBookHub_Bot" target="_blank" class="dmca-contact-link"><i class="fab fa-telegram-plane"></i> Spidy Book Hub Support</a>
                         <p style="margin-top: 15px; font-weight: bold; color: #a1a1aa; font-size: 0.75rem;">⏱ Review Time: 24–48 Hours</p>
                     </div>
-                    <div class="premium-copyright" style="margin-bottom: 80px;">
+                    <div class="premium-copyright" style="margin-bottom: 20px;">
                         © 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
