@@ -59,7 +59,7 @@ body { background-color: #000000; color: #ffffff; display: flex; justify-content
 
 header { display: flex; align-items: center; justify-content: space-between; padding: 20px; background-color: var(--bg-main); z-index: 10; gap: 10px; position: relative; flex-shrink: 0; transition: all 0.3s ease; }
 .header-left { display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1; }
-.header-title { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
+.header-title { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; text-transform: uppercase; }
 .icon-box { width: 40px; height: 40px; border: 1.5px solid var(--border-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; color: var(--text-primary); flex-shrink: 0; background-color: transparent; }
 .icon-box:hover { background-color: rgba(255,255,255,0.08); transform: scale(1.05); }
 .header-icons { display: flex; gap: 10px; align-items: center; }
@@ -134,13 +134,13 @@ main::-webkit-scrollbar { display: none; }
 /* NAVIGATION SPACER */
 .nav-scroll-spacer { height: 95px; width: 100%; flex-shrink: 0; }
 
-/* BOTTOM NAVIGATION BAR */
+/* BOTTOM NAVIGATION BAR (Updated for Black Bg and White Glow) */
 .bottom-nav-bar {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #0b1014;
+    background-color: #000000;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -176,7 +176,11 @@ main::-webkit-scrollbar { display: none; }
     transition: color 0.25s ease;
 }
 .bottom-nav-item:active { transform: scale(0.95); }
-.bottom-nav-item.active .nav-icon-pill { background-color: #103629; color: #d1f4e0; }
+.bottom-nav-item.active .nav-icon-pill { 
+    background-color: rgba(255, 255, 255, 0.15); 
+    color: #ffffff; 
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
 .bottom-nav-item.active .nav-label { color: #ffffff; font-weight: 700; }
 
 
@@ -342,19 +346,21 @@ main::-webkit-scrollbar { display: none; }
 .stat-label { font-size: 10px; color: #9ca3af; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;}
 .stat-value { font-size: 18px; font-weight: 900; color: #ffffff; font-family: 'Poppins', sans-serif;}
 
-/* Individual Stat Card Glows */
-.card-upload { border-color: rgba(59, 130, 246, 0.4); box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.1), 0 5px 15px rgba(0,0,0,0.5); }
+/* Individual Stat Card Glows (UPDATED) */
+.card-upload { border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 0 20px rgba(59, 130, 246, 0.35), inset 0 0 20px rgba(59, 130, 246, 0.1); }
 .card-upload .icon-box { width: 42px; height: 42px; border-radius: 12px; background: rgba(59, 130, 246, 0.15); color: #3b82f6; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);}
 
-.card-download { border-color: rgba(16, 185, 129, 0.4); box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.1), 0 5px 15px rgba(0,0,0,0.5); }
+.card-download { border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 20px rgba(16, 185, 129, 0.35), inset 0 0 20px rgba(16, 185, 129, 0.1); }
 .card-download .icon-box { width: 42px; height: 42px; border-radius: 12px; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);}
 
-.card-bookmark { border-color: rgba(168, 85, 247, 0.4); box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.1), 0 5px 15px rgba(0,0,0,0.5); }
+.card-bookmark { border-color: rgba(168, 85, 247, 0.4); box-shadow: 0 0 20px rgba(168, 85, 247, 0.35), inset 0 0 20px rgba(168, 85, 247, 0.1); }
 .card-bookmark .icon-box { width: 42px; height: 42px; border-radius: 12px; background: rgba(168, 85, 247, 0.15); color: #a855f7; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);}
 
-.card-premium { border-color: rgba(234, 179, 8, 0.4); box-shadow: inset 0 0 20px rgba(234, 179, 8, 0.1), 0 5px 15px rgba(0,0,0,0.5); }
+.card-premium { border-color: rgba(234, 179, 8, 0.4); box-shadow: 0 0 20px rgba(234, 179, 8, 0.35), inset 0 0 20px rgba(234, 179, 8, 0.1); }
 .card-premium .icon-box { width: 42px; height: 42px; border-radius: 12px; background: rgba(234, 179, 8, 0.15); color: #eab308; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);}
 
+.card-credit { border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 20px rgba(239, 68, 68, 0.35), inset 0 0 20px rgba(239, 68, 68, 0.1); }
+.card-coins { border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 0 20px rgba(245, 158, 11, 0.35), inset 0 0 20px rgba(245, 158, 11, 0.1); }
 
 .dmca-content { flex: 1; width: 100%; overflow-y: auto; overflow-x: hidden; padding: 20px 0px 0px; display: flex; flex-direction: column; background-color: #000000; -webkit-overflow-scrolling: touch; transform: translateZ(0); will-change: transform; overscroll-behavior-y: contain; overscroll-behavior-x: none; -ms-overflow-style: none; scrollbar-width: none; }
 .dmca-content::-webkit-scrollbar { display: none; }
