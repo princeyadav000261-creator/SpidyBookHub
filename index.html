@@ -34,10 +34,9 @@
     <!-- Login Overlay -->
     <div id="loginOverlay" class="login-container" style="display: none; opacity: 0;">
         
-        <!-- NEW BACKGROUND DECORATIONS (Based on 1000111923.png) -->
-        <div class="login-decor-lines"></div>
-        <div class="login-decor-dots top-left"></div>
-        <div class="login-decor-dots bottom-right"></div>
+        <!-- NEW: Background Dots Decoration -->
+        <div class="login-dots dot-top-left"></div>
+        <div class="login-dots dot-bottom-right"></div>
         
         <div class="close-login-btn" id="closeLoginBtn"><i class="fas fa-times"></i></div>
         
@@ -48,7 +47,6 @@
                 <p class="brand-subtitle">Best Content | Infinite Library | Instant Downloads </p>
             </div>
 
-            <!-- Card Design -->
             <div class="glass-card">
                 <h2 class="form-header"><i class="fas fa-graduation-cap"></i> 𝐒𝐩𝐢𝐝𝐲 𝐁𝐨𝐨𝐤 𝐇𝐮𝐛</h2>
                 <form id="loginForm">
@@ -61,23 +59,8 @@
                         <input type="password" id="loginPassword" placeholder="Enter your password" required>
                         <i class="fas fa-eye toggle-password" id="toggleEye"></i>
                     </div>
-                    
-                    <!-- Added Remember Me & Forgot Password (based on image reference, hidden by default but structure is here) -->
-                    <div class="login-options" style="display: flex; justify-content: space-between; align-items: center; margin-top: -20px; margin-bottom: 25px; font-size: 12px; color: #a1a1aa;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" style="width: auto; margin: 0; accent-color: #ffffff;"> Remember me
-                        </label>
-                        <span style="cursor: pointer;">Forgot password?</span>
-                    </div>
-
-                    <button type="submit" id="loginBtn" class="btn-login"><span class="btn-text">Sign In <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></span></button>
+                    <button type="submit" id="loginBtn" class="btn-login"><span class="btn-text">Sign In</span></button>
                 </form>
-
-                <div class="login-divider" style="display: flex; align-items: center; text-align: center; color: #71717a; font-size: 11px; margin: 25px 0;">
-                    <hr style="flex: 1; border: none; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                    <span style="padding: 0 10px;">OR</span>
-                    <hr style="flex: 1; border: none; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                </div>
 
                 <div class="social-login">
                     <button type="button" id="googleSignInBtn" class="btn-google">
@@ -191,7 +174,7 @@
                     <div class="nav-scroll-spacer"></div>
                 </div>
 
-                <!-- TAB 2: NOTES -->
+                <!-- TAB 2: NOTES (Replaced with Custom Image) -->
                 <div id="tab-notes" class="app-tab" style="display: none; padding-top: 0px;">
                     <div style="display: flex; justify-content: center; align-items: center; height: 80vh; padding: 20px;">
                         <img src="https://i.postimg.cc/HWXLxtXh/1000111895.jpg" style="max-width: 100%; border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(255,255,255,0.05);" alt="Premium Notes Coming Soon">
