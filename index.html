@@ -33,15 +33,22 @@
 
     <!-- Login Overlay -->
     <div id="loginOverlay" class="login-container" style="display: none; opacity: 0;">
+        
+        <!-- NEW BACKGROUND DECORATIONS (Based on 1000111923.png) -->
+        <div class="login-decor-lines"></div>
+        <div class="login-decor-dots top-left"></div>
+        <div class="login-decor-dots bottom-right"></div>
+        
         <div class="close-login-btn" id="closeLoginBtn"><i class="fas fa-times"></i></div>
         
         <div class="login-wrapper">
             <div class="logo-container">
                 <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" alt="Logo" class="brand-logo">
                 <h1 class="brand-title">SPIDY BOOK HUB</h1>
-                <p class="brand-subtitle">Free Books | Premium Notes | Instant Access </p>
+                <p class="brand-subtitle">Best Content | Infinite Library | Instant Downloads </p>
             </div>
 
+            <!-- Card Design -->
             <div class="glass-card">
                 <h2 class="form-header"><i class="fas fa-graduation-cap"></i> 𝐒𝐩𝐢𝐝𝐲 𝐁𝐨𝐨𝐤 𝐇𝐮𝐛</h2>
                 <form id="loginForm">
@@ -54,8 +61,23 @@
                         <input type="password" id="loginPassword" placeholder="Enter your password" required>
                         <i class="fas fa-eye toggle-password" id="toggleEye"></i>
                     </div>
-                    <button type="submit" id="loginBtn" class="btn-login"><span class="btn-text">Sign In</span></button>
+                    
+                    <!-- Added Remember Me & Forgot Password (based on image reference, hidden by default but structure is here) -->
+                    <div class="login-options" style="display: flex; justify-content: space-between; align-items: center; margin-top: -20px; margin-bottom: 25px; font-size: 12px; color: #a1a1aa;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" style="width: auto; margin: 0; accent-color: #ffffff;"> Remember me
+                        </label>
+                        <span style="cursor: pointer;">Forgot password?</span>
+                    </div>
+
+                    <button type="submit" id="loginBtn" class="btn-login"><span class="btn-text">Sign In <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></span></button>
                 </form>
+
+                <div class="login-divider" style="display: flex; align-items: center; text-align: center; color: #71717a; font-size: 11px; margin: 25px 0;">
+                    <hr style="flex: 1; border: none; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <span style="padding: 0 10px;">OR</span>
+                    <hr style="flex: 1; border: none; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                </div>
 
                 <div class="social-login">
                     <button type="button" id="googleSignInBtn" class="btn-google">
@@ -169,7 +191,7 @@
                     <div class="nav-scroll-spacer"></div>
                 </div>
 
-                <!-- TAB 2: NOTES (Replaced with Custom Image) -->
+                <!-- TAB 2: NOTES -->
                 <div id="tab-notes" class="app-tab" style="display: none; padding-top: 0px;">
                     <div style="display: flex; justify-content: center; align-items: center; height: 80vh; padding: 20px;">
                         <img src="https://i.postimg.cc/HWXLxtXh/1000111895.jpg" style="max-width: 100%; border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(255,255,255,0.05);" alt="Premium Notes Coming Soon">
@@ -218,7 +240,7 @@
                                                 <label class="uc-btn"><i class="fas fa-folder-open"></i> Browse Files<input type="file" accept="image/*" hidden id="fileCoverBrowse"></label>
                                             </div>
                                         </div>
-                                        <div class="uc-footer">JPG, PNG, WEBP • Maximum 5MB</div>
+                                        <div class="uc-footer">JPG, PNG, WEBP • Max 5MB</div>
                                         <input type="hidden" id="inImage" value="">
                                     </div>
                                 </div>
@@ -241,7 +263,7 @@
                                                 <label class="uc-btn"><i class="fas fa-folder-open"></i> Browse Files<input type="file" accept=".pdf" hidden id="filePdfBrowse"></label>
                                             </div>
                                         </div>
-                                        <div class="uc-footer">PDF FILES • Maximum 800MB</div>
+                                        <div class="uc-footer">PDF • Max 50MB</div>
                                         <input type="hidden" id="inPdfUrl" value="">
                                     </div>
                                 </div>
@@ -361,19 +383,19 @@
             <nav class="bottom-nav-bar">
                 <div class="bottom-nav-item active" id="nav-home" onclick="updateHeaderForTab('home')">
                     <div class="nav-icon-pill"><i class="fas fa-home"></i></div>
-                    <span class="nav-label">𝐇𝐨𝐦𝐞 </span>
+                    <span class="nav-label">Home</span>
                 </div>
                 <div class="bottom-nav-item" id="nav-notes" onclick="updateHeaderForTab('notes')">
                     <div class="nav-icon-pill"><i class="fas fa-file-alt"></i></div>
-                    <span class="nav-label">𝐍𝐨𝐭𝐞𝐬</span>
+                    <span class="nav-label">Notes</span>
                 </div>
                 <div class="bottom-nav-item" id="nav-upload" onclick="updateHeaderForTab('upload')">
                     <div class="nav-icon-pill"><i class="fas fa-cloud-upload-alt"></i></div>
-                    <span class="nav-label">𝐔𝐩𝐥𝐨𝐚𝐝</span>
+                    <span class="nav-label">Upload</span>
                 </div>
                 <div class="bottom-nav-item" id="nav-dev" onclick="updateHeaderForTab('about')">
                     <div class="nav-icon-pill"><i class="fas fa-user-tie"></i></div>
-                    <span class="nav-label">𝐌𝐞</span>
+                    <span class="nav-label">About</span>
                 </div>
             </nav>
 
@@ -689,3 +711,4 @@
     <script type="module" src="./app.js"></script>
 </body>
 </html>
+
