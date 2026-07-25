@@ -176,6 +176,18 @@ const currentQuoteIndex = todayDays % quotes.length;
 document.getElementById('daily-quote-text').innerHTML = `<i class="fas fa-quote-left" style="color: rgba(255,255,255,0.3); margin-right:5px;"></i> ${sanitizeHTML(quotes[currentQuoteIndex].text)}`;
 document.getElementById('daily-quote-author').innerText = `— ${sanitizeHTML(quotes[currentQuoteIndex].author)}`;
 
+// Update Live Credits Function
+function updateLiveCredits(uploads, downloads) {
+    if (IS_SUPER_ADMIN) {
+        document.getElementById('profile-credits').innerHTML = `<span style="font-size: 24px;">&infin;</span>`; // Infinity Symbol
+        return;
+    }
+    let allowedDownloads = 2 + (uploads * 2);
+    let remainingCredits = allowedDownloads - downloads;
+    if (remainingCredits < 0) remainingCredits = 0;
+    document.getElementById('profile-credits').innerText = remainingCredits;
+}
+
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         isUserLoggedIn = true;
@@ -199,10 +211,8 @@ onAuthStateChanged(auth, async (user) => {
         try {
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
-            if (!userSnap.exists()) {
-                await setDoc(userRef, { email: user.email, name: dName, photo: user.photoURL || "", totalUploads: 0, lifetimeDownloads: 0, createdAt: new Date().getTime() }, { merge: true });
-            }
-
+            
+            // Check Admin Status first
             const cleanEmail = user.email ? user.email.toLowerCase().trim() : "";
             const adminDocRef = doc(db, "admins", cleanEmail);
             const adminDocSnap = await getDoc(adminDocRef);
@@ -217,12 +227,22 @@ onAuthStateChanged(auth, async (user) => {
                 document.getElementById('admTabManage').style.display = 'none';
                 switchAdminTabLocal('add');
             }
+
+            if (!userSnap.exists()) {
+                await setDoc(userRef, { email: user.email, name: dName, photo: user.photoURL || "", totalUploads: 0, lifetimeDownloads: 0, createdAt: new Date().getTime() }, { merge: true });
+                updateLiveCredits(0, 0); // Setup Initial Credits
+            } else {
+                let data = userSnap.data();
+                updateLiveCredits(data.totalUploads || 0, data.lifetimeDownloads || 0);
+            }
+
         } catch (error) { console.error("Verification failed:", error); IS_SUPER_ADMIN = false; }
     } else {
         isUserLoggedIn = false; IS_SUPER_ADMIN = false; localStorage.removeItem('isUserLoggedIn');
         document.getElementById('sidebarProfileName').innerText = "Guest User";
         document.getElementById('sidebarRoleText').innerText = "Please Login";
         document.getElementById('sidebarProfileImg').src = "https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png";
+        document.getElementById('profile-credits').innerText = "--";
     }
 
     isAppReady.auth = true; tryTransition();
@@ -258,6 +278,22 @@ onAuthStateChanged(auth, async (user) => {
         isAppReady.data = true; tryTransition();
     });
 });
+
+// LOGOUT FUNCTIONALITY (Bound to both sidebar & profile buttons if they exist)
+const logoutBtn = document.getElementById('admin-logout-btn');
+if(logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        if(confirm("Are you sure you want to log out?")) {
+            signOut(auth).then(() => {
+                localStorage.removeItem('isUserLoggedIn');
+                showToast("Logged out successfully!");
+                setTimeout(() => window.location.reload(), 1000);
+            }).catch((error) => {
+                showToast("Error signing out!");
+            });
+        }
+    });
+}
 
 document.getElementById('promptsContainer').addEventListener('click', (e) => {
     const btn = e.target.closest('.telegram-copy-btn');
@@ -443,23 +479,6 @@ document.getElementById('bookContainer').addEventListener('click', (e) => {
     }
 });
 
-// Category Grid Click Listener (Now inside Notes Tab)
-document.getElementById('categoryGrid').addEventListener('click', (e) => {
-    const card = e.target.closest('.cat-card');
-    if(card) {
-        const catTitle = card.querySelector('.cat-title').innerText;
-        document.getElementById('app-search-input').value = catTitle;
-        
-        // Switch back to Home Tab to see search results
-        setNavActive('nav-home');
-        switchTab('tab-home');
-        applyMasterFilter();
-        
-        // Scroll to trending books section
-        document.getElementById('bookContainer').scrollIntoView({ behavior: 'smooth' });
-    }
-});
-
 function renderSavedBooksUI() {
     const container = document.getElementById("savedBooksContainer");
     const noMsg = document.getElementById("no-saved-msg");
@@ -534,6 +553,8 @@ async function openMyProfileLocal() {
             const data = userSnap.data();
             uploads = parseInt(data.totalUploads) || 0; 
             downloads = parseInt(data.lifetimeDownloads) || 0;
+            // Update Live Credits immediately
+            updateLiveCredits(uploads, downloads);
         }
         document.getElementById('profile-uploads').innerText = uploads;
         document.getElementById('profile-downloads').innerText = downloads;
@@ -583,38 +604,27 @@ document.getElementById('open-menu').addEventListener('click', () => { history.p
 sidebarOverlay.addEventListener('click', () => { history.back(); });
 
 // Sidebar links
-document.getElementById('menu-home-side').addEventListener('click', (e) => { e.preventDefault(); history.back(); setNavActive('nav-home'); switchTab('tab-home'); closeAllPanels();});
 document.getElementById('menu-dmca').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'dmca' }, ''); document.getElementById('dmca-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
 document.getElementById('close-dmca-btn').addEventListener('click', () => { history.back(); });
 document.getElementById('menu-bookmarks').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'bookmarks' }, ''); document.getElementById('bookmarks-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); renderSavedBooksUI(); });
 document.getElementById('close-bookmarks-btn').addEventListener('click', () => { history.back(); });
 
-// ==========================================
-// NEW: BOTTOM NAVIGATION LOGIC (TABS)
-// ==========================================
-const navHome = document.getElementById('nav-home');
-const navNotes = document.getElementById('nav-notes');
-const navUpload = document.getElementById('nav-upload');
-const navDev = document.getElementById('nav-dev');
-
-function setNavActive(id) {
-    document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
+// BOTTOM NAVIGATION TAB SWITCHING
 function switchTab(tabId) {
-    // Hide all tabs
     document.querySelectorAll('.app-tab').forEach(tab => {
         tab.style.display = 'none';
         tab.classList.remove('active');
     });
-    // Show specific tab
     const target = document.getElementById(tabId);
     if(target) {
         target.style.display = 'flex';
-        // Delay for smooth fade in animation
         setTimeout(() => target.classList.add('active'), 10);
     }
+}
+
+function setNavActive(id) {
+    document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 }
 
 function closeAllPanels() {
@@ -627,36 +637,28 @@ function closeAllPanels() {
     document.getElementById('my-profile-panel').classList.remove('active'); 
 }
 
-navHome.addEventListener('click', () => {
-    setNavActive('nav-home');
-    closeAllPanels();
-    switchTab('tab-home');
+document.getElementById('nav-home').addEventListener('click', () => {
+    setNavActive('nav-home'); closeAllPanels(); switchTab('tab-home');
     window.history.replaceState({}, '', window.location.pathname);
 });
 
-navNotes.addEventListener('click', () => {
-    setNavActive('nav-notes');
-    closeAllPanels();
-    switchTab('tab-notes');
+document.getElementById('nav-notes').addEventListener('click', () => {
+    setNavActive('nav-notes'); closeAllPanels(); switchTab('tab-notes');
 });
 
-navUpload.addEventListener('click', () => {
+document.getElementById('nav-upload').addEventListener('click', () => {
     if(!isUserLoggedIn) {
         document.getElementById('loginOverlay').style.display = 'flex';
         setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10);
         setNavActive('nav-home');
         return;
     }
-    setNavActive('nav-upload');
-    closeAllPanels();
-    switchTab('tab-upload');
+    setNavActive('nav-upload'); closeAllPanels(); switchTab('tab-upload');
     setTimeout(() => { document.getElementById('uploadPopup').classList.remove('hidden'); }, 300);
 });
 
-navDev.addEventListener('click', () => {
-    setNavActive('nav-dev');
-    closeAllPanels();
-    switchTab('tab-about');
+document.getElementById('nav-dev').addEventListener('click', () => {
+    setNavActive('nav-dev'); closeAllPanels(); switchTab('tab-about');
 });
 
 // Close popups
@@ -664,10 +666,6 @@ document.getElementById('closeUploadPopupBtn').addEventListener('click', () => {
 
 window.addEventListener('popstate', (e) => {
     closeAllPanels();
-    // Default fallback to Home tab
-    setNavActive('nav-home');
-    switchTab('tab-home');
-    
     applyMasterFilter();
     const sBook = new URLSearchParams(window.location.search).get('book');
     if(sBook) { openDownloadPageLocal(sBook, true); } 
@@ -715,10 +713,13 @@ function openDownloadPageLocal(slug, skipPushState = false) {
                 if (downloads >= allowedDownloads && !IS_SUPER_ADMIN) {
                     showToast("Limit Reached! Upload 1 book to get 2 more downloads.");
                     closeDownloadPageLocal();
-                    navUpload.click(); // Programmatically switches to upload tab
+                    document.getElementById('nav-upload').click(); 
                     btn.innerHTML = originalText; btn.disabled = false; return; 
                 }
-                await updateDoc(userRef, { lifetimeDownloads: increment(1) }).catch(e => console.log("Stats error ignored"));
+                
+                // Track Download & Live Update Credits
+                await updateDoc(userRef, { lifetimeDownloads: increment(1) });
+                updateLiveCredits(uploads, downloads + 1); // Live deduction
             }
             if(book.pdfLink) { window.open(book.pdfLink, '_blank'); }
             
@@ -803,10 +804,17 @@ document.getElementById('addBookForm').addEventListener('submit', async (e) => {
     try { 
         await addDoc(collection(db, "books"), newBook); 
         const userRef = doc(db, "users", auth.currentUser.uid);
-        await updateDoc(userRef, { totalUploads: increment(1) }).catch(e => console.log("Stats error ignored"));
+        await updateDoc(userRef, { totalUploads: increment(1) });
+
+        // Update Live Credits for uploading a book (+2)
+        const userSnap = await getDoc(userRef);
+        if(userSnap.exists()){
+            let data = userSnap.data();
+            updateLiveCredits(data.totalUploads, data.lifetimeDownloads || 0);
+        }
 
         await logActivity("ADD", newBook.title, newBook.image); 
-        showToast("Book Published Successfully!"); 
+        showToast("Book Published Successfully! +2 Credits Added"); 
         e.target.reset(); 
     } catch (error) { 
         if(error.message.includes("Missing or insufficient permissions")) { showToast("Failed: Firebase Security Rules Blocked Save!"); } 
