@@ -319,7 +319,7 @@ main::-webkit-scrollbar { display: none; }
 .premium-divider-new { width: 85%; height: 1.5px; margin: 30px auto; background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.8), rgba(14, 165, 233, 0.8), transparent); position: relative; border-radius: 2px; box-shadow: 0 0 12px rgba(124, 58, 237, 0.4), 0 0 12px rgba(14, 165, 233, 0.4); }
 
 .social-bar-left { display: flex; gap: 12px; padding: 0px 20px; margin-top: -20px; justify-content: flex-start; position: relative; z-index: 10; flex-shrink: 0; }
-.hero-soc-btn { width: 38px; height: 38px; border-radius: 50%; background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.25); display: flex; justify-content: center; align-items: center; font-size: 20px; text-decoration: none; transition: 0.2s ease; backdrop-filter: blur(4px); }
+.hero-soc-btn { width: 38px; height: 38px; border-radius: 50%; background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.25); display: flex; justify-content: center; align-items: center; font-size: 16px; text-decoration: none; transition: 0.2s ease; backdrop-filter: blur(4px); }
 .hero-soc-btn:active { transform: scale(0.9); background-color: rgba(255, 255, 255, 0.1); }
 .hero-soc-btn .fa-whatsapp { color: #25D366; }
 .hero-soc-btn .fa-telegram-plane { color: #3b82f6; }
@@ -334,7 +334,7 @@ main::-webkit-scrollbar { display: none; }
 
 .dev-cards-container { padding: 25px 20px 35px; display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;}
 .dev-info-card { background: rgba(20, 20, 20, 0.85); border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); }
-.dev-icon-box { width: 44px; height: 44px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: center; align-items: center; color: #ffffff; font-size: 1rem; flex-shrink: 0; box-shadow: inset 0 0 10px rgba(255,255,255,0.05); }
+.dev-icon-box { width: 46px; height: 46px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: center; align-items: center; color: #ffffff; font-size: 1rem; flex-shrink: 0; box-shadow: inset 0 0 10px rgba(255,255,255,0.05); }
 .dev-card-content { display: flex; flex-direction: column; gap: 2px; }
 .dev-card-title { font-size: 0.9rem; font-weight: 800; color: #ffffff; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px;}
 .dev-card-desc { font-size: 0.75rem; font-weight: 500; color: #a1a1aa; }
