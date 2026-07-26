@@ -33,9 +33,6 @@ let CURRENT_ADMIN_NAME = "USER";
 let CURRENT_ADMIN_EMAIL = "";
 let CURRENT_ADMIN_PHOTO = "https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png";
 
-let adminFilteredBooks = [];
-let adminCurrentPage = 1;
-const adminBooksPerPage = 10;
 let currentAuthorFilter = "All"; 
 let savedBooks = JSON.parse(localStorage.getItem('spidy_saved_books')) || [];
 
@@ -212,7 +209,7 @@ onAuthStateChanged(auth, async (user) => {
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
             
-            // Check Admin Status first
+            // Check Admin Status
             const cleanEmail = user.email ? user.email.toLowerCase().trim() : "";
             const adminDocRef = doc(db, "admins", cleanEmail);
             const adminDocSnap = await getDoc(adminDocRef);
@@ -220,11 +217,10 @@ onAuthStateChanged(auth, async (user) => {
             if (adminDocSnap.exists()) {
                 IS_SUPER_ADMIN = true;
                 document.getElementById('sidebarRoleText').innerText = "Super Admin";
-                document.getElementById('admTabManage').style.display = 'inline-flex';
+                // Manage Tab logic completely removed from here
             } else {
                 IS_SUPER_ADMIN = false;
                 document.getElementById('sidebarRoleText').innerText = "Verified User";
-                document.getElementById('admTabManage').style.display = 'none';
                 switchAdminTabLocal('add');
             }
 
@@ -272,14 +268,12 @@ onAuthStateChanged(auth, async (user) => {
         });
         mainFilteredData = [...booksData]; 
         updateAuthorFilterOptions(); applyMasterFilter(); generateNotifications();
-        adminFilteredBooks = [...booksData];
-        if(document.getElementById('adminSearchBook')) { document.getElementById('adminSearchBook').value = ''; }
-        renderAdminBooksTable(); 
+        
         isAppReady.data = true; tryTransition();
     });
 });
 
-// LOGOUT FUNCTIONALITY (Bound to both sidebar & profile buttons if they exist)
+// LOGOUT FUNCTIONALITY 
 const logoutBtn = document.getElementById('admin-logout-btn');
 if(logoutBtn) {
     logoutBtn.addEventListener('click', () => {
@@ -642,9 +636,11 @@ document.getElementById('nav-home').addEventListener('click', () => {
     window.history.replaceState({}, '', window.location.pathname);
 });
 
+/* NOTES TAB FUNCTIONALITY HELD FOR FUTURE
 document.getElementById('nav-notes').addEventListener('click', () => {
     setNavActive('nav-notes'); closeAllPanels(); switchTab('tab-notes');
 });
+*/
 
 document.getElementById('nav-upload').addEventListener('click', () => {
     if(!isUserLoggedIn) {
@@ -825,7 +821,7 @@ document.getElementById('addBookForm').addEventListener('submit', async (e) => {
 document.querySelectorAll('.adm-tab-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         let tab = 'add';
-        if(btn.id === 'admTabManage') tab = 'manage';
+        // Manage is removed
         if(btn.id === 'admTabPrompt') tab = 'prompt';
         switchAdminTabLocal(tab);
     });
@@ -835,105 +831,5 @@ function switchAdminTabLocal(tabName) {
     document.querySelectorAll('.adm-section').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.adm-tab-btn').forEach(el => el.classList.remove('active'));
     if(tabName === 'add') { document.getElementById('sectionAddBook').classList.add('active'); document.getElementById('admTabAdd').classList.add('active'); }
-    else if(tabName === 'manage') { document.getElementById('sectionManageBooks').classList.add('active'); document.getElementById('admTabManage').classList.add('active'); }
     else if(tabName === 'prompt') { document.getElementById('sectionPrompt').classList.add('active'); document.getElementById('admTabPrompt').classList.add('active'); }
 }
-
-document.getElementById('adminSearchBook').addEventListener('input', (e) => {
-    const searchInputRaw = e.target.value.trim();
-    const searchStr = searchInputRaw.toLowerCase();
-    const normalizedSearch = searchInputRaw.toLowerCase().replace(/[^a-z0-9\s]/g, '');
-    const tokens = normalizedSearch.split(/\s+/).filter(t => t.length > 0);
-    
-    adminFilteredBooks = booksData.filter(book => {
-        if (searchInputRaw.length === 0) return true;
-        let textToSearch = (book.title + " " + (book.author || "")).toLowerCase().replace(/[^a-z0-9\s]/g, '');
-        let matchesTitleAuthor = false;
-        if (tokens.length > 0) { matchesTitleAuthor = tokens.every(token => textToSearch.includes(token)); }
-        let matchesExam = false;
-        if (book.exams) {
-            let examArray = book.exams.split(',').map(e => e.trim().toLowerCase());
-            matchesExam = examArray.some(exam => exam.includes(searchStr));
-        }
-        return matchesTitleAuthor || matchesExam;
-    });
-    adminCurrentPage = 1; renderAdminBooksTable();
-});
-
-document.getElementById('admPrevPage').addEventListener('click', () => changeAdminPageLocal(-1));
-document.getElementById('admNextPage').addEventListener('click', () => changeAdminPageLocal(1));
-function changeAdminPageLocal(dir) { adminCurrentPage += dir; renderAdminBooksTable(); }
-
-function renderAdminBooksTable() {
-    if(!document.getElementById('adminBooksTableBody')) return;
-    if(document.getElementById('adminSearchBook').value.trim() === "") { adminFilteredBooks = [...booksData]; }
-    const totalPages = Math.ceil(adminFilteredBooks.length / adminBooksPerPage) || 1;
-    if(adminCurrentPage > totalPages) adminCurrentPage = totalPages;
-    if(adminCurrentPage < 1) adminCurrentPage = 1;
-
-    document.getElementById('admPageInfo').innerText = `Page ${adminCurrentPage} of ${totalPages}`;
-    document.getElementById('admPrevPage').disabled = adminCurrentPage === 1; document.getElementById('admNextPage').disabled = adminCurrentPage === totalPages;
-
-    const startIdx = (adminCurrentPage - 1) * adminBooksPerPage;
-    const paginated = adminFilteredBooks.slice(startIdx, startIdx + adminBooksPerPage);
-    const tbody = document.getElementById('adminBooksTableBody');
-    let htmlString = "";
-    
-    if(paginated.length === 0) { tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px; color:#a1a1aa; font-weight:800;">No books found matching search.</td></tr>`; return; }
-    paginated.forEach((book) => { 
-        htmlString += `<tr><td><img src="${book.image}" loading="lazy" style="width:40px; border-radius:5px;" oncontextmenu="return false;" draggable="false"></td><td><strong style="color:#fff;">${sanitizeHTML(book.title)}</strong><br><span style="font-size:0.8rem; color:#a1a1aa;">${sanitizeHTML(book.author)}</span></td><td><button class="adm-btn-edit" data-id="${book.id}"><i class="fas fa-edit"></i></button><button class="adm-btn-delete" data-id="${book.id}"><i class="fas fa-trash"></i></button></td></tr>`; 
-    });
-    tbody.innerHTML = htmlString;
-}
-
-document.getElementById('adminBooksTableBody').addEventListener('click', (e) => {
-    const editBtn = e.target.closest('.adm-btn-edit'); const delBtn = e.target.closest('.adm-btn-delete');
-    if (editBtn) openAdminEditModalLocal(editBtn.getAttribute('data-id'));
-    if (delBtn) deleteBookRecordLocal(delBtn.getAttribute('data-id'));
-});
-
-async function deleteBookRecordLocal(id) { 
-    if(confirm("Delete this book permanently?")) { 
-        try { 
-            const bookToDelete = booksData.find(x => x.id === id); 
-            await deleteDoc(doc(db, "books", id)); 
-            if(bookToDelete) { await logActivity("DELETE", bookToDelete.title, bookToDelete.image, bookToDelete); } 
-            showToast("Deleted Successfully!"); 
-        } catch (error) { showToast("Failed: Rules Blocked Delete!"); } 
-    } 
-}
-
-function openAdminEditModalLocal(id) {
-    const book = booksData.find(x => x.id === id); 
-    document.getElementById('editDocId').value = book.id; 
-    document.getElementById('edTitle').value = book.title; 
-    document.getElementById('edAuthor').value = book.author || ""; 
-    document.getElementById('edYear').value = book.year || "2026"; 
-    document.getElementById('edLang').value = book.lang || "Hindi"; 
-    document.getElementById('edExams').value = book.exams || ""; 
-    document.getElementById('edImage').value = book.image; 
-    document.getElementById('edPdfUrl').value = book.pdfLink || ""; 
-    document.getElementById('adminEditModal').style.display = 'flex';
-}
-
-document.getElementById('closeEditModalBtn').addEventListener('click', () => { document.getElementById('adminEditModal').style.display='none'; });
-
-document.getElementById('editBookForm').addEventListener('submit', async (e) => {
-    e.preventDefault(); 
-    const btn = document.getElementById('editSaveBtn'); const originalText = btn.innerHTML;
-    const pdfUrlInput = document.getElementById('edPdfUrl').value.trim();
-
-    if (!IS_SUPER_ADMIN) { 
-        const lowerUrl = pdfUrlInput.toLowerCase();
-        if (!(lowerUrl.includes('drive.google.com') || lowerUrl.includes('mega.nz') || lowerUrl.includes('mega.io') || lowerUrl.includes('mediafire.com'))) { showToast("Failed: You can only upload Google Drive, MEGA, or MediaFire links!"); return; } 
-    }
-
-    btn.innerHTML = `<span class="btn-text" style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div class="premium-loader"></div> Saving...</span>`; btn.disabled = true;
-    const docId = document.getElementById('editDocId').value;
-    const updatedData = { title: document.getElementById('edTitle').value, author: document.getElementById('edAuthor').value, year: document.getElementById('edYear').value, lang: document.getElementById('edLang').value, exams: document.getElementById('edExams').value, image: document.getElementById('edImage').value, pdfLink: pdfUrlInput };
-
-    try { 
-        await updateDoc(doc(db, "books", docId), updatedData); await logActivity("EDIT", updatedData.title, updatedData.image); 
-        document.getElementById('adminEditModal').style.display='none'; showToast("Updated Successfully!"); 
-    } catch (error) { showToast("Failed: Rules Blocked Update!"); } finally { btn.innerHTML = originalText; btn.disabled = false; }
-});
