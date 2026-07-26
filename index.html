@@ -569,36 +569,6 @@
         </div>
     </div>
 
-    <!-- Edit Modal for Vault Panel (Kept intact just in case you ever want to re-add Manage via JS, but it won't show up right now) -->
-    <div class="adm-modal-overlay" id="adminEditModal">
-        <div class="adm-modal-box">
-            <h3 style="color: #fff; margin-bottom: 15px; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; font-weight: 800;">
-                <span><i class="fas fa-pen"></i> Edit Vault Record</span>
-                <i class="fas fa-times" id="closeEditModalBtn" style="cursor: pointer; color: #a1a1aa; padding: 5px;"></i>
-            </h3>
-            <form id="editBookForm">
-                <input type="hidden" id="editDocId"> 
-                <div class="adm-form-group"><label class="adm-label">Book Title</label><input type="text" id="edTitle" class="adm-input" required autocomplete="off"></div>
-                <div class="adm-form-group"><label class="adm-label">Author Name</label><input type="text" id="edAuthor" class="adm-input" required autocomplete="off"></div>
-                <div class="adm-form-group"><label class="adm-label">Publish Year</label>
-                    <select id="edYear" class="adm-input" required>
-                        <option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option><option value="2029">2029</option><option value="2030">2030</option>
-                    </select>
-                </div>
-                <div class="adm-form-group"><label class="adm-label">Language</label>
-                    <select id="edLang" class="adm-input"><option value="Hindi">Hindi</option><option value="English">English</option><option value="Bilingual">Bilingual</option></select>
-                </div>
-                <div class="adm-form-group"><label class="adm-label">Exam Relevance</label><input type="text" id="edExams" class="adm-input" required autocomplete="off"></div>
-                <div class="adm-form-group"><label class="adm-label">Cover Image URL</label><input type="url" id="edImage" class="adm-input" required autocomplete="off"></div>
-                <div class="adm-form-group"><label class="adm-label">Direct PDF Link</label><input type="url" id="edPdfUrl" class="adm-input" required autocomplete="off"></div>
-                
-                <button type="submit" id="editSaveBtn" class="adm-submit-btn" style="background:#7c3aed; color:#fff;">
-                    <span class="btn-text" style="display: flex; align-items: center; justify-content: center; gap: 10px;"><i class="fas fa-save"></i> Save Changes</span>
-                </button>
-            </form>
-        </div>
-    </div>
-
     <!-- TOAST CONTAINER FOR NOTIFICATIONS -->
     <div id="toast"></div>
 
@@ -667,4 +637,3 @@
     <script type="module" src="./app.js"></script>
 </body>
 </html>
-
