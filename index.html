@@ -137,7 +137,7 @@
                 </div>
             </div>
 
-            <!-- MAIN CONTENT AREA (Contains all 4 Tabs) -->
+            <!-- MAIN CONTENT AREA (Contains all Tabs) -->
             <main id="mainContentArea">
                 
                 <!-- TAB 1: HOME -->
@@ -175,14 +175,14 @@
                     <div class="nav-scroll-spacer"></div>
                 </div>
 
-                <!-- TAB 2: NOTES -->
+                <!-- TAB 2: NOTES (COMMENTED OUT TEMPORARILY)
                 <div id="tab-notes" class="app-tab" style="display: none; padding-top: 0px;">
                     <div style="display: flex; justify-content: center; align-items: center; height: 80vh; padding: 20px;">
                         <img src="https://i.postimg.cc/HWXLxtXh/1000111895.jpg" style="max-width: 100%; border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 20px rgba(255,255,255,0.05);" alt="Premium Notes Coming Soon">
                     </div>
-                    <!-- Spacer for bottom navigation overlap -->
                     <div class="nav-scroll-spacer"></div>
                 </div>
+                -->
 
                 <!-- TAB 3: UPLOAD (Vault Panel) -->
                 <div id="tab-upload" class="app-tab" style="display: none; padding: 0;">
@@ -190,7 +190,6 @@
                         <div class="adm-tabs" style="display: flex; gap: 10px; padding-bottom: 12px; margin-bottom: 0;">
                             <button class="adm-tab-btn active" id="admTabAdd"><i class="fas fa-plus"></i> Add Book</button>
                             <button class="adm-tab-btn" id="admTabPrompt"><i class="fas fa-terminal"></i> Prompts</button>
-                            <button class="adm-tab-btn" id="admTabManage" style="display: none;"><i class="fas fa-list"></i> Manage</button>
                         </div>
                     </div>
 
@@ -261,33 +260,6 @@
                         <div id="sectionPrompt" class="adm-section">
                             <div id="promptsContainer" style="display: flex; flex-direction: column; gap: 25px;">
                                 <div style="text-align:center; padding:20px; color:#a1a1aa; font-weight:800;">Loading prompts...</div>
-                            </div>
-                        </div>
-
-                        <div id="sectionManageBooks" class="adm-section">
-                            <div class="seamless-header">
-                                <div class="icon-wrapper" style="color: #60a5fa; background: rgba(96, 165, 250, 0.15); border-color: rgba(96, 165, 250, 0.3); box-shadow: 0 0 15px rgba(96, 165, 250, 0.2);"><i class="fas fa-list"></i></div>
-                                <h2>Manage Vault Inventory</h2>
-                            </div>
-                                
-                            <div class="seamless-form-container">
-                                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-                                    <div style="flex: 1; position: relative;">
-                                        <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #a1a1aa;"></i>
-                                        <input type="text" id="adminSearchBook" class="adm-input" placeholder="Search titles, authors..." style="padding-left: 40px;">
-                                    </div>
-                                </div>
-                                <div style="overflow-x: auto; padding-bottom: 10px;">
-                                    <table class="adm-table">
-                                        <thead><tr><th>Cover</th><th>Info</th><th>Actions</th></tr></thead>
-                                        <tbody id="adminBooksTableBody"></tbody>
-                                    </table>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                                    <button class="adm-page-btn" id="admPrevPage"><i class="fas fa-chevron-left"></i> Prev</button>
-                                    <span id="admPageInfo" style="color: #a1a1aa; font-size: 0.9rem; font-weight: 800;">Page 1 of 1</span>
-                                    <button class="adm-page-btn" id="admNextPage">Next <i class="fas fa-chevron-right"></i></button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -368,10 +340,12 @@
                     <div class="nav-icon-pill"><i class="fas fa-home"></i></div>
                     <span class="nav-label">𝐇𝐨𝐦𝐞</span>
                 </div>
+                <!-- NOTES NAV ITEM DISABLED TEMPORARILY
                 <div class="bottom-nav-item" id="nav-notes" onclick="updateHeaderForTab('notes')">
                     <div class="nav-icon-pill"><i class="fas fa-file-alt"></i></div>
                     <span class="nav-label">𝐍𝐨𝐭𝐞𝐬</span>
                 </div>
+                -->
                 <div class="bottom-nav-item" id="nav-upload" onclick="updateHeaderForTab('upload')">
                     <div class="nav-icon-pill"><i class="fas fa-cloud-upload-alt"></i></div>
                     <span class="nav-label">𝐔𝐩𝐥𝐨𝐚𝐝</span>
@@ -595,7 +569,7 @@
         </div>
     </div>
 
-    <!-- Edit Modal for Vault Panel -->
+    <!-- Edit Modal for Vault Panel (Kept intact just in case you ever want to re-add Manage via JS, but it won't show up right now) -->
     <div class="adm-modal-overlay" id="adminEditModal">
         <div class="adm-modal-box">
             <h3 style="color: #fff; margin-bottom: 15px; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; font-weight: 800;">
@@ -693,3 +667,4 @@
     <script type="module" src="./app.js"></script>
 </body>
 </html>
+
