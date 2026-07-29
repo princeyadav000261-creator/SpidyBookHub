@@ -1,10 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, setDoc, getDoc, increment, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, orderBy, setDoc, getDoc, increment, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
 
 // ==========================================
-// 1. FIREBASE CONFIGURATION (Only for Text Data & Auth)
+// 1. FIREBASE CONFIGURATION
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyASYcouPGDMx5_V9ZUZ3RcFifCxcbpcst8",
@@ -23,11 +23,11 @@ const provider = new GoogleAuthProvider();
 const analytics = getAnalytics(app); 
 
 // ==========================================
-// 2. CLOUDFLARE R2 API CONFIGURATION
+// 2. CLOUDFLARE R2 DIRECT API CONFIGURATION
 // ==========================================
-// NOTE: Replace this with your actual Cloudflare Worker URL that handles R2 uploads
+// Bhai, jab tak backend nahi banta, apni R2 API details yahan daal do:
 const R2_UPLOAD_API_URL = "https://your-worker-name.your-subdomain.workers.dev/upload";
-const R2_API_TOKEN = "YOUR_SECURE_API_HASH_TOKEN"; // Token if your worker requires authorization
+const R2_API_TOKEN = "YOUR_SECURE_API_HASH_TOKEN";
 
 // ==========================================
 // GLOBAL VARIABLES
@@ -46,10 +46,7 @@ let CURRENT_ADMIN_NAME = "USER";
 let CURRENT_ADMIN_EMAIL = "";
 let CURRENT_ADMIN_PHOTO = "https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png";
 
-let currentAuthorFilter = "All"; 
 let savedBooks = JSON.parse(localStorage.getItem('spidy_saved_books')) || [];
-
-// Variables to hold selected files for R2 Upload
 let selectedCoverFile = null;
 let selectedPdfFile = null;
 
@@ -71,7 +68,7 @@ function showToast(message) {
     if (lowerMsg.includes('deleted')) {
         toast.style.background = 'rgba(239, 68, 68, 0.95)'; 
         toast.innerHTML = `<i class="fas fa-trash"></i> <span id="toastMsg">${sanitizeHTML(message)}</span>`;
-    } else if (lowerMsg.includes('failed') || lowerMsg.includes('error') || lowerMsg.includes('invalid') || lowerMsg.includes('limit') || lowerMsg.includes('exhausted') || lowerMsg.includes('logout') || lowerMsg.includes('logged out') || lowerMsg.includes('select')) {
+    } else if (lowerMsg.includes('failed') || lowerMsg.includes('error') || lowerMsg.includes('limit') || lowerMsg.includes('select')) {
         toast.style.background = 'rgba(239, 68, 68, 0.95)'; 
         toast.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span id="toastMsg">${sanitizeHTML(message)}</span>`;
     } else {
@@ -146,7 +143,12 @@ function tryTransition() {
                             setTimeout(() => loginOverlay.style.opacity = '1', 10);
                         }
                     } else {
-                        setTimeout(triggerWhatsAppPopup, 15000); 
+                        setTimeout(() => {
+                            if(!popupShown && !isDeepLinkLoad) {
+                                popupShown = true;
+                                document.getElementById("popupOverlay").style.display = "flex";
+                            }
+                        }, 15000); 
                     }
                     const loader = document.getElementById("loaderScreen");
                     loader.style.opacity = "0"; 
@@ -159,12 +161,6 @@ function tryTransition() {
     }
 }
 
-function triggerWhatsAppPopup() {
-    if(!popupShown && !isDeepLinkLoad) {
-        popupShown = true;
-        document.getElementById("popupOverlay").style.display = "flex";
-    }
-}
 document.getElementById('joinWhatsappBtn').addEventListener('click', () => { window.open('https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A', '_blank'); });
 document.getElementById('laterPopupBtn').addEventListener('click', () => { document.getElementById("popupOverlay").style.display = "none"; });
 
@@ -172,12 +168,10 @@ document.getElementById('laterPopupBtn').addEventListener('click', () => { docum
 // QUOTE GENERATOR
 // ==========================================
 const quotes = [
-    { text: "Be the change that you wish to see in the world.", author: "Mahatma Gandhi" },
+    { text: "Knowledge Builds Power, Hard Work Creates Success, Never Give Up!", author: "MADxPRINCE" },
     { text: "I have not failed. I've just found 10,000 ways that won't work.", author: "Thomas A. Edison" },
     { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
-    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
-    { text: "Whatever you are, be a good one.", author: "Abraham Lincoln" }
+    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" }
 ];
 const todayDays = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
 const currentQuoteIndex = todayDays % quotes.length;
@@ -275,7 +269,7 @@ onAuthStateChanged(auth, async (user) => {
             booksData.push(data);
         });
         mainFilteredData = [...booksData]; 
-        updateAuthorFilterOptions(); applyMasterFilter(); generateNotifications();
+        updateDynamicFilters(); applyMasterFilter(); generateNotifications();
         
         isAppReady.data = true; tryTransition();
     });
@@ -290,7 +284,7 @@ function closeLoginOverlayLocal() {
         if (isDeepLinkLoad && !isUserLoggedIn) {
             isDeepLinkLoad = false;
             window.history.replaceState({}, '', window.location.pathname);
-            setTimeout(triggerWhatsAppPopup, 15000);
+            document.getElementById("popupOverlay").style.display = "flex";
         }
     }, 500);
 }
@@ -333,48 +327,88 @@ document.getElementById('googleSignInBtn').addEventListener('click', async () =>
 });
 
 // ==========================================
-// BOOKMARK SYSTEM
+// 🌟 ADVANCED DUAL FILTER SYSTEM (APPROACH B) 🌟
 // ==========================================
-function toggleBookmarkLocal(iconElement, slug) {
-    const index = savedBooks.indexOf(slug);
-    if (index === -1) {
-        savedBooks.push(slug);
-        iconElement.className = "fas fa-bookmark"; 
-    } else {
-        savedBooks.splice(index, 1);
-        iconElement.className = "far fa-bookmark"; 
-    }
-    localStorage.setItem('spidy_saved_books', JSON.stringify(savedBooks));
-    if(document.getElementById('bookmarks-panel').classList.contains('active')) { renderSavedBooksUI(); }
-}
 
-// ==========================================
-// SEARCH & FILTER SYSTEM
-// ==========================================
-function updateAuthorFilterOptions() {
-    const authorMap = new Map();
+const EXAM_CATEGORY_MAP = {
+    "SSC": ["SSC", "CGL", "CHSL", "MTS", "CPO", "GD", "STENOGRAPHER", "SELECTION POST"],
+    "Railway": ["RAILWAY", "RRB", "NTPC", "GROUP D", "ALP", "TECHNICIAN", "RPF"],
+    "Defence": ["NDA", "CDS", "AFCAT", "NAVY", "ARMY", "AIRFORCE", "AGNIVEER"],
+    "Banking": ["BANK", "IBPS", "SBI", "PO", "CLERK", "RBI", "LIC"],
+    "Teaching": ["CTET", "STET", "UPTET", "KVS", "NVS", "BPSC TRE", "DSSSB"],
+    "State PSC & UPSC": ["UPSC", "BPSC", "UPPSC", "MPPSC", "STATE PSC", "PCS", "CIVIL SERVICES"],
+    "Police": ["POLICE", "UP POLICE", "DELHI POLICE", "BIHAR POLICE", "SI", "CONSTABLE", "DAROGA"],
+    "Engg & Medical": ["JEE", "NEET", "IIT", "GATE", "BITSAT", "MAINS", "ADVANCED"]
+};
+
+let currentSelectedCategory = "All";
+let currentSelectedLanguage = "All";
+
+// Auto-generate dynamic boards/categories
+function updateDynamicFilters() {
+    const activeCategories = new Set();
+    
     booksData.forEach(book => {
-        if(!book.author) return;
-        let normalized = book.author.toLowerCase().replace(/\s+/g, ' ').trim();
-        if(!authorMap.has(normalized)) { authorMap.set(normalized, book.author.trim()); }
+        if(!book.exams) return;
+        let bookExamsString = book.exams.toUpperCase();
+        let matchedMainCategory = false;
+        
+        // 1. Check Smart Dictionary
+        for (let mainCategory in EXAM_CATEGORY_MAP) {
+            let keywords = EXAM_CATEGORY_MAP[mainCategory];
+            if (keywords.some(keyword => bookExamsString.includes(keyword))) {
+                activeCategories.add(mainCategory);
+                matchedMainCategory = true;
+            }
+        }
+        
+        // 2. Extract Dynamic Classes & Boards if not in Dictionary
+        if (!matchedMainCategory) {
+            let examsArray = book.exams.split(',');
+            examsArray.forEach(exam => {
+                let cleanExam = exam.trim().toUpperCase();
+                // Add dynamically if it contains "CLASS", "BOARD" or is an unmapped string
+                if (cleanExam.length > 0) {
+                    activeCategories.add(cleanExam);
+                }
+            });
+        }
     });
-    const uniqueAuthors = Array.from(authorMap.values()).sort((a, b) => a.localeCompare(b));
-    const grid = document.getElementById('authorFilterGrid');
-    let html = `<div class="f-pill ${currentAuthorFilter === 'All' ? 'active' : ''}" data-author="All">All</div>`;
-    uniqueAuthors.forEach(author => {
-        let normAuthor = author.toLowerCase().replace(/\s+/g, ' ').trim();
-        let normCurrent = currentAuthorFilter.toLowerCase().replace(/\s+/g, ' ').trim();
-        let isActive = (normAuthor === normCurrent) ? 'active' : '';
-        html += `<div class="f-pill ${isActive}" data-author="${sanitizeHTML(author).replace(/'/g, "\\'")}">${sanitizeHTML(author)}</div>`;
+
+    const sortedCategories = Array.from(activeCategories).sort();
+    const catGrid = document.getElementById('categoryFilterGrid'); 
+    
+    let html = `<div class="f-pill ${currentSelectedCategory === 'All' ? 'active' : ''}" data-category="All">All</div>`;
+    sortedCategories.forEach(category => {
+        let isActive = (category === currentSelectedCategory) ? 'active' : '';
+        html += `<div class="f-pill ${isActive}" data-category="${sanitizeHTML(category)}">${sanitizeHTML(category)}</div>`;
     });
-    grid.innerHTML = html;
+    catGrid.innerHTML = html;
 }
 
-document.getElementById('authorFilterGrid').addEventListener('click', (e) => {
+// Click Listener for Categories
+document.getElementById('categoryFilterGrid').addEventListener('click', (e) => {
     if(e.target.classList.contains('f-pill')) {
-        currentAuthorFilter = e.target.getAttribute('data-author');
-        updateAuthorFilterOptions(); document.getElementById('filterBottomOverlay').classList.remove('active'); applyMasterFilter(); 
+        // Remove active class from all, add to clicked
+        document.querySelectorAll('#categoryFilterGrid .f-pill').forEach(el => el.classList.remove('active'));
+        e.target.classList.add('active');
+        currentSelectedCategory = e.target.getAttribute('data-category');
     }
+});
+
+// Click Listener for Languages
+document.getElementById('languageFilterGrid').addEventListener('click', (e) => {
+    if(e.target.classList.contains('f-pill')) {
+        document.querySelectorAll('#languageFilterGrid .f-pill').forEach(el => el.classList.remove('active'));
+        e.target.classList.add('active');
+        currentSelectedLanguage = e.target.getAttribute('data-lang');
+    }
+});
+
+// Apply Button Logic
+document.getElementById('applyFiltersBtn').addEventListener('click', () => {
+    document.getElementById('filterBottomOverlay').classList.remove('active'); 
+    applyMasterFilter();
 });
 
 function applyMasterFilter() {
@@ -384,31 +418,50 @@ function applyMasterFilter() {
     let searchTokens = normalizedSearch.split(/\s+/).filter(token => token.length > 0);
 
     mainFilteredData = booksData.filter(book => {
-        let matchesAuthor = true;
-        if (currentAuthorFilter !== "All") {
-            let normFilter = currentAuthorFilter.toLowerCase().replace(/\s+/g, ' ').trim();
-            let normBookAuth = (book.author || "").toLowerCase().replace(/\s+/g, ' ').trim();
-            matchesAuthor = (normFilter === normBookAuth);
+        
+        // 1. DUAL FILTER CHECK (Category + Language)
+        let matchesCategory = true;
+        if (currentSelectedCategory !== "All") {
+            matchesCategory = false; 
+            if (book.exams) {
+                let bookExamsString = book.exams.toUpperCase();
+                let keywordsToCheck = EXAM_CATEGORY_MAP[currentSelectedCategory] || [currentSelectedCategory];
+                matchesCategory = keywordsToCheck.some(keyword => bookExamsString.includes(keyword));
+            }
         }
+
+        let matchesLanguage = true;
+        if (currentSelectedLanguage !== "All") {
+            let bookLang = (book.lang || "").toLowerCase();
+            let selectedLang = currentSelectedLanguage.toLowerCase();
+            // If user selects Hindi, show Hindi AND Bilingual. Same for English.
+            if(selectedLang === 'hindi' || selectedLang === 'english') {
+                matchesLanguage = bookLang.includes(selectedLang) || bookLang.includes('bilingual');
+            } else {
+                matchesLanguage = bookLang.includes(selectedLang);
+            }
+        }
+
+        // 2. SEARCH BAR CHECK
         let matchesSearch = true;
         if (searchInputRaw.length > 0) {
-            let textToSearch = (book.title + " " + (book.author || "")).toLowerCase().replace(/[^a-z0-9\s]/g, '');
-            let matchesTitleAuthor = false;
-            if (searchTokens.length > 0) { matchesTitleAuthor = searchTokens.every(token => textToSearch.includes(token)); }
-            let matchesExam = false;
-            if (book.exams) {
-                let examArray = book.exams.split(',').map(e => e.trim().toLowerCase());
-                matchesExam = examArray.some(exam => exam.includes(searchStr));
+            let textToSearch = (book.title + " " + (book.author || "") + " " + (book.exams || "")).toLowerCase().replace(/[^a-z0-9\s]/g, '');
+            matchesSearch = false;
+            if (searchTokens.length > 0) { 
+                matchesSearch = searchTokens.every(token => textToSearch.includes(token)); 
             }
-            matchesSearch = matchesTitleAuthor || matchesExam;
         }
-        return matchesAuthor && matchesSearch;
+        
+        return matchesCategory && matchesLanguage && matchesSearch;
     });
+    
     loadedCount = 0; 
     if(mainFilteredData.length > 0) { 
-        document.getElementById('no-results-msg').style.display = 'none'; renderBooksUI(0, getBatchSize() * 2, mainFilteredData); 
+        document.getElementById('no-results-msg').style.display = 'none'; 
+        renderBooksUI(0, getBatchSize() * 2, mainFilteredData); 
     } else { 
-        document.getElementById("bookContainer").innerHTML = ""; document.getElementById('no-results-msg').style.display = 'flex'; 
+        document.getElementById("bookContainer").innerHTML = ""; 
+        document.getElementById('no-results-msg').style.display = 'flex'; 
     }
 }
 
@@ -474,6 +527,19 @@ document.getElementById('bookContainer').addEventListener('click', (e) => {
         else { openDownloadPageLocal(slug); }
     }
 });
+
+function toggleBookmarkLocal(iconElement, slug) {
+    const index = savedBooks.indexOf(slug);
+    if (index === -1) {
+        savedBooks.push(slug);
+        iconElement.className = "fas fa-bookmark"; 
+    } else {
+        savedBooks.splice(index, 1);
+        iconElement.className = "far fa-bookmark"; 
+    }
+    localStorage.setItem('spidy_saved_books', JSON.stringify(savedBooks));
+    if(document.getElementById('bookmarks-panel').classList.contains('active')) { renderSavedBooksUI(); }
+}
 
 function renderSavedBooksUI() {
     const container = document.getElementById("savedBooksContainer");
@@ -663,38 +729,31 @@ document.getElementById('shareBookBtn').addEventListener('click', () => {
     if (navigator.share) navigator.share({ title: activeBookTitle, text: "Download free book", url: shareUrl }); else { navigator.clipboard.writeText(shareUrl); alert("Link Copied!"); }
 });
 
-
 // ==========================================
-// 🚀 CLOUDFLARE R2 UPLOAD LOGIC & UI (XHR PROGRESS)
+// 🚀 DIRECT CLOUDFLARE R2 UPLOAD LOGIC
 // ==========================================
 
-// 1. File Selection Listeners for Cover Image
 ['fileCoverGallery', 'fileCoverBrowse'].forEach(id => {
     document.getElementById(id).addEventListener('change', function(e) {
         if(e.target.files.length > 0) {
             selectedCoverFile = e.target.files[0];
-            // Update UI to show file name instead of "Drag & Drop..."
             e.target.closest('.uc-actions').querySelector('p').innerText = "Selected: " + selectedCoverFile.name;
         }
     });
 });
 
-// 2. File Selection Listeners for PDF
 ['filePdfGallery', 'filePdfBrowse'].forEach(id => {
     document.getElementById(id).addEventListener('change', function(e) {
         if(e.target.files.length > 0) {
             selectedPdfFile = e.target.files[0];
-            // Update UI to show file name instead of "Drag & Drop..."
             e.target.closest('.uc-actions').querySelector('p').innerText = "Selected: " + selectedPdfFile.name;
         }
     });
 });
 
-// 3. XHR Upload Function to Cloudflare R2
 function uploadFileToR2(file, type) {
     return new Promise((resolve, reject) => {
         
-        // Show R2 Glowing Loader Overlay
         const r2Overlay = document.getElementById('r2UploadOverlay');
         const progressBar = document.getElementById('r2ProgressBar');
         const progressText = document.getElementById('r2ProgressText');
@@ -702,32 +761,24 @@ function uploadFileToR2(file, type) {
         const icon = document.getElementById('r2UploadIcon');
         const title = document.getElementById('r2UploadTitle');
 
-        // Dynamic Text & Icon based on Type
         if(type === 'image') {
-            icon.className = "fas fa-image";
-            title.innerText = "Upload Cover Image";
-            statusText.innerText = "Uploading Cover Image...";
+            icon.className = "fas fa-image"; title.innerText = "Upload Cover Image"; statusText.innerText = "Uploading Cover Image...";
         } else {
-            icon.className = "fas fa-file-pdf";
-            title.innerText = "Upload PDF File";
-            statusText.innerText = "Securely transferring to Cloudflare R2...";
+            icon.className = "fas fa-file-pdf"; title.innerText = "Upload PDF File"; statusText.innerText = "Securely transferring to Cloudflare R2...";
         }
 
         r2Overlay.style.display = 'flex';
         progressBar.style.width = '0%';
         progressText.innerText = '0%';
 
-        // Setup XHR
         const xhr = new XMLHttpRequest();
         xhr.open("POST", R2_UPLOAD_API_URL, true);
-        xhr.setRequestHeader("Authorization", "Bearer " + R2_API_TOKEN); // Adjust header based on your Worker logic
+        xhr.setRequestHeader("Authorization", "Bearer " + R2_API_TOKEN); 
         
-        // Form Data
         const formData = new FormData();
         formData.append("file", file);
         formData.append("type", type);
 
-        // Upload Progress Tracker
         xhr.upload.addEventListener("progress", (event) => {
             if (event.lengthComputable) {
                 let percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -740,23 +791,18 @@ function uploadFileToR2(file, type) {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     const response = JSON.parse(xhr.responseText);
-                    // Hide loader after a tiny delay for smoothness
                     setTimeout(() => { r2Overlay.style.display = 'none'; }, 500);
-                    // Assuming your worker returns { url: "https://r2.yourdomain.com/filename.pdf" }
-                    resolve(response.url);
+                    resolve(response.url); 
                 } catch(e) {
-                    r2Overlay.style.display = 'none';
-                    reject("Invalid Response from Server");
+                    r2Overlay.style.display = 'none'; reject("Invalid Response from Server");
                 }
             } else {
-                r2Overlay.style.display = 'none';
-                reject("Upload Failed: " + xhr.status);
+                r2Overlay.style.display = 'none'; reject("Upload Failed: " + xhr.status);
             }
         };
 
         xhr.onerror = function() {
-            r2Overlay.style.display = 'none';
-            reject("Network Error during upload.");
+            r2Overlay.style.display = 'none'; reject("Network Error during upload.");
         };
 
         xhr.send(formData);
@@ -771,7 +817,6 @@ document.getElementById('addBookForm').addEventListener('submit', async (e) => {
     const btn = document.getElementById('publishBtn'); 
     const originalText = btn.innerHTML;
 
-    // Validation
     if (!selectedCoverFile) { showToast("Please select a Cover Image!"); return; }
     if (!selectedPdfFile) { showToast("Please select a PDF file!"); return; }
 
@@ -779,13 +824,9 @@ document.getElementById('addBookForm').addEventListener('submit', async (e) => {
     btn.disabled = true;
 
     try {
-        // Step 1: Upload Cover Image to Cloudflare R2
         let coverR2Url = await uploadFileToR2(selectedCoverFile, 'image');
-
-        // Step 2: Upload PDF File to Cloudflare R2
         let pdfR2Url = await uploadFileToR2(selectedPdfFile, 'pdf');
 
-        // Step 3: Prepare Data for Firestore (Only text format goes to Firebase!)
         const titleInput = document.getElementById('inTitle').value; 
         const newBook = { 
             title: titleInput, 
@@ -793,17 +834,15 @@ document.getElementById('addBookForm').addEventListener('submit', async (e) => {
             year: document.getElementById('inYear').value, 
             lang: document.getElementById('inLang').value, 
             exams: document.getElementById('inExams').value, 
-            image: coverR2Url, // Cloudflare R2 URL
-            pdfLink: pdfR2Url, // Cloudflare R2 URL
+            image: coverR2Url, 
+            pdfLink: pdfR2Url, 
             dateAdded: new Date().toLocaleDateString('en-GB').toUpperCase(), 
             createdAt: new Date().getTime(), 
             uploaderUid: auth.currentUser.uid 
         };
 
-        // Step 4: Save metadata to Firebase Firestore
         await addDoc(collection(db, "books"), newBook); 
         
-        // Step 5: Update Upload Credits
         const userRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(userRef, { totalUploads: increment(1) });
         const userSnap = await getDoc(userRef);
@@ -813,11 +852,8 @@ document.getElementById('addBookForm').addEventListener('submit', async (e) => {
         }
 
         showToast("Book Published Successfully!"); 
-        
-        // Reset Form & Variables
         e.target.reset(); 
-        selectedCoverFile = null;
-        selectedPdfFile = null;
+        selectedCoverFile = null; selectedPdfFile = null;
         document.querySelectorAll('.uc-actions p').forEach(p => p.innerText = "Drag & Drop File");
 
     } catch (error) { 
@@ -825,8 +861,7 @@ document.getElementById('addBookForm').addEventListener('submit', async (e) => {
         if(error.message && error.message.includes("Missing or insufficient permissions")) { showToast("Failed: Firebase Security Rules Blocked Save!"); } 
         else { showToast("Failed: " + error); }
     } finally { 
-        btn.innerHTML = originalText; 
-        btn.disabled = false; 
+        btn.innerHTML = originalText; btn.disabled = false; 
     }
 });
 
@@ -842,4 +877,3 @@ function switchAdminTabLocal(tabName) {
     if(tabName === 'add') { document.getElementById('sectionAddBook').classList.add('active'); document.getElementById('admTabAdd').classList.add('active'); }
     else if(tabName === 'prompt') { document.getElementById('sectionPrompt').classList.add('active'); document.getElementById('admTabPrompt').classList.add('active'); }
 }
-
