@@ -262,7 +262,7 @@
                     <div class="nav-scroll-spacer"></div>
                 </div>
 
-                <!-- TAB 4: ABOUT -->
+                <!-- TAB 4: ABOUT (DEV TAB - NO FOOTER) -->
                 <div id="tab-about" class="app-tab" style="display: none; padding: 0;">
                     <div class="dev-hero-banner" id="aboutBanner" style="width: 100%; margin: 0;">
                         <div class="banner-fade-bottom"></div>
@@ -320,10 +320,8 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="nav-scroll-spacer"></div>
                 </div>
-
             </main>
 
             <!-- PERSISTENT BOTTOM NAVIGATION BAR -->
@@ -359,8 +357,7 @@
 
             <!-- MY PROFILE PANEL -->
             <div class="overlay-panel" id="my-profile-panel">
-                <div class="dev-scroll-area" style="padding-top: 0; display: flex; flex-direction: column; min-height: 100vh;">
-                    
+                <div class="dev-scroll-area" style="display: flex; flex-direction: column; padding: 0;">
                     <div style="flex: 1;">
                         <button class="back-btn dev-back-btn" id="closeProfileBtn" style="z-index: 100;"><i class="fas fa-arrow-left"></i></button>
                         <button class="back-btn dev-back-btn" id="admin-logout-btn" style="right: 20px; left: auto; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); z-index: 100; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);"><i class="fas fa-power-off"></i></button>
@@ -400,7 +397,6 @@
                                 </div>
                             </div>
 
-                            <!-- CREDITS MOVED TO BOTTOM LEFT -->
                             <div class="stat-card card-credit">
                                 <div class="icon-box" style="color: #ef4444; background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);">
                                     <i class="fas fa-bolt"></i>
@@ -411,7 +407,6 @@
                                 </div>
                             </div>
 
-                            <!-- RANK MOVED TO BOTTOM RIGHT -->
                             <div class="stat-card card-premium">
                                 <div class="icon-box" style="box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);"><i class="fas fa-crown"></i></div>
                                 <div class="stat-info">
@@ -422,15 +417,15 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
-                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: 8.5px; font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;">
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
             </div>
 
             <!-- Download Modal -->
-            <div class="download-modal" id="downloadModal">
+            <div class="download-modal" id="downloadModal" style="display: none; flex-direction: column;">
                 <div class="modal-header-fixed">
                     <div class="header-content-wrapper" style="display: flex; align-items: center; gap: 15px; flex-grow: 1;">
                         <button class="back-btn" id="closeDlBtn"><i class="fas fa-arrow-left"></i></button>
@@ -438,7 +433,7 @@
                     </div>
                     <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" class="header-right-logo" alt="Logo" oncontextmenu="return false;" draggable="false">
                 </div>
-                <div class="dl-content-wrapper" style="display: flex; flex-direction: column; min-height: 100vh; padding: 0;">
+                <div class="dl-content-wrapper" style="display: flex; flex-direction: column; flex: 1; padding: 0;">
                     
                     <div style="padding: 15px 20px 30px; flex: 1;">
                         <div class="dl-img-wrapper-outer"><div class="dl-img-container"><img id="dlPreviewImage" class="dl-preview-image" src="" oncontextmenu="return false;" draggable="false"><div class="dl-powered-badge disable-long-press">POWERED BY : MADxPRINCE</div></div></div>
@@ -460,8 +455,8 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
-                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: 8.5px; font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;">
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
@@ -476,7 +471,7 @@
                     </div>
                     <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" class="header-right-logo" alt="Logo" oncontextmenu="return false;" draggable="false">
                 </div>
-                <div class="dmca-content" style="display: flex; flex-direction: column; min-height: 100vh; padding: 0;">
+                <div class="dmca-content" style="display: flex; flex-direction: column; padding: 0;">
                     
                     <div style="padding: 20px 20px 30px; flex: 1;">
                         <div style="margin-bottom: 15px;">
@@ -492,8 +487,8 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
-                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: 8.5px; font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;">
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
@@ -527,7 +522,7 @@
                     </div>
                     <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" class="header-right-logo" alt="Logo" oncontextmenu="return false;" draggable="false">
                 </div>
-                <div class="dmca-content" style="display: flex; flex-direction: column; min-height: 100vh; padding: 0;">
+                <div class="dmca-content" style="display: flex; flex-direction: column; padding: 0;">
                     
                     <div style="padding: 20px 0 30px; flex: 1;">
                         <div class="dmca-hero">
@@ -551,8 +546,6 @@
                             <a href="https://t.me/SpidyBookHub_Bot" target="_blank" class="dmca-contact-link"><i class="fab fa-telegram-plane"></i> Spidy Book Hub Support</a>
                             <p style="margin-top: 15px; font-weight: bold; color: #a1a1aa; font-size: 0.75rem;">⏱ Review Time: 24–48 Hours</p>
                         </div>
-                        
-                        <!-- MISSING CARDS ADDED BACK -->
                         <div class="dmca-section">
                             <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-notice"><i class="fas fa-shield-alt"></i></span>Important Notice</h2>
                             <p>The materials shared on this platform are intended for educational, research, review and reference purposes only. Users are encouraged to support authors and publishers by purchasing original books whenever possible.</p>
@@ -563,8 +556,8 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
-                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: 8.5px; font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;">
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
