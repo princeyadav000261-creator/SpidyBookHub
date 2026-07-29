@@ -185,7 +185,6 @@
                         <div id="sectionAddBook" class="adm-section active">
                             <form id="addBookForm" class="seamless-form-container">
                                 
-                                <!-- ENTER BOOK DETAILS HEADER (Added exactly like the image) -->
                                 <div class="seamless-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed rgba(255,255,255,0.15);">
                                     <div class="icon-wrapper" style="width: 44px; height: 44px; background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 12px; display: flex; justify-content: center; align-items: center; color: #c084fc; font-size: 18px; box-shadow: 0 0 15px rgba(124, 58, 237, 0.2); flex-shrink: 0;">
                                         <i class="fas fa-pen-nib"></i>
@@ -221,7 +220,6 @@
                                             </div>
                                         </div>
                                         <div class="uc-footer">JPG, PNG, WEBP (Uploaded securely to Cloudflare R2)</div>
-                                        <!-- This will hold the URL returned from R2 -->
                                         <input type="hidden" id="inImage" value="">
                                     </div>
                                 </div>
@@ -245,7 +243,6 @@
                                             </div>
                                         </div>
                                         <div class="uc-footer">PDF FILES (Uploaded securely to Cloudflare R2)</div>
-                                        <!-- This will hold the URL returned from R2 -->
                                         <input type="hidden" id="inPdfUrl" value="">
                                     </div>
                                 </div>
@@ -324,7 +321,12 @@
                         </div>
                     </div>
                     
-                    <div class="nav-scroll-spacer"></div>
+                    <!-- Appended specific inline fix for Developer About Page Footer -->
+                    <div style="margin-top: auto; padding: 25px 15px 100px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.8px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);">
+                        <span style="white-space: nowrap;">© 2026 SPIDY BOOK HUB</span>
+                        <span style="color: #3f3f46;">|</span>
+                        <span style="white-space: nowrap;">MADE WITH <i class="fas fa-heart" style="color: #ff4757; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</span>
+                    </div>
                 </div>
 
             </main>
@@ -383,7 +385,7 @@
                         <div id="profile-email-ui" style="display: none; font-size: 0.95rem; color: #a1a1aa; font-weight: 600; margin-top: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;"></div>
                     </div>
 
-                    <!-- Cleaned up Stats Container (Only 4 Premium Cards) -->
+                    <!-- Cleaned up Stats Container: CREDITS and RANK SWAPPED -->
                     <div class="stats-container">
                         <div class="stat-card card-download">
                             <div class="icon-box" style="box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);"><i class="fas fa-cloud-download-alt"></i></div>
@@ -401,14 +403,7 @@
                             </div>
                         </div>
 
-                        <div class="stat-card card-premium">
-                            <div class="icon-box" style="box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);"><i class="fas fa-crown"></i></div>
-                            <div class="stat-info">
-                                <div class="stat-label">Rank</div>
-                                <div class="stat-value premium-text" id="profile-rank">#--</div>
-                            </div>
-                        </div>
-                        
+                        <!-- CREDITS MOVED TO BOTTOM LEFT -->
                         <div class="stat-card card-credit">
                             <div class="icon-box" style="color: #ef4444; background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);">
                                 <i class="fas fa-bolt"></i>
@@ -418,10 +413,22 @@
                                 <div class="stat-value" id="profile-credits">--</div>
                             </div>
                         </div>
+
+                        <!-- RANK MOVED TO BOTTOM RIGHT -->
+                        <div class="stat-card card-premium">
+                            <div class="icon-box" style="box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);"><i class="fas fa-crown"></i></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Rank</div>
+                                <div class="stat-value premium-text" id="profile-rank">#--</div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="premium-copyright">
-                        © 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
+                    <div style="margin-top: auto; padding: 25px 15px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.8px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);">
+                        <span style="white-space: nowrap;">© 2026 SPIDY BOOK HUB</span>
+                        <span style="color: #3f3f46;">|</span>
+                        <span style="white-space: nowrap;">MADE WITH <i class="fas fa-heart" style="color: #ff4757; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</span>
                     </div>
                 </div>
             </div>
@@ -435,25 +442,33 @@
                     </div>
                     <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" class="header-right-logo" alt="Logo" oncontextmenu="return false;" draggable="false">
                 </div>
-                <div class="dl-content-wrapper">
-                    <div class="dl-img-wrapper-outer"><div class="dl-img-container"><img id="dlPreviewImage" class="dl-preview-image" src="" oncontextmenu="return false;" draggable="false"><div class="dl-powered-badge disable-long-press">POWERED BY : MADxPRINCE</div></div></div>
-                    <h2 class="dl-title" id="dlBookTitle"></h2><div class="dl-author" id="dlBookAuthor"></div>
-                    <button id="dlPdfLinkBtn" class="dl-main-btn disable-long-press"><i class="fas fa-download"></i> Download PDF</button>
-                    
-                    <div id="dlYoutubeLinkBtn" class="dl-box disable-long-press"><i class="fab fa-youtube icon" style="color: #ef4444;"></i><div><div class="dl-box-title">Watch Tutorials</div><div class="dl-box-sub">How to download books?</div></div></div>
-                    <div class="dl-box disable-long-press" id="shareBookBtn"><i class="fas fa-share-nodes icon"></i><div><div class="dl-box-title">Share this book</div><div class="dl-box-sub">Send this book to friends</div></div></div>
-                    
-                    <div class="exam-rel-box"><div class="exam-header"><i class="fas fa-ribbon"></i> EXAM RELEVANCE</div><div class="exam-tags" id="dlModalTags"></div></div>
-                    
-                    <div class="dl-social-container">
-                        <div class="dev-social-row">
-                            <a href="https://youtube.com/@madxprince" target="_blank" class="dev-soc-btn dev-yt"><i class="fab fa-youtube"></i></a>
-                            <a href="https://www.instagram.com/madxprince_3030" target="_blank" class="dev-soc-btn dev-ig"><i class="fab fa-instagram"></i></a>
-                            <a href="https://t.me/MultiverseBooks" target="_blank" class="dev-soc-btn dev-tg"><i class="fab fa-telegram-plane"></i></a>
-                            <a href="https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A" target="_blank" class="dev-soc-btn dev-wa"><i class="fab fa-whatsapp"></i></a>
+                <div class="dl-content-wrapper" style="display: flex; flex-direction: column; min-height: 100%;">
+                    <div>
+                        <div class="dl-img-wrapper-outer"><div class="dl-img-container"><img id="dlPreviewImage" class="dl-preview-image" src="" oncontextmenu="return false;" draggable="false"><div class="dl-powered-badge disable-long-press">POWERED BY : MADxPRINCE</div></div></div>
+                        <h2 class="dl-title" id="dlBookTitle"></h2><div class="dl-author" id="dlBookAuthor"></div>
+                        <button id="dlPdfLinkBtn" class="dl-main-btn disable-long-press"><i class="fas fa-download"></i> Download PDF</button>
+                        
+                        <div id="dlYoutubeLinkBtn" class="dl-box disable-long-press"><i class="fab fa-youtube icon" style="color: #ef4444;"></i><div><div class="dl-box-title">Watch Tutorials</div><div class="dl-box-sub">How to download books?</div></div></div>
+                        <div class="dl-box disable-long-press" id="shareBookBtn"><i class="fas fa-share-nodes icon"></i><div><div class="dl-box-title">Share this book</div><div class="dl-box-sub">Send this book to friends</div></div></div>
+                        
+                        <div class="exam-rel-box"><div class="exam-header"><i class="fas fa-ribbon"></i> EXAM RELEVANCE</div><div class="exam-tags" id="dlModalTags"></div></div>
+                        
+                        <div class="dl-social-container">
+                            <div class="dev-social-row">
+                                <a href="https://youtube.com/@madxprince" target="_blank" class="dev-soc-btn dev-yt"><i class="fab fa-youtube"></i></a>
+                                <a href="https://www.instagram.com/madxprince_3030" target="_blank" class="dev-soc-btn dev-ig"><i class="fab fa-instagram"></i></a>
+                                <a href="https://t.me/MultiverseBooks" target="_blank" class="dev-soc-btn dev-tg"><i class="fab fa-telegram-plane"></i></a>
+                                <a href="https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A" target="_blank" class="dev-soc-btn dev-wa"><i class="fab fa-whatsapp"></i></a>
+                            </div>
                         </div>
                     </div>
-                    <div class="premium-copyright" style="margin-bottom: 20px;">© 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</div>
+                    
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
+                    <div style="margin-top: auto; padding: 25px 15px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.8px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);">
+                        <span style="white-space: nowrap;">© 2026 SPIDY BOOK HUB</span>
+                        <span style="color: #3f3f46;">|</span>
+                        <span style="white-space: nowrap;">MADE WITH <i class="fas fa-heart" style="color: #ff4757; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</span>
+                    </div>
                 </div>
             </div>
             
@@ -509,30 +524,46 @@
                     </div>
                     <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" class="header-right-logo" alt="Logo" oncontextmenu="return false;" draggable="false">
                 </div>
-                <div class="dmca-content">
-                    <div class="dmca-hero">
-                        <h1 class="dmca-hero-title">COPYRIGHT DISCLAIMER</h1>
-                        <p class="dmca-hero-subtitle">
-                            <span class="dmca-badge badge-edu"><i class="fas fa-graduation-cap"></i> Educational</span>
-                            <span class="dmca-badge badge-res"><i class="fas fa-flask"></i> Research</span>
-                            <span class="dmca-badge badge-ref"><i class="fas fa-book-open"></i> Reference</span>
-                        </p>
+                <div class="dmca-content" style="padding-bottom: 20px;">
+                    <div>
+                        <div class="dmca-hero">
+                            <h1 class="dmca-hero-title">COPYRIGHT DISCLAIMER</h1>
+                            <p class="dmca-hero-subtitle">
+                                <span class="dmca-badge badge-edu"><i class="fas fa-graduation-cap"></i> Educational</span>
+                                <span class="dmca-badge badge-res"><i class="fas fa-flask"></i> Research</span>
+                                <span class="dmca-badge badge-ref"><i class="fas fa-book-open"></i> Reference</span>
+                            </p>
+                        </div>
+                        <div class="dmca-section">
+                            <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-ownership"><i class="fas fa-book"></i></span>Content Ownership</h2>
+                            <p>This website is created solely for educational, informational and archival purposes. We do not claim ownership of any copyrighted material shared on this platform. All copyrights and intellectual property rights belong to their respective authors, publishers and owners.</p>
+                        </div>
+                        <div class="dmca-section">
+                            <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-concerns"><i class="fas fa-copyright"></i></span>Copyright Concerns</h2>
+                            <p>If you are the copyright owner of any material available here and believe that your content has been shared without proper authorization, please contact us.</p>
+                        </div>
+                        <div class="dmca-section">
+                            <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-contact"><i class="fas fa-envelope"></i></span>Contact Information</h2>
+                            <a href="https://t.me/SpidyBookHub_Bot" target="_blank" class="dmca-contact-link"><i class="fab fa-telegram-plane"></i> Spidy Book Hub Support</a>
+                            <p style="margin-top: 15px; font-weight: bold; color: #a1a1aa; font-size: 0.75rem;">⏱ Review Time: 24–48 Hours</p>
+                        </div>
+                        
+                        <!-- ADDED BACK THE MISSING CARDS AS REQUESTED -->
+                        <div class="dmca-section">
+                            <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-notice"><i class="fas fa-shield-alt"></i></span>Important Notice</h2>
+                            <p>The materials shared on this platform are intended for educational, research, review and reference purposes only. Users are encouraged to support authors and publishers by purchasing original books whenever possible.</p>
+                        </div>
+                        <div class="dmca-section">
+                            <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-resp"><i class="fas fa-user-shield"></i></span>User Responsibility</h2>
+                            <p>Users are solely responsible for how they access, download, share or use any content available through this platform. This website and its administrators cannot be held responsible for any misuse or unauthorized use of the materials.</p>
+                        </div>
                     </div>
-                    <div class="dmca-section">
-                        <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-ownership"><i class="fas fa-book"></i></span>Content Ownership</h2>
-                        <p>This website is created solely for educational, informational and archival purposes. We do not claim ownership of any copyrighted material shared on this platform. All copyrights and intellectual property rights belong to their respective authors, publishers and owners.</p>
-                    </div>
-                    <div class="dmca-section">
-                        <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-concerns"><i class="fas fa-copyright"></i></span>Copyright Concerns</h2>
-                        <p>If you are the copyright owner of any material available here and believe that your content has been shared without proper authorization, please contact us.</p>
-                    </div>
-                    <div class="dmca-section">
-                        <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-contact"><i class="fas fa-envelope"></i></span>Contact Information</h2>
-                        <a href="https://t.me/SpidyBookHub_Bot" target="_blank" class="dmca-contact-link"><i class="fab fa-telegram-plane"></i> Spidy Book Hub Support</a>
-                        <p style="margin-top: 15px; font-weight: bold; color: #a1a1aa; font-size: 0.75rem;">⏱ Review Time: 24–48 Hours</p>
-                    </div>
-                    <div class="premium-copyright" style="margin-bottom: 20px;">
-                        © 2026 SPIDY BOOK HUB <span style="margin: 0 5px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
+                    
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
+                    <div style="margin-top: auto; padding: 25px 15px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.8px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);">
+                        <span style="white-space: nowrap;">© 2026 SPIDY BOOK HUB</span>
+                        <span style="color: #3f3f46;">|</span>
+                        <span style="white-space: nowrap;">MADE WITH <i class="fas fa-heart" style="color: #ff4757; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</span>
                     </div>
                 </div>
             </div>
@@ -568,24 +599,19 @@
         </div>
     </div>
 
-    <!-- 🌟 NEW CLOUDFLARE R2 UPLOAD LOADER UI (Based on 1000111649.png) 🌟 -->
+    <!-- CLOUDFLARE R2 UPLOAD LOADER UI -->
     <div id="r2UploadOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999999; justify-content: center; align-items: center; backdrop-filter: blur(10px); padding: 20px; flex-direction: column;">
         <div style="width: 100%; max-width: 450px; text-align: center; font-family: 'Poppins', sans-serif;">
-            
-            <!-- Dashed Box Container -->
             <div style="border: 3px dashed rgba(255,255,255,0.6); border-radius: 20px; padding: 50px 20px; margin-bottom: 40px; position: relative;">
                 <i id="r2UploadIcon" class="fas fa-file-pdf" style="font-size: 65px; color: #ffffff; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));"></i>
                 <h3 id="r2UploadTitle" style="color: #ffffff; font-size: 30px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px;">Upload PDF</h3>
                 <p style="color: #a1a1aa; font-size: 15px; font-weight: 500;">Securely transferring to Cloudflare R2...</p>
             </div>
             
-            <!-- Glowing Progress Bar -->
             <div style="width: 100%; height: 20px; background: rgba(255,255,255,0.1); border-radius: 30px; overflow: visible; position: relative; margin-bottom: 25px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8);">
-                <!-- The fill width will be controlled via JS -->
                 <div id="r2ProgressBar" style="width: 0%; height: 100%; background: #ffffff; border-radius: 30px; box-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 0 0 50px rgba(255, 255, 255, 0.6); transition: width 0.3s ease;"></div>
             </div>
             
-            <!-- Percentage & Status Text -->
             <div id="r2ProgressText" style="font-size: 55px; font-weight: 900; color: #ffffff; letter-spacing: 1px; line-height: 1.1; font-family: 'Inter', sans-serif; text-shadow: 0 0 15px rgba(255,255,255,0.3);">0%</div>
             <div id="r2StatusText" style="font-size: 16px; color: #a1a1aa; font-weight: 500; margin-top: 10px;">Uploading PDF...</div>
         </div>
