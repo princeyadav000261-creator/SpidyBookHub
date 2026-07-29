@@ -3,6 +3,9 @@ import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
 
+// ==========================================
+// 1. FIREBASE CONFIGURATION (Only for Text Data & Auth)
+// ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyASYcouPGDMx5_V9ZUZ3RcFifCxcbpcst8",
   authDomain: "spidy-book-dbe32.firebaseapp.com",
@@ -19,6 +22,16 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const analytics = getAnalytics(app); 
 
+// ==========================================
+// 2. CLOUDFLARE R2 API CONFIGURATION
+// ==========================================
+// NOTE: Replace this with your actual Cloudflare Worker URL that handles R2 uploads
+const R2_UPLOAD_API_URL = "https://your-worker-name.your-subdomain.workers.dev/upload";
+const R2_API_TOKEN = "YOUR_SECURE_API_HASH_TOKEN"; // Token if your worker requires authorization
+
+// ==========================================
+// GLOBAL VARIABLES
+// ==========================================
 let booksData = [];
 let mainFilteredData = []; 
 let loadedCount = 0; 
@@ -36,6 +49,13 @@ let CURRENT_ADMIN_PHOTO = "https://i.postimg.cc/D0BF1b77/file-000000000e847207a6
 let currentAuthorFilter = "All"; 
 let savedBooks = JSON.parse(localStorage.getItem('spidy_saved_books')) || [];
 
+// Variables to hold selected files for R2 Upload
+let selectedCoverFile = null;
+let selectedPdfFile = null;
+
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
 function sanitizeHTML(str) {
     if (typeof str !== 'string') return str;
     return str.replace(/[&<>'"]/g, function(match) {
@@ -44,19 +64,28 @@ function sanitizeHTML(str) {
     });
 }
 
-function toggleBookmarkLocal(iconElement, slug) {
-    const index = savedBooks.indexOf(slug);
-    if (index === -1) {
-        savedBooks.push(slug);
-        iconElement.className = "fas fa-bookmark"; 
+function showToast(message) {
+    const toast = document.getElementById('toast'); 
+    const lowerMsg = message.toLowerCase();
+    
+    if (lowerMsg.includes('deleted')) {
+        toast.style.background = 'rgba(239, 68, 68, 0.95)'; 
+        toast.innerHTML = `<i class="fas fa-trash"></i> <span id="toastMsg">${sanitizeHTML(message)}</span>`;
+    } else if (lowerMsg.includes('failed') || lowerMsg.includes('error') || lowerMsg.includes('invalid') || lowerMsg.includes('limit') || lowerMsg.includes('exhausted') || lowerMsg.includes('logout') || lowerMsg.includes('logged out') || lowerMsg.includes('select')) {
+        toast.style.background = 'rgba(239, 68, 68, 0.95)'; 
+        toast.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span id="toastMsg">${sanitizeHTML(message)}</span>`;
     } else {
-        savedBooks.splice(index, 1);
-        iconElement.className = "far fa-bookmark"; 
+        toast.style.background = 'rgba(16, 185, 129, 0.95)'; 
+        toast.innerHTML = `<i class="fas fa-check-circle"></i> <span id="toastMsg">${sanitizeHTML(message)}</span>`;
     }
-    localStorage.setItem('spidy_saved_books', JSON.stringify(savedBooks));
-    if(document.getElementById('bookmarks-panel').classList.contains('active')) { renderSavedBooksUI(); }
+    
+    toast.classList.add('show'); 
+    setTimeout(() => { toast.classList.remove('show'); }, 3000);
 }
 
+// ==========================================
+// INITIAL LOADER & DEEP LINKING
+// ==========================================
 const urlParamsCheck = new URLSearchParams(window.location.search);
 let isDeepLinkLoad = urlParamsCheck.has('book'); 
 let pendingBookSlug = urlParamsCheck.get('book');
@@ -69,7 +98,6 @@ if (isDeepLinkLoad) {
 let isAppReady = { auth: false, data: false }; 
 let hasTransitioned = false;
 let popupShown = false;
-
 let loadingProgress = 0;
 let loaderInterval;
 
@@ -137,29 +165,12 @@ function triggerWhatsAppPopup() {
         document.getElementById("popupOverlay").style.display = "flex";
     }
 }
+document.getElementById('joinWhatsappBtn').addEventListener('click', () => { window.open('https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A', '_blank'); });
+document.getElementById('laterPopupBtn').addEventListener('click', () => { document.getElementById("popupOverlay").style.display = "none"; });
 
-function closeLoginOverlayLocal() {
-    const loginOverlay = document.getElementById('loginOverlay');
-    loginOverlay.style.opacity = '0';
-    setTimeout(() => { 
-        loginOverlay.style.display = 'none'; 
-        if (isDeepLinkLoad && !isUserLoggedIn) {
-            isDeepLinkLoad = false;
-            window.history.replaceState({}, '', window.location.pathname);
-            setTimeout(triggerWhatsAppPopup, 15000);
-        }
-    }, 500);
-}
-
-document.getElementById('closeLoginBtn').addEventListener('click', closeLoginOverlayLocal);
-document.getElementById('toggleEye').addEventListener('click', togglePasswordVisibility);
-
-function togglePasswordVisibility() {
-    const passInput = document.getElementById('loginPassword'); const eyeIcon = document.getElementById('toggleEye');
-    if (passInput.type === 'password') { passInput.type = 'text'; eyeIcon.classList.remove('fa-eye'); eyeIcon.classList.add('fa-eye-slash'); eyeIcon.style.color = '#00d2ff'; } 
-    else { passInput.type = 'password'; eyeIcon.classList.remove('fa-eye-slash'); eyeIcon.classList.add('fa-eye'); eyeIcon.style.color = '#a1a1aa'; }
-}
-
+// ==========================================
+// QUOTE GENERATOR
+// ==========================================
 const quotes = [
     { text: "Be the change that you wish to see in the world.", author: "Mahatma Gandhi" },
     { text: "I have not failed. I've just found 10,000 ways that won't work.", author: "Thomas A. Edison" },
@@ -173,10 +184,12 @@ const currentQuoteIndex = todayDays % quotes.length;
 document.getElementById('daily-quote-text').innerHTML = `<i class="fas fa-quote-left" style="color: rgba(255,255,255,0.3); margin-right:5px;"></i> ${sanitizeHTML(quotes[currentQuoteIndex].text)}`;
 document.getElementById('daily-quote-author').innerText = `— ${sanitizeHTML(quotes[currentQuoteIndex].author)}`;
 
-// Update Live Credits Function
+// ==========================================
+// AUTHENTICATION & LIVE CREDITS
+// ==========================================
 function updateLiveCredits(uploads, downloads) {
     if (IS_SUPER_ADMIN) {
-        document.getElementById('profile-credits').innerHTML = `<span style="font-size: 24px;">&infin;</span>`; // Infinity Symbol
+        document.getElementById('profile-credits').innerHTML = `<span style="font-size: 24px;">&infin;</span>`; 
         return;
     }
     let allowedDownloads = 2 + (uploads * 2);
@@ -190,17 +203,12 @@ onAuthStateChanged(auth, async (user) => {
         isUserLoggedIn = true;
         localStorage.setItem('isUserLoggedIn', 'true');
 
-        let dName = user.displayName;
-        if (!dName || dName.trim() === "") { dName = user.email.split('@')[0]; }
+        let dName = user.displayName || user.email.split('@')[0];
         document.getElementById('sidebarProfileName').innerText = sanitizeHTML(dName);
         
         const sidebarAvatar = document.getElementById('sidebarProfileImg');
-        if(user.photoURL) {
-            CURRENT_ADMIN_PHOTO = user.photoURL;
-            sidebarAvatar.src = user.photoURL;
-        } else {
-            sidebarAvatar.src = "https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png";
-        }
+        CURRENT_ADMIN_PHOTO = user.photoURL ? user.photoURL : "https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png";
+        sidebarAvatar.src = CURRENT_ADMIN_PHOTO;
         
         CURRENT_ADMIN_NAME = dName;
         CURRENT_ADMIN_EMAIL = user.email;
@@ -209,7 +217,6 @@ onAuthStateChanged(auth, async (user) => {
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
             
-            // Check Admin Status
             const cleanEmail = user.email ? user.email.toLowerCase().trim() : "";
             const adminDocRef = doc(db, "admins", cleanEmail);
             const adminDocSnap = await getDoc(adminDocRef);
@@ -217,7 +224,6 @@ onAuthStateChanged(auth, async (user) => {
             if (adminDocSnap.exists()) {
                 IS_SUPER_ADMIN = true;
                 document.getElementById('sidebarRoleText').innerText = "Super Admin";
-                // Manage Tab logic completely removed from here
             } else {
                 IS_SUPER_ADMIN = false;
                 document.getElementById('sidebarRoleText').innerText = "Verified User";
@@ -226,7 +232,7 @@ onAuthStateChanged(auth, async (user) => {
 
             if (!userSnap.exists()) {
                 await setDoc(userRef, { email: user.email, name: dName, photo: user.photoURL || "", totalUploads: 0, lifetimeDownloads: 0, createdAt: new Date().getTime() }, { merge: true });
-                updateLiveCredits(0, 0); // Setup Initial Credits
+                updateLiveCredits(0, 0); 
             } else {
                 let data = userSnap.data();
                 updateLiveCredits(data.totalUploads || 0, data.lifetimeDownloads || 0);
@@ -243,6 +249,7 @@ onAuthStateChanged(auth, async (user) => {
 
     isAppReady.auth = true; tryTransition();
 
+    // Fetch Prompts
     onSnapshot(query(collection(db, "prompts"), orderBy("createdAt", "asc")), (snapshot) => {
         const container = document.getElementById('promptsContainer');
         container.innerHTML = '';
@@ -258,6 +265,7 @@ onAuthStateChanged(auth, async (user) => {
         });
     });
 
+    // Fetch Books
     const q = query(collection(db, "books"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
         booksData = [];
@@ -273,37 +281,25 @@ onAuthStateChanged(auth, async (user) => {
     });
 });
 
-// LOGOUT FUNCTIONALITY 
-const logoutBtn = document.getElementById('admin-logout-btn');
-if(logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        if(confirm("Are you sure you want to log out?")) {
-            signOut(auth).then(() => {
-                localStorage.removeItem('isUserLoggedIn');
-                showToast("Logged out successfully!");
-                setTimeout(() => window.location.reload(), 1000);
-            }).catch((error) => {
-                showToast("Error signing out!");
-            });
+// LOGIN SYSTEM
+function closeLoginOverlayLocal() {
+    const loginOverlay = document.getElementById('loginOverlay');
+    loginOverlay.style.opacity = '0';
+    setTimeout(() => { 
+        loginOverlay.style.display = 'none'; 
+        if (isDeepLinkLoad && !isUserLoggedIn) {
+            isDeepLinkLoad = false;
+            window.history.replaceState({}, '', window.location.pathname);
+            setTimeout(triggerWhatsAppPopup, 15000);
         }
-    });
+    }, 500);
 }
-
-document.getElementById('promptsContainer').addEventListener('click', (e) => {
-    const btn = e.target.closest('.telegram-copy-btn');
-    if (btn) { copyPromptTextLocal(decodeURIComponent(btn.getAttribute('data-text')), btn.id); }
+document.getElementById('closeLoginBtn').addEventListener('click', closeLoginOverlayLocal);
+document.getElementById('toggleEye').addEventListener('click', () => {
+    const passInput = document.getElementById('loginPassword'); const eyeIcon = document.getElementById('toggleEye');
+    if (passInput.type === 'password') { passInput.type = 'text'; eyeIcon.classList.replace('fa-eye', 'fa-eye-slash'); eyeIcon.style.color = '#00d2ff'; } 
+    else { passInput.type = 'password'; eyeIcon.classList.replace('fa-eye-slash', 'fa-eye'); eyeIcon.style.color = '#a1a1aa'; }
 });
-
-function copyPromptTextLocal(text, btnId) {
-    if(!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-        const btn = document.getElementById(btnId);
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = `<i class="fas fa-check" style="color: #25D366;"></i> COPIED`;
-        btn.style.color = "#25D366";
-        setTimeout(() => { btn.innerHTML = originalHTML; btn.style.color = "#B5BAC1"; }, 2000);
-    }).catch(err => { showToast("Failed to copy!"); });
-}
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault(); 
@@ -314,10 +310,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     btn.innerHTML = `<span style="display:flex; align-items:center; gap:8px;"><div class="premium-loader"></div> Authenticating...</span>`;
     try { 
         await signInWithEmailAndPassword(auth, email, pass); 
-        e.target.reset(); 
-        showToast("Login Successful!"); 
-        btn.innerHTML = originalContent; 
-        closeLoginOverlayLocal();
+        e.target.reset(); showToast("Login Successful!"); btn.innerHTML = originalContent; closeLoginOverlayLocal();
         if (isDeepLinkLoad && pendingBookSlug) {
             document.getElementById('mainAppWrapper').style.display = 'block';
             setTimeout(() => { openDownloadPageLocal(pendingBookSlug, true); }, 300);
@@ -331,9 +324,7 @@ document.getElementById('googleSignInBtn').addEventListener('click', async () =>
     btn.innerHTML = `<span style="display:flex; align-items:center; gap:8px;"><div class="premium-loader"></div> Connecting...</span>`;
     try { 
         await signInWithPopup(auth, provider); 
-        showToast("Google Login Successful!");
-        btn.innerHTML = originalContent;
-        closeLoginOverlayLocal();
+        showToast("Google Login Successful!"); btn.innerHTML = originalContent; closeLoginOverlayLocal();
         if (isDeepLinkLoad && pendingBookSlug) {
             document.getElementById('mainAppWrapper').style.display = 'block';
             setTimeout(() => { openDownloadPageLocal(pendingBookSlug, true); }, 300);
@@ -341,9 +332,25 @@ document.getElementById('googleSignInBtn').addEventListener('click', async () =>
     } catch(err) { showToast("Failed: Google Sign-In Error."); btn.innerHTML = originalContent; } 
 });
 
-document.getElementById('joinWhatsappBtn').addEventListener('click', () => { window.open('https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A', '_blank'); });
-document.getElementById('laterPopupBtn').addEventListener('click', () => { document.getElementById("popupOverlay").style.display = "none"; });
+// ==========================================
+// BOOKMARK SYSTEM
+// ==========================================
+function toggleBookmarkLocal(iconElement, slug) {
+    const index = savedBooks.indexOf(slug);
+    if (index === -1) {
+        savedBooks.push(slug);
+        iconElement.className = "fas fa-bookmark"; 
+    } else {
+        savedBooks.splice(index, 1);
+        iconElement.className = "far fa-bookmark"; 
+    }
+    localStorage.setItem('spidy_saved_books', JSON.stringify(savedBooks));
+    if(document.getElementById('bookmarks-panel').classList.contains('active')) { renderSavedBooksUI(); }
+}
 
+// ==========================================
+// SEARCH & FILTER SYSTEM
+// ==========================================
 function updateAuthorFilterOptions() {
     const authorMap = new Map();
     booksData.forEach(book => {
@@ -366,9 +373,7 @@ function updateAuthorFilterOptions() {
 document.getElementById('authorFilterGrid').addEventListener('click', (e) => {
     if(e.target.classList.contains('f-pill')) {
         currentAuthorFilter = e.target.getAttribute('data-author');
-        updateAuthorFilterOptions(); 
-        document.getElementById('filterBottomOverlay').classList.remove('active');
-        applyMasterFilter(); 
+        updateAuthorFilterOptions(); document.getElementById('filterBottomOverlay').classList.remove('active'); applyMasterFilter(); 
     }
 });
 
@@ -385,7 +390,6 @@ function applyMasterFilter() {
             let normBookAuth = (book.author || "").toLowerCase().replace(/\s+/g, ' ').trim();
             matchesAuthor = (normFilter === normBookAuth);
         }
-
         let matchesSearch = true;
         if (searchInputRaw.length > 0) {
             let textToSearch = (book.title + " " + (book.author || "")).toLowerCase().replace(/[^a-z0-9\s]/g, '');
@@ -402,24 +406,22 @@ function applyMasterFilter() {
     });
     loadedCount = 0; 
     if(mainFilteredData.length > 0) { 
-        document.getElementById('no-results-msg').style.display = 'none'; 
-        renderBooksUI(0, getBatchSize() * 2, mainFilteredData); 
+        document.getElementById('no-results-msg').style.display = 'none'; renderBooksUI(0, getBatchSize() * 2, mainFilteredData); 
     } else { 
-        document.getElementById("bookContainer").innerHTML = ""; 
-        document.getElementById('no-results-msg').style.display = 'flex'; 
+        document.getElementById("bookContainer").innerHTML = ""; document.getElementById('no-results-msg').style.display = 'flex'; 
     }
 }
 
-let searchTimeout;
 const searchInputEl = document.getElementById('app-search-input');
-const closeSearchBtn = document.getElementById('close-search');
-
+let searchTimeout;
 searchInputEl.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => { applyMasterFilter(); }, 300); });
-closeSearchBtn.addEventListener('click', () => { searchInputEl.value = ''; applyMasterFilter(); document.getElementById('search-box').classList.remove('active'); if (history.state && history.state.popup === 'search') { history.back(); }});
+document.getElementById('close-search').addEventListener('click', () => { searchInputEl.value = ''; applyMasterFilter(); document.getElementById('search-box').classList.remove('active'); if (history.state && history.state.popup === 'search') { history.back(); }});
 document.getElementById('openAuthorFilterBtn').addEventListener('click', () => { document.getElementById('filterBottomOverlay').classList.add('active'); });
 document.getElementById('closeAuthorFilterBtn').addEventListener('click', () => { document.getElementById('filterBottomOverlay').classList.remove('active'); });
-document.getElementById('filterBottomOverlay').addEventListener('click', (e) => { if (e.target === document.getElementById('filterBottomOverlay')) { document.getElementById('filterBottomOverlay').classList.remove('active'); }});
 
+// ==========================================
+// RENDERING UI
+// ==========================================
 function getBatchSize() {
     let cols = 2; 
     if (window.innerWidth >= 768) {
@@ -487,7 +489,6 @@ function renderSavedBooksUI() {
     });
     container.innerHTML = htmlChunk;
 }
-
 document.getElementById('savedBooksContainer').addEventListener('click', (e) => {
     const card = e.target.closest('.book-card');
     if(card) {
@@ -508,88 +509,60 @@ function generateNotifications() {
         notiContainer.innerHTML += `<div class="noti-card-dynamic" data-slug="${book.slug}" style="cursor:pointer;"><img src="${book.image}" loading="lazy" class="noti-card-img" alt="Logo"><div class="noti-card-content"><div class="noti-card-title">${sanitizeHTML(book.title)} Book Added ✅</div><div class="noti-card-desc">New book is now available.</div><div style="font-size: 10px; color: #10b981; margin-top: 2px; font-weight: 700; display: flex; align-items: center; gap: 4px;"><i class="far fa-calendar-alt"></i> Added: ${dateStr}</div></div></div>`;
     });
 }
-
 document.getElementById('dynamic-noti-container').addEventListener('click', (e) => {
     const card = e.target.closest('.noti-card-dynamic');
     if(card) openDownloadPageLocal(card.getAttribute('data-slug'));
 });
 
-document.getElementById('sidebarHeader').addEventListener('click', openMyProfileLocal);
-async function openMyProfileLocal() {
+// ==========================================
+// NAVIGATION & OVERLAYS
+// ==========================================
+document.getElementById('sidebarHeader').addEventListener('click', async () => {
     if(!isUserLoggedIn || !auth.currentUser) {
-        document.getElementById('sidebar').classList.remove('active');
-        document.getElementById('sidebar-overlay').classList.remove('active');
-        document.getElementById('loginOverlay').style.display = 'flex';
-        setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10);
+        document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').classList.remove('active');
+        document.getElementById('loginOverlay').style.display = 'flex'; setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10);
         return;
     }
-
-    document.getElementById('sidebar').classList.remove('active');
-    document.getElementById('sidebar-overlay').classList.remove('active');
-
+    document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').classList.remove('active');
     document.getElementById('profile-name-ui').innerText = sanitizeHTML(CURRENT_ADMIN_NAME);
-    const emailUi = document.getElementById('profile-email-ui');
-    emailUi.innerText = auth.currentUser.email || "No Email linked";
-    emailUi.style.display = 'block';
-
+    document.getElementById('profile-email-ui').innerText = auth.currentUser.email || "No Email linked";
+    document.getElementById('profile-email-ui').style.display = 'block';
     document.getElementById('profile-avatar-ui').src = CURRENT_ADMIN_PHOTO;
     document.getElementById('profile-saved').innerText = savedBooks.length;
-
-    document.getElementById('my-profile-panel').classList.add('active');
-    history.pushState({ popup: 'profile' }, '');
+    document.getElementById('my-profile-panel').classList.add('active'); history.pushState({ popup: 'profile' }, '');
 
     try {
         const userRef = doc(db, "users", auth.currentUser.uid);
         const userSnap = await getDoc(userRef);
         let uploads = 0; let downloads = 0;
-
         if (userSnap.exists()) {
             const data = userSnap.data();
-            uploads = parseInt(data.totalUploads) || 0; 
-            downloads = parseInt(data.lifetimeDownloads) || 0;
-            // Update Live Credits immediately
+            uploads = parseInt(data.totalUploads) || 0; downloads = parseInt(data.lifetimeDownloads) || 0;
             updateLiveCredits(uploads, downloads);
         }
-        document.getElementById('profile-uploads').innerText = uploads;
         document.getElementById('profile-downloads').innerText = downloads;
 
         const usersRef = collection(db, "users");
         const querySnapshot = await getDocs(usersRef);
-        
         let allUsers = [];
         querySnapshot.forEach((docSnap) => { allUsers.push({ id: docSnap.id, ...docSnap.data() }); });
-
         allUsers.sort((a, b) => {
-            let uploadsA = parseInt(a.totalUploads) || 0;
-            let uploadsB = parseInt(b.totalUploads) || 0;
+            let uploadsA = parseInt(a.totalUploads) || 0; let uploadsB = parseInt(b.totalUploads) || 0;
             if (uploadsB !== uploadsA) { return uploadsB - uploadsA; } 
-            
-            let timeA = parseInt(a.createdAt) || 9999999999999; 
-            let timeB = parseInt(b.createdAt) || 9999999999999;
-            if (timeA !== timeB) { return timeA - timeB; }
-            return a.id.localeCompare(b.id);
+            let timeA = parseInt(a.createdAt) || 9999999999999; let timeB = parseInt(b.createdAt) || 9999999999999;
+            if (timeA !== timeB) { return timeA - timeB; } return a.id.localeCompare(b.id);
         });
 
-        let rank = 1;
-        for (let i = 0; i < allUsers.length; i++) {
-            if (allUsers[i].id === auth.currentUser.uid) { rank = i + 1; break; }
-        }
-
+        let rank = 1; for (let i = 0; i < allUsers.length; i++) { if (allUsers[i].id === auth.currentUser.uid) { rank = i + 1; break; } }
         const rankElement = document.getElementById('profile-rank');
         if (rank === 1 && uploads > 0) { rankElement.style.color = "#fbbf24"; rankElement.innerHTML = `<i class="fas fa-crown"></i> #1`; } 
         else if (rank === 2 && uploads > 0) { rankElement.style.color = "#9ca3af"; rankElement.innerText = "#" + rank; } 
         else if (rank === 3 && uploads > 0) { rankElement.style.color = "#b45309"; rankElement.innerText = "#" + rank; } 
         else { rankElement.style.color = ""; rankElement.innerText = "#" + rank; }
-
     } catch (error) { console.error("Error fetching profile stats:", error); showToast("Error loading profile data"); }
-}
+});
 
-document.getElementById('closeProfileBtn').addEventListener('click', closeMyProfileLocal);
-function closeMyProfileLocal() {
-    if (history.state && history.state.popup === 'profile') { history.back(); } 
-    else { document.getElementById('my-profile-panel').classList.remove('active'); }
-}
-
+document.getElementById('closeProfileBtn').addEventListener('click', () => { if (history.state && history.state.popup === 'profile') { history.back(); } else { document.getElementById('my-profile-panel').classList.remove('active'); }});
 document.getElementById('open-search').addEventListener('click', () => { history.pushState({ popup: 'search' }, ''); document.getElementById('search-box').classList.add('active'); setTimeout(() => { searchInputEl.focus(); }, 300); });
 document.getElementById('open-noti').addEventListener('click', () => { history.pushState({ popup: 'noti' }, ''); document.getElementById('noti-panel').classList.add('active'); document.querySelector('.blink-dot').style.display = 'none'; });
 
@@ -597,82 +570,45 @@ const sidebar = document.getElementById('sidebar'); const sidebarOverlay = docum
 document.getElementById('open-menu').addEventListener('click', () => { history.pushState({ popup: 'sidebar' }, ''); sidebar.classList.add('active'); sidebarOverlay.classList.add('active'); });
 sidebarOverlay.addEventListener('click', () => { history.back(); });
 
-// Sidebar links
 document.getElementById('menu-dmca').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'dmca' }, ''); document.getElementById('dmca-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); });
 document.getElementById('close-dmca-btn').addEventListener('click', () => { history.back(); });
 document.getElementById('menu-bookmarks').addEventListener('click', (e) => { e.preventDefault(); history.replaceState({ popup: 'bookmarks' }, ''); document.getElementById('bookmarks-panel').classList.add('active'); sidebar.classList.remove('active'); sidebarOverlay.classList.remove('active'); renderSavedBooksUI(); });
 document.getElementById('close-bookmarks-btn').addEventListener('click', () => { history.back(); });
 
-// BOTTOM NAVIGATION TAB SWITCHING
 function switchTab(tabId) {
-    document.querySelectorAll('.app-tab').forEach(tab => {
-        tab.style.display = 'none';
-        tab.classList.remove('active');
-    });
+    document.querySelectorAll('.app-tab').forEach(tab => { tab.style.display = 'none'; tab.classList.remove('active'); });
     const target = document.getElementById(tabId);
-    if(target) {
-        target.style.display = 'flex';
-        setTimeout(() => target.classList.add('active'), 10);
-    }
+    if(target) { target.style.display = 'flex'; setTimeout(() => target.classList.add('active'), 10); }
 }
 
 function setNavActive(id) {
-    document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active')); document.getElementById(id).classList.add('active');
 }
 
 function closeAllPanels() {
-    document.getElementById('noti-panel').classList.remove('active'); 
-    document.getElementById('sidebar').classList.remove('active'); 
-    document.getElementById('sidebar-overlay').classList.remove('active'); 
-    document.getElementById('dmca-panel').classList.remove('active'); 
-    document.getElementById('bookmarks-panel').classList.remove('active'); 
-    document.getElementById('search-box').classList.remove('active');
-    document.getElementById('my-profile-panel').classList.remove('active'); 
+    document.getElementById('noti-panel').classList.remove('active'); document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebar-overlay').classList.remove('active'); document.getElementById('dmca-panel').classList.remove('active'); document.getElementById('bookmarks-panel').classList.remove('active'); document.getElementById('search-box').classList.remove('active'); document.getElementById('my-profile-panel').classList.remove('active'); 
 }
 
-document.getElementById('nav-home').addEventListener('click', () => {
-    setNavActive('nav-home'); closeAllPanels(); switchTab('tab-home');
-    window.history.replaceState({}, '', window.location.pathname);
-});
-
-/* NOTES TAB FUNCTIONALITY HELD FOR FUTURE
-document.getElementById('nav-notes').addEventListener('click', () => {
-    setNavActive('nav-notes'); closeAllPanels(); switchTab('tab-notes');
-});
-*/
-
+document.getElementById('nav-home').addEventListener('click', () => { setNavActive('nav-home'); closeAllPanels(); switchTab('tab-home'); window.history.replaceState({}, '', window.location.pathname); });
 document.getElementById('nav-upload').addEventListener('click', () => {
-    if(!isUserLoggedIn) {
-        document.getElementById('loginOverlay').style.display = 'flex';
-        setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10);
-        setNavActive('nav-home');
-        return;
-    }
-    setNavActive('nav-upload'); closeAllPanels(); switchTab('tab-upload');
-    setTimeout(() => { document.getElementById('uploadPopup').classList.remove('hidden'); }, 300);
+    if(!isUserLoggedIn) { document.getElementById('loginOverlay').style.display = 'flex'; setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10); setNavActive('nav-home'); return; }
+    setNavActive('nav-upload'); closeAllPanels(); switchTab('tab-upload'); setTimeout(() => { document.getElementById('uploadPopup').classList.remove('hidden'); }, 300);
 });
-
-document.getElementById('nav-dev').addEventListener('click', () => {
-    setNavActive('nav-dev'); closeAllPanels(); switchTab('tab-about');
-});
-
-// Close popups
+document.getElementById('nav-dev').addEventListener('click', () => { setNavActive('nav-dev'); closeAllPanels(); switchTab('tab-about'); });
 document.getElementById('closeUploadPopupBtn').addEventListener('click', () => { document.getElementById('uploadPopup').classList.add('hidden'); });
 
 window.addEventListener('popstate', (e) => {
-    closeAllPanels();
-    applyMasterFilter();
+    closeAllPanels(); applyMasterFilter();
     const sBook = new URLSearchParams(window.location.search).get('book');
-    if(sBook) { openDownloadPageLocal(sBook, true); } 
-    else { document.getElementById("downloadModal").style.display = "none"; }
+    if(sBook) { openDownloadPageLocal(sBook, true); } else { document.getElementById("downloadModal").style.display = "none"; }
 });
 
+// ==========================================
+// DOWNLOAD PAGE
+// ==========================================
 function openDownloadPageLocal(slug, skipPushState = false) {
     if(!isUserLoggedIn) {
-        document.getElementById('loginOverlay').style.display = 'flex';
-        setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10);
-        return;
+        document.getElementById('loginOverlay').style.display = 'flex'; setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10); return;
     }
     const book = booksData.find(b => b.slug === slug); if(!book) return;
     document.getElementById("downloadModal").style.display = "flex";
@@ -685,45 +621,28 @@ function openDownloadPageLocal(slug, skipPushState = false) {
     document.getElementById("dlBookAuthor").innerText = sanitizeHTML(book.author);
     
     document.getElementById("dlPdfLinkBtn").onclick = async function() { 
-        if(!isUserLoggedIn || !auth.currentUser) {
-            document.getElementById('loginOverlay').style.display = 'flex'; setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10); return;
-        }
-
-        const btn = document.getElementById("dlPdfLinkBtn");
-        const originalText = btn.innerHTML;
-        const uid = auth.currentUser.uid;
-
-        btn.innerHTML = `<span style="display:flex; align-items:center; gap:8px;"><i class="fas fa-spinner fa-spin"></i> Processing...</span>`;
-        btn.disabled = true;
+        if(!isUserLoggedIn || !auth.currentUser) { document.getElementById('loginOverlay').style.display = 'flex'; setTimeout(() => document.getElementById('loginOverlay').style.opacity = '1', 10); return; }
+        const btn = document.getElementById("dlPdfLinkBtn"); const originalText = btn.innerHTML; const uid = auth.currentUser.uid;
+        btn.innerHTML = `<span style="display:flex; align-items:center; gap:8px;"><i class="fas fa-spinner fa-spin"></i> Processing...</span>`; btn.disabled = true;
 
         try {
             const userRef = doc(db, "users", uid);
             const userSnap = await getDoc(userRef);
 
             if (userSnap.exists()) {
-                let data = userSnap.data();
-                let uploads = data.totalUploads || 0;
-                let downloads = data.lifetimeDownloads || 0;
+                let data = userSnap.data(); let uploads = data.totalUploads || 0; let downloads = data.lifetimeDownloads || 0;
                 let allowedDownloads = 2 + (uploads * 2);
-
                 if (downloads >= allowedDownloads && !IS_SUPER_ADMIN) {
-                    showToast("Limit Reached! Upload 1 book to get 2 more downloads.");
-                    closeDownloadPageLocal();
-                    document.getElementById('nav-upload').click(); 
-                    btn.innerHTML = originalText; btn.disabled = false; return; 
+                    showToast("Limit Reached! Upload 1 book to get 2 more downloads."); closeDownloadPageLocal(); document.getElementById('nav-upload').click(); btn.innerHTML = originalText; btn.disabled = false; return; 
                 }
-                
-                // Track Download & Live Update Credits
                 await updateDoc(userRef, { lifetimeDownloads: increment(1) });
-                updateLiveCredits(uploads, downloads + 1); // Live deduction
+                updateLiveCredits(uploads, downloads + 1);
             }
             if(book.pdfLink) { window.open(book.pdfLink, '_blank'); }
-            
-        } catch (error) { console.error("Download tracking error:", error); showToast("Failed to initiate download. Try again."); } 
-        finally { btn.innerHTML = originalText; btn.disabled = false; }
+        } catch (error) { showToast("Failed to initiate download. Try again."); } finally { btn.innerHTML = originalText; btn.disabled = false; }
     };
     
-    document.getElementById("dlYoutubeLinkBtn").onclick = function() { window.open('https://youtube.com/@spidystudyhub', '_blank'); };
+    document.getElementById("dlYoutubeLinkBtn").onclick = function() { window.open('https://youtube.com/@madxprince', '_blank'); };
     let examsArray = (book.exams || "General").split(',').map(item => sanitizeHTML(item.trim()));
     document.getElementById("dlModalTags").innerHTML = examsArray.map(exam => `<div class="dl-modal-tag">${exam}</div>`).join('');
     activeBookSlug = book.slug; activeBookTitle = book.title;
@@ -735,101 +654,192 @@ function closeDownloadPageLocal() {
     if (history.state && history.state.popup === 'book') { history.back(); } 
     else { document.getElementById("downloadModal").style.display = "none"; window.history.replaceState({}, '', window.location.pathname); }
     if(isDeepLinkLoad) {
-        isDeepLinkLoad = false;
-        const loader = document.getElementById("loaderScreen"); loader.style.display = "flex"; loader.style.opacity = "1";
-        updateLoaderUI(100);
+        isDeepLinkLoad = false; const loader = document.getElementById("loaderScreen"); loader.style.display = "flex"; loader.style.opacity = "1"; updateLoaderUI(100);
         setTimeout(() => { loader.style.opacity = "0"; setTimeout(() => { loader.style.display = "none"; document.getElementById("popupOverlay").style.display = "flex"; }, 300); }, 1500); 
     }
 }
-
-document.getElementById('shareBookBtn').addEventListener('click', shareBookLocal);
-function shareBookLocal() {
+document.getElementById('shareBookBtn').addEventListener('click', () => {
     const shareUrl = window.location.origin + window.location.pathname + "?book=" + activeBookSlug;
-    if (navigator.share) navigator.share({ title: activeBookTitle, text: "Download free book", url: shareUrl });
-    else { navigator.clipboard.writeText(shareUrl); alert("Link Copied!"); }
+    if (navigator.share) navigator.share({ title: activeBookTitle, text: "Download free book", url: shareUrl }); else { navigator.clipboard.writeText(shareUrl); alert("Link Copied!"); }
+});
+
+
+// ==========================================
+// 🚀 CLOUDFLARE R2 UPLOAD LOGIC & UI (XHR PROGRESS)
+// ==========================================
+
+// 1. File Selection Listeners for Cover Image
+['fileCoverGallery', 'fileCoverBrowse'].forEach(id => {
+    document.getElementById(id).addEventListener('change', function(e) {
+        if(e.target.files.length > 0) {
+            selectedCoverFile = e.target.files[0];
+            // Update UI to show file name instead of "Drag & Drop..."
+            e.target.closest('.uc-actions').querySelector('p').innerText = "Selected: " + selectedCoverFile.name;
+        }
+    });
+});
+
+// 2. File Selection Listeners for PDF
+['filePdfGallery', 'filePdfBrowse'].forEach(id => {
+    document.getElementById(id).addEventListener('change', function(e) {
+        if(e.target.files.length > 0) {
+            selectedPdfFile = e.target.files[0];
+            // Update UI to show file name instead of "Drag & Drop..."
+            e.target.closest('.uc-actions').querySelector('p').innerText = "Selected: " + selectedPdfFile.name;
+        }
+    });
+});
+
+// 3. XHR Upload Function to Cloudflare R2
+function uploadFileToR2(file, type) {
+    return new Promise((resolve, reject) => {
+        
+        // Show R2 Glowing Loader Overlay
+        const r2Overlay = document.getElementById('r2UploadOverlay');
+        const progressBar = document.getElementById('r2ProgressBar');
+        const progressText = document.getElementById('r2ProgressText');
+        const statusText = document.getElementById('r2StatusText');
+        const icon = document.getElementById('r2UploadIcon');
+        const title = document.getElementById('r2UploadTitle');
+
+        // Dynamic Text & Icon based on Type
+        if(type === 'image') {
+            icon.className = "fas fa-image";
+            title.innerText = "Upload Cover Image";
+            statusText.innerText = "Uploading Cover Image...";
+        } else {
+            icon.className = "fas fa-file-pdf";
+            title.innerText = "Upload PDF File";
+            statusText.innerText = "Securely transferring to Cloudflare R2...";
+        }
+
+        r2Overlay.style.display = 'flex';
+        progressBar.style.width = '0%';
+        progressText.innerText = '0%';
+
+        // Setup XHR
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", R2_UPLOAD_API_URL, true);
+        xhr.setRequestHeader("Authorization", "Bearer " + R2_API_TOKEN); // Adjust header based on your Worker logic
+        
+        // Form Data
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("type", type);
+
+        // Upload Progress Tracker
+        xhr.upload.addEventListener("progress", (event) => {
+            if (event.lengthComputable) {
+                let percentComplete = Math.round((event.loaded / event.total) * 100);
+                progressBar.style.width = percentComplete + '%';
+                progressText.innerText = percentComplete + '%';
+            }
+        });
+
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    // Hide loader after a tiny delay for smoothness
+                    setTimeout(() => { r2Overlay.style.display = 'none'; }, 500);
+                    // Assuming your worker returns { url: "https://r2.yourdomain.com/filename.pdf" }
+                    resolve(response.url);
+                } catch(e) {
+                    r2Overlay.style.display = 'none';
+                    reject("Invalid Response from Server");
+                }
+            } else {
+                r2Overlay.style.display = 'none';
+                reject("Upload Failed: " + xhr.status);
+            }
+        };
+
+        xhr.onerror = function() {
+            r2Overlay.style.display = 'none';
+            reject("Network Error during upload.");
+        };
+
+        xhr.send(formData);
+    });
 }
 
-function showToast(message) {
-    const toast = document.getElementById('toast'); 
-    const lowerMsg = message.toLowerCase();
-    
-    if (lowerMsg.includes('deleted')) {
-        toast.style.background = '#ef4444'; 
-        toast.innerHTML = `<i class="fas fa-trash"></i> <span id="toastMsg">${sanitizeHTML(message)}</span>`;
-    } else if (lowerMsg.includes('failed') || lowerMsg.includes('error') || lowerMsg.includes('invalid') || lowerMsg.includes('limit') || lowerMsg.includes('exhausted') || lowerMsg.includes('logout') || lowerMsg.includes('logged out')) {
-        toast.style.background = '#ef4444'; 
-        toast.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span id="toastMsg">${sanitizeHTML(message)}</span>`;
-    } else {
-        toast.style.background = '#10b981'; 
-        toast.innerHTML = `<i class="fas fa-check-circle"></i> <span id="toastMsg">${sanitizeHTML(message)}</span>`;
-    }
-    
-    toast.classList.add('show'); 
-    setTimeout(() => { toast.classList.remove('show'); }, 3000);
-}
-
-async function logActivity(action, bookTitle, imageUrl = "", deletedData = null) {
-    try {
-        await addDoc(collection(db, "activity_logs"), { action, bookTitle, image: imageUrl, deletedData, adminName: CURRENT_ADMIN_NAME, adminEmail: CURRENT_ADMIN_EMAIL, adminPhoto: CURRENT_ADMIN_PHOTO, timestamp: new Date().getTime(), dateStr: new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }) });
-    } catch(e) { console.error("Logging Error:", e); }
-}
-
+// ==========================================
+// FINAL BOOK PUBLISHING SUBMIT
+// ==========================================
 document.getElementById('addBookForm').addEventListener('submit', async (e) => {
     e.preventDefault(); 
     const btn = document.getElementById('publishBtn'); 
     const originalText = btn.innerHTML;
-    
-    const titleInput = document.getElementById('inTitle').value; 
-    const imgInput = document.getElementById('inImage').value;
-    const pdfUrlInput = document.getElementById('inPdfUrl').value.trim(); 
 
-    if (!IS_SUPER_ADMIN) {
-        const lowerUrl = pdfUrlInput.toLowerCase();
-        if (!(lowerUrl.includes('drive.google.com') || lowerUrl.includes('mega.nz') || lowerUrl.includes('mega.io') || lowerUrl.includes('mediafire.com'))) { 
-            showToast("Failed: You can only upload Google Drive, MEGA, or MediaFire links!"); return; 
-        }
-    }
+    // Validation
+    if (!selectedCoverFile) { showToast("Please select a Cover Image!"); return; }
+    if (!selectedPdfFile) { showToast("Please select a PDF file!"); return; }
 
     btn.innerHTML = `<span class="btn-text" style="display: flex; align-items: center; justify-content: center; gap: 10px;"><div class="premium-loader" style="border-color:#000;"></div> Publishing...</span>`;
     btn.disabled = true;
 
-    const newBook = { 
-        title: titleInput, author: document.getElementById('inAuthor').value, image: imgInput, year: document.getElementById('inYear').value, lang: document.getElementById('inLang').value, exams: document.getElementById('inExams').value, pdfLink: pdfUrlInput, dateAdded: new Date().toLocaleDateString('en-GB').toUpperCase(), createdAt: new Date().getTime(), uploaderUid: auth.currentUser.uid 
-    };
+    try {
+        // Step 1: Upload Cover Image to Cloudflare R2
+        let coverR2Url = await uploadFileToR2(selectedCoverFile, 'image');
 
-    try { 
+        // Step 2: Upload PDF File to Cloudflare R2
+        let pdfR2Url = await uploadFileToR2(selectedPdfFile, 'pdf');
+
+        // Step 3: Prepare Data for Firestore (Only text format goes to Firebase!)
+        const titleInput = document.getElementById('inTitle').value; 
+        const newBook = { 
+            title: titleInput, 
+            author: document.getElementById('inAuthor').value, 
+            year: document.getElementById('inYear').value, 
+            lang: document.getElementById('inLang').value, 
+            exams: document.getElementById('inExams').value, 
+            image: coverR2Url, // Cloudflare R2 URL
+            pdfLink: pdfR2Url, // Cloudflare R2 URL
+            dateAdded: new Date().toLocaleDateString('en-GB').toUpperCase(), 
+            createdAt: new Date().getTime(), 
+            uploaderUid: auth.currentUser.uid 
+        };
+
+        // Step 4: Save metadata to Firebase Firestore
         await addDoc(collection(db, "books"), newBook); 
+        
+        // Step 5: Update Upload Credits
         const userRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(userRef, { totalUploads: increment(1) });
-
-        // Update Live Credits for uploading a book (+2)
         const userSnap = await getDoc(userRef);
         if(userSnap.exists()){
             let data = userSnap.data();
             updateLiveCredits(data.totalUploads, data.lifetimeDownloads || 0);
         }
 
-        await logActivity("ADD", newBook.title, newBook.image); 
-        showToast("Book Published Successfully! +2 Credits Added"); 
+        showToast("Book Published Successfully!"); 
+        
+        // Reset Form & Variables
         e.target.reset(); 
+        selectedCoverFile = null;
+        selectedPdfFile = null;
+        document.querySelectorAll('.uc-actions p').forEach(p => p.innerText = "Drag & Drop File");
+
     } catch (error) { 
-        if(error.message.includes("Missing or insufficient permissions")) { showToast("Failed: Firebase Security Rules Blocked Save!"); } 
-        else { showToast("Failed: " + error.message); }
-    } finally { btn.innerHTML = originalText; btn.disabled = false; }
+        console.error("Upload process error:", error);
+        if(error.message && error.message.includes("Missing or insufficient permissions")) { showToast("Failed: Firebase Security Rules Blocked Save!"); } 
+        else { showToast("Failed: " + error); }
+    } finally { 
+        btn.innerHTML = originalText; 
+        btn.disabled = false; 
+    }
 });
 
+// Admin Tabs Switching
 document.querySelectorAll('.adm-tab-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-        let tab = 'add';
-        // Manage is removed
-        if(btn.id === 'admTabPrompt') tab = 'prompt';
-        switchAdminTabLocal(tab);
+        let tab = 'add'; if(btn.id === 'admTabPrompt') tab = 'prompt'; switchAdminTabLocal(tab);
     });
 });
-
 function switchAdminTabLocal(tabName) {
     document.querySelectorAll('.adm-section').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.adm-tab-btn').forEach(el => el.classList.remove('active'));
     if(tabName === 'add') { document.getElementById('sectionAddBook').classList.add('active'); document.getElementById('admTabAdd').classList.add('active'); }
     else if(tabName === 'prompt') { document.getElementById('sectionPrompt').classList.add('active'); document.getElementById('admTabPrompt').classList.add('active'); }
 }
+
