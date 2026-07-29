@@ -321,12 +321,7 @@
                         </div>
                     </div>
                     
-                    <!-- Appended specific inline fix for Developer About Page Footer -->
-                    <div style="margin-top: auto; padding: 25px 15px 100px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.8px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);">
-                        <span style="white-space: nowrap;">© 2026 SPIDY BOOK HUB</span>
-                        <span style="color: #3f3f46;">|</span>
-                        <span style="white-space: nowrap;">MADE WITH <i class="fas fa-heart" style="color: #ff4757; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</span>
-                    </div>
+                    <div class="nav-scroll-spacer"></div>
                 </div>
 
             </main>
@@ -364,71 +359,72 @@
 
             <!-- MY PROFILE PANEL -->
             <div class="overlay-panel" id="my-profile-panel">
-                <div class="dev-scroll-area" style="padding-top: 0;">
-                    <button class="back-btn dev-back-btn" id="closeProfileBtn" style="z-index: 100;"><i class="fas fa-arrow-left"></i></button>
-                    <button class="back-btn dev-back-btn" id="admin-logout-btn" style="right: 20px; left: auto; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); z-index: 100; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);"><i class="fas fa-power-off"></i></button>
+                <div class="dev-scroll-area" style="padding-top: 0; display: flex; flex-direction: column; min-height: 100vh;">
+                    
+                    <div style="flex: 1;">
+                        <button class="back-btn dev-back-btn" id="closeProfileBtn" style="z-index: 100;"><i class="fas fa-arrow-left"></i></button>
+                        <button class="back-btn dev-back-btn" id="admin-logout-btn" style="right: 20px; left: auto; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); z-index: 100; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);"><i class="fas fa-power-off"></i></button>
 
-                    <div class="dev-hero-banner" id="profileBanner" style="background-image: url('https://i.postimg.cc/ydWN7sF8/file-00000000639481f8b111b8b824545a9a.png'); min-height: 220px; margin: 0; width: 100%;">
-                        <div class="banner-fade-bottom"></div>
-                        <div class="hero-content-wrapper" style="justify-content: center; padding-bottom: 0;">
-                            <div class="profile-avatar-container" style="margin: 0 auto;">
-                                <div class="dev-profile-img-wrapper">
-                                    <img id="profile-avatar-ui" src="https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png" class="dev-profile-img" oncontextmenu="return false;" draggable="false">
+                        <div class="dev-hero-banner" id="profileBanner" style="background-image: url('https://i.postimg.cc/ydWN7sF8/file-00000000639481f8b111b8b824545a9a.png'); min-height: 220px; margin: 0; width: 100%;">
+                            <div class="banner-fade-bottom"></div>
+                            <div class="hero-content-wrapper" style="justify-content: center; padding-bottom: 0;">
+                                <div class="profile-avatar-container" style="margin: 0 auto;">
+                                    <div class="dev-profile-img-wrapper">
+                                        <img id="profile-avatar-ui" src="https://i.postimg.cc/D0BF1b77/file-000000000e847207a64f6711d825a859.png" class="dev-profile-img" oncontextmenu="return false;" draggable="false">
+                                    </div>
+                                    <div class="profile-shield" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); border-color: #000; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.5); z-index: 10;"><i class="fas fa-shield-alt"></i></div>
                                 </div>
-                                <div class="profile-shield" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); border-color: #000; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.5); z-index: 10;"><i class="fas fa-shield-alt"></i></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="premium-bio-section" style="margin-top: 35px; padding-bottom: 25px;">
-                        <div class="bio-greeting" id="profile-name-ui" style="font-size: 1.6rem; font-family: 'Plus Jakarta Sans', sans-serif;">Loading...</div>
-                        <div id="profile-email-ui" style="display: none; font-size: 0.95rem; color: #a1a1aa; font-weight: 600; margin-top: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;"></div>
-                    </div>
-
-                    <!-- Cleaned up Stats Container: CREDITS and RANK SWAPPED -->
-                    <div class="stats-container">
-                        <div class="stat-card card-download">
-                            <div class="icon-box" style="box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);"><i class="fas fa-cloud-download-alt"></i></div>
-                            <div class="stat-info">
-                                <div class="stat-label">Download</div>
-                                <div class="stat-value" id="profile-downloads">0</div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card card-bookmark">
-                            <div class="icon-box" style="box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);"><i class="fas fa-bookmark"></i></div>
-                            <div class="stat-info">
-                                <div class="stat-label">Save</div>
-                                <div class="stat-value" id="profile-saved">0</div>
                             </div>
                         </div>
 
-                        <!-- CREDITS MOVED TO BOTTOM LEFT -->
-                        <div class="stat-card card-credit">
-                            <div class="icon-box" style="color: #ef4444; background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);">
-                                <i class="fas fa-bolt"></i>
-                            </div>
-                            <div class="stat-info">
-                                <div class="stat-label">Credits</div>
-                                <div class="stat-value" id="profile-credits">--</div>
-                            </div>
+                        <div class="premium-bio-section" style="margin-top: 35px; padding-bottom: 25px;">
+                            <div class="bio-greeting" id="profile-name-ui" style="font-size: 1.6rem; font-family: 'Plus Jakarta Sans', sans-serif;">Loading...</div>
+                            <div id="profile-email-ui" style="display: none; font-size: 0.95rem; color: #a1a1aa; font-weight: 600; margin-top: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;"></div>
                         </div>
 
-                        <!-- RANK MOVED TO BOTTOM RIGHT -->
-                        <div class="stat-card card-premium">
-                            <div class="icon-box" style="box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);"><i class="fas fa-crown"></i></div>
-                            <div class="stat-info">
-                                <div class="stat-label">Rank</div>
-                                <div class="stat-value premium-text" id="profile-rank">#--</div>
+                        <!-- Cleaned up Stats Container: CREDITS and RANK SWAPPED -->
+                        <div class="stats-container">
+                            <div class="stat-card card-download">
+                                <div class="icon-box" style="box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);"><i class="fas fa-cloud-download-alt"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Download</div>
+                                    <div class="stat-value" id="profile-downloads">0</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card card-bookmark">
+                                <div class="icon-box" style="box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);"><i class="fas fa-bookmark"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Save</div>
+                                    <div class="stat-value" id="profile-saved">0</div>
+                                </div>
+                            </div>
+
+                            <!-- CREDITS MOVED TO BOTTOM LEFT -->
+                            <div class="stat-card card-credit">
+                                <div class="icon-box" style="color: #ef4444; background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Credits</div>
+                                    <div class="stat-value" id="profile-credits">--</div>
+                                </div>
+                            </div>
+
+                            <!-- RANK MOVED TO BOTTOM RIGHT -->
+                            <div class="stat-card card-premium">
+                                <div class="icon-box" style="box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);"><i class="fas fa-crown"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-label">Rank</div>
+                                    <div class="stat-value premium-text" id="profile-rank">#--</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
-                    <div style="margin-top: auto; padding: 25px 15px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.8px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);">
-                        <span style="white-space: nowrap;">© 2026 SPIDY BOOK HUB</span>
-                        <span style="color: #3f3f46;">|</span>
-                        <span style="white-space: nowrap;">MADE WITH <i class="fas fa-heart" style="color: #ff4757; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</span>
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: 8.5px; font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;">
+                        © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
             </div>
@@ -442,8 +438,9 @@
                     </div>
                     <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" class="header-right-logo" alt="Logo" oncontextmenu="return false;" draggable="false">
                 </div>
-                <div class="dl-content-wrapper" style="display: flex; flex-direction: column; min-height: 100%;">
-                    <div>
+                <div class="dl-content-wrapper" style="display: flex; flex-direction: column; min-height: 100vh; padding: 0;">
+                    
+                    <div style="padding: 15px 20px 30px; flex: 1;">
                         <div class="dl-img-wrapper-outer"><div class="dl-img-container"><img id="dlPreviewImage" class="dl-preview-image" src="" oncontextmenu="return false;" draggable="false"><div class="dl-powered-badge disable-long-press">POWERED BY : MADxPRINCE</div></div></div>
                         <h2 class="dl-title" id="dlBookTitle"></h2><div class="dl-author" id="dlBookAuthor"></div>
                         <button id="dlPdfLinkBtn" class="dl-main-btn disable-long-press"><i class="fas fa-download"></i> Download PDF</button>
@@ -463,11 +460,9 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
-                    <div style="margin-top: auto; padding: 25px 15px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.8px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);">
-                        <span style="white-space: nowrap;">© 2026 SPIDY BOOK HUB</span>
-                        <span style="color: #3f3f46;">|</span>
-                        <span style="white-space: nowrap;">MADE WITH <i class="fas fa-heart" style="color: #ff4757; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</span>
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: 8.5px; font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;">
+                        © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
             </div>
@@ -481,17 +476,25 @@
                     </div>
                     <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" class="header-right-logo" alt="Logo" oncontextmenu="return false;" draggable="false">
                 </div>
-                <div class="dmca-content" style="padding: 20px 20px 0px;">
-                    <div style="margin-bottom: 15px;">
-                        <div class="section-header-title" style="margin-bottom: 0;"><i class="fas fa-bookmark" style="color: #3b82f6;"></i> Your Favorites 💖 </div>
-                    </div>
-                    <div class="book-container" id="savedBooksContainer"></div>
-                    <div id="no-saved-msg" style="display: none; padding-bottom: 20px; justify-content: center; height: 100%;">
-                        <div class="no-results-card" style="margin-top: 40px;">
-                            <div class="no-results-icon"><i class="far fa-bookmark"></i></div>
-                            <h2 class="no-results-title">NO SAVED BOOKS</h2>
-                            <p class="no-results-desc">You haven't bookmarked any books yet. Click the bookmark icon on any book to save it here!</p>
+                <div class="dmca-content" style="display: flex; flex-direction: column; min-height: 100vh; padding: 0;">
+                    
+                    <div style="padding: 20px 20px 30px; flex: 1;">
+                        <div style="margin-bottom: 15px;">
+                            <div class="section-header-title" style="margin-bottom: 0;"><i class="fas fa-bookmark" style="color: #3b82f6;"></i> Your Favorites 💖 </div>
                         </div>
+                        <div class="book-container" id="savedBooksContainer"></div>
+                        <div id="no-saved-msg" style="display: none; padding-bottom: 20px; justify-content: center; height: 100%;">
+                            <div class="no-results-card" style="margin-top: 40px;">
+                                <div class="no-results-icon"><i class="far fa-bookmark"></i></div>
+                                <h2 class="no-results-title">NO SAVED BOOKS</h2>
+                                <p class="no-results-desc">You haven't bookmarked any books yet. Click the bookmark icon on any book to save it here!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: 8.5px; font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;">
+                        © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
             </div>
@@ -524,8 +527,9 @@
                     </div>
                     <img src="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png" class="header-right-logo" alt="Logo" oncontextmenu="return false;" draggable="false">
                 </div>
-                <div class="dmca-content" style="padding-bottom: 20px;">
-                    <div>
+                <div class="dmca-content" style="display: flex; flex-direction: column; min-height: 100vh; padding: 0;">
+                    
+                    <div style="padding: 20px 0 30px; flex: 1;">
                         <div class="dmca-hero">
                             <h1 class="dmca-hero-title">COPYRIGHT DISCLAIMER</h1>
                             <p class="dmca-hero-subtitle">
@@ -548,7 +552,7 @@
                             <p style="margin-top: 15px; font-weight: bold; color: #a1a1aa; font-size: 0.75rem;">⏱ Review Time: 24–48 Hours</p>
                         </div>
                         
-                        <!-- ADDED BACK THE MISSING CARDS AS REQUESTED -->
+                        <!-- MISSING CARDS ADDED BACK -->
                         <div class="dmca-section">
                             <h2 class="dmca-section-title"><span class="dmca-mini-icon icon-notice"><i class="fas fa-shield-alt"></i></span>Important Notice</h2>
                             <p>The materials shared on this platform are intended for educational, research, review and reference purposes only. Users are encouraged to support authors and publishers by purchasing original books whenever possible.</p>
@@ -559,11 +563,9 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
-                    <div style="margin-top: auto; padding: 25px 15px; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: #a1a1aa; letter-spacing: 0.8px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.08); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);">
-                        <span style="white-space: nowrap;">© 2026 SPIDY BOOK HUB</span>
-                        <span style="color: #3f3f46;">|</span>
-                        <span style="white-space: nowrap;">MADE WITH <i class="fas fa-heart" style="color: #ff4757; filter: drop-shadow(0 0 5px rgba(255,71,87,0.8));"></i> BY MADxPRINCE</span>
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: 8.5px; font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; white-space: nowrap;">
+                        © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
             </div>
