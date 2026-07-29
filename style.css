@@ -229,7 +229,6 @@ main::-webkit-scrollbar { display: none; }
 .download-modal { position: absolute; inset: 0; background-color: #000000; z-index: 99999; overflow-y: auto; overflow-x: hidden; display: none; flex-direction: column; }
 .download-modal::-webkit-scrollbar { display: none; }
 .download-modal .modal-header-fixed { background-color: #000000 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); }
-.dl-content-wrapper { padding: 5px 20px 0; display: flex; flex-direction: column; min-height: 100%; }
 .dl-img-wrapper-outer { display: flex; justify-content: center; width: 100%; margin-top: 10px; margin-bottom: 30px; }
 .dl-img-container { position: relative; display: inline-flex; justify-content: center; align-items: center; padding: 6px; border-radius: 18px; border: 2px solid #ffffff; background: transparent; box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.9), 0 10px 30px rgba(0, 0, 0, 0.8); min-height: 320px; min-width: 220px; }
 .dl-preview-image { width: 100%; max-width: 320px; height: auto; min-height: 300px; max-height: 420px; object-fit: contain; border-radius: 12px; background: #fff; display: block; transition: opacity 0.3s ease; }
@@ -498,7 +497,7 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 .uc-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
 .uc-footer { text-align: center; font-size: 10px; color: #71717a; font-weight: 600; position: relative; z-index: 1; }
 
-/* PROMPT UI (From Original) */
+/* PROMPT UI */
 .telegram-prompt-wrapper { margin-bottom: 25px; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
 .telegram-prompt-card { background: #121212; border-radius: 6px 12px 12px 6px; overflow: hidden; width: 100%; border: 1px solid rgba(255,255,255,0.15); border-left: 4px solid #7c3aed; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
 .telegram-prompt-header { background: rgba(255,255,255,0.05); padding: 12px 15px; font-weight: 700; color: #fff; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -508,26 +507,40 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 .telegram-copy-btn:active { transform: scale(0.97); background: rgba(255,255,255,0.1); }
 
 /* ========================================= */
-/* BOTTOM SHEET / AUTHOR FILTER              */
+/* 🌟 NEW: DUAL FILTER BOTTOM SHEET (APPROACH B) 🌟 */
 /* ========================================= */
 .app-filter-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 12px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.12); flex-shrink: 0; }
 .app-filter-icon:active { transform: scale(0.9); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
+
 .filter-bottom-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 999999; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
 .filter-bottom-overlay.active { opacity: 1; pointer-events: all; }
-.filter-bottom-sheet { width: 100%; background: #121212; border-radius: 28px 28px 0 0; padding: 15px 20px 30px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-top: 1px solid rgba(255,255,255,0.15); height: 92vh; display: flex; flex-direction: column; }
+
+/* Enhanced Sheet for Dual Filters */
+.filter-bottom-sheet { 
+    width: 100%; background: #121212; border-radius: 28px 28px 0 0; padding: 15px 20px 20px; 
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    border-top: 1px solid rgba(255,255,255,0.15); height: 88vh; max-height: 88vh; display: flex; flex-direction: column; 
+}
 .filter-bottom-overlay.active .filter-bottom-sheet { transform: translateY(0); }
+
 .f-drag-handle { width: 45px; height: 5px; background: #3f3f46; border-radius: 10px; margin: 0 auto 20px; }
 .f-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
 .f-header h3 { color: #fff; font-size: 1.25rem; font-weight: 800; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; }
 .f-header-icon { width: 28px; height: 28px; background: transparent; display: flex; justify-content: center; align-items: center; color: #10b981; font-size: 22px; box-shadow: none; border: none; flex-shrink: 0; }
 .f-close { width: 34px; height: 34px; border-radius: 50%; background: transparent; display: flex; justify-content: center; align-items: center; color: #a1a1aa; cursor: pointer; border: 1px solid rgba(255,255,255,0.15); transition: 0.2s; }
 .f-close:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
-.f-options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; overflow-y: auto; padding-bottom: 20px; flex: 1; align-content: start; }
+
+/* Custom Scroll for Dual Grids */
 .f-options-grid::-webkit-scrollbar { display: none; }
 .f-pill { display: block; width: 100%; height: 46px; line-height: 24px; text-align: center; padding: 10px 12px; background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #a1a1aa; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 .f-pill:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); color: #fff; border-color: rgba(255,255,255,0.2); }
 .f-pill:active { transform: scale(0.95); }
+
+/* Active States for Exam & Language */
 .f-pill.active { background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2); font-weight: 800; }
+#languageFilterGrid .f-pill.active { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; color: #3b82f6; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2); }
+
+#applyFiltersBtn:active { transform: scale(0.96); box-shadow: 0 2px 5px rgba(16, 185, 129, 0.4); }
 
 /* ========================================= */
 /* UG UPLOAD POPUP (Tutorial Modal)          */
@@ -579,6 +592,7 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
     .brand-title { font-size: 24px; } 
     .form-header { font-size: 18px; }
     .f-options-grid { grid-template-columns: repeat(1, 1fr); }
+    #languageFilterGrid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 @media screen and (min-width: 768px) {
     .app-container { max-width: 100%; border-radius: 0; box-shadow: none; }
@@ -592,6 +606,7 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
     .modal-header-fixed, .noti-header-premium { padding: 15px 5%; }
     .adm-content-area { padding: 30px 10%; }
     .dev-hero-banner { aspect-ratio: 2071 / 771; min-height: 300px; }
+    
     .filter-bottom-sheet { max-width: 500px; margin: 0 auto; border-radius: 28px; transform: translateY(20px) scale(0.95); padding: 25px 30px 30px; border: 1px solid rgba(255,255,255,0.15); align-self: center; height: auto; max-height: 80vh; }
     .filter-bottom-overlay.active .filter-bottom-sheet { transform: translateY(0) scale(1); }
     .f-drag-handle { display: none; }
