@@ -9,6 +9,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="./style.css">
+    
+    <!-- CUSTOM LOGOUT MODAL CSS -->
+    <style>
+        .custom-logout-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 99999999;
+            opacity: 0; transition: opacity 0.3s ease; padding: 20px;
+        }
+        .custom-logout-card {
+            background: #121212; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+            width: 100%; max-width: 320px; padding: 25px 20px; text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8); transform: scale(0.9); transition: transform 0.3s ease;
+        }
+        .custom-logout-overlay.show { display: flex; opacity: 1; }
+        .custom-logout-overlay.show .custom-logout-card { transform: scale(1); }
+        .logout-icon-wrapper {
+            width: 60px; height: 60px; background: rgba(239, 68, 68, 0.1); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; margin: 0 auto 15px;
+            color: #ef4444; font-size: 24px; border: 1px solid rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+        }
+        .logout-title { color: #fff; font-size: 18px; font-weight: 800; font-family: 'Poppins', sans-serif; margin-bottom: 8px; letter-spacing: 0.5px;}
+        .logout-desc { color: #a1a1aa; font-size: 13px; font-weight: 500; margin-bottom: 25px; line-height: 1.5; }
+        .logout-actions { display: flex; gap: 12px; }
+        .btn-cancel-logout {
+            flex: 1; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif;
+        }
+        .btn-cancel-logout:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+        .btn-confirm-logout {
+            flex: 1; background: #ef4444; color: #fff; border: none;
+            padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); font-family: 'Inter', sans-serif;
+        }
+        .btn-confirm-logout:active { transform: scale(0.95); box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4); }
+    </style>
 </head>
 <body>
 
@@ -262,7 +298,7 @@
                     <div class="nav-scroll-spacer"></div>
                 </div>
 
-                <!-- TAB 4: ABOUT (DEV TAB - NO FOOTER) -->
+                <!-- TAB 4: ABOUT -->
                 <div id="tab-about" class="app-tab" style="display: none; padding: 0;">
                     <div class="dev-hero-banner" id="aboutBanner" style="width: 100%; margin: 0;">
                         <div class="banner-fade-bottom"></div>
@@ -320,8 +356,10 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="nav-scroll-spacer"></div>
                 </div>
+
             </main>
 
             <!-- PERSISTENT BOTTOM NAVIGATION BAR -->
@@ -358,6 +396,7 @@
             <!-- MY PROFILE PANEL -->
             <div class="overlay-panel" id="my-profile-panel">
                 <div class="dev-scroll-area" style="display: flex; flex-direction: column; padding: 0;">
+                    
                     <div style="flex: 1;">
                         <button class="back-btn dev-back-btn" id="closeProfileBtn" style="z-index: 100;"><i class="fas fa-arrow-left"></i></button>
                         <button class="back-btn dev-back-btn" id="admin-logout-btn" style="right: 20px; left: auto; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); z-index: 100; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);"><i class="fas fa-power-off"></i></button>
@@ -374,7 +413,8 @@
                             </div>
                         </div>
 
-                        <div class="premium-bio-section" style="margin-top: 35px; padding-bottom: 25px;">
+                        <!-- Spacing increased properly -->
+                        <div class="premium-bio-section" style="margin-top: 60px; padding-bottom: 25px;">
                             <div class="bio-greeting" id="profile-name-ui" style="font-size: 1.6rem; font-family: 'Plus Jakarta Sans', sans-serif;">Loading...</div>
                             <div id="profile-email-ui" style="display: none; font-size: 0.95rem; color: #a1a1aa; font-weight: 600; margin-top: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;"></div>
                         </div>
@@ -417,8 +457,8 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
-                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
+                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER (No background gap) -->
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
@@ -456,7 +496,7 @@
                     </div>
                     
                     <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
-                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
@@ -488,7 +528,7 @@
                     </div>
                     
                     <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
-                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
@@ -557,7 +597,7 @@
                     </div>
                     
                     <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
-                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
+                    <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
                 </div>
@@ -612,6 +652,19 @@
         </div>
     </div>
     
+    <!-- CUSTOM LOGOUT MODAL HTML -->
+    <div class="custom-logout-overlay" id="customLogoutOverlay">
+        <div class="custom-logout-card">
+            <div class="logout-icon-wrapper"><i class="fas fa-sign-out-alt"></i></div>
+            <h3 class="logout-title">Sign Out?</h3>
+            <p class="logout-desc">Are you sure you want to log out of your account?</p>
+            <div class="logout-actions">
+                <button class="btn-cancel-logout" id="cancelLogoutBtn">Cancel</button>
+                <button class="btn-confirm-logout" id="confirmLogoutBtn">Yes, Log Out</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script for Dynamic Headers Logic -->
     <script>
         function updateHeaderForTab(tab) {
@@ -631,20 +684,36 @@
         }
     </script>
     
-    <!-- Logout Script -->
+    <!-- NEW LOGOUT SCRIPT INTEGRATED WITH CUSTOM MODAL -->
     <script type="module">
         import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         
-        document.getElementById('admin-logout-btn').addEventListener('click', () => {
+        const logoutBtn = document.getElementById('admin-logout-btn');
+        const logoutOverlay = document.getElementById('customLogoutOverlay');
+        const cancelBtn = document.getElementById('cancelLogoutBtn');
+        const confirmBtn = document.getElementById('confirmLogoutBtn');
+
+        logoutBtn.addEventListener('click', () => {
+            logoutOverlay.style.display = 'flex';
+            setTimeout(() => { logoutOverlay.classList.add('show'); }, 10);
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            logoutOverlay.classList.remove('show');
+            setTimeout(() => { logoutOverlay.style.display = 'none'; }, 300);
+        });
+
+        confirmBtn.addEventListener('click', () => {
             const auth = getAuth();
-            if(confirm("Are you sure you want to log out?")) {
-                signOut(auth).then(() => {
-                    localStorage.removeItem('isUserLoggedIn');
-                    window.location.reload();
-                }).catch((error) => {
-                    alert("Error signing out!");
-                });
-            }
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            signOut(auth).then(() => {
+                localStorage.removeItem('isUserLoggedIn');
+                window.location.reload();
+            }).catch((error) => {
+                alert("Error signing out!");
+                logoutOverlay.classList.remove('show');
+                setTimeout(() => { logoutOverlay.style.display = 'none'; confirmBtn.innerHTML = 'Yes, Log Out'; }, 300);
+            });
         });
     </script>
 
