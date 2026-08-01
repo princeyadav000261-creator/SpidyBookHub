@@ -59,7 +59,6 @@ body {
     width: 100%; max-width: 414px; height: 100%; height: 100dvh; background-color: var(--bg-main); position: relative; overflow-x: hidden; overflow-y: hidden; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.8); 
 }
 
-/* AUTO-HIDE HEADER WHEN ABOUT TAB IS ACTIVE */
 .app-container:has(#tab-about.active) #main-header { display: none !important; }
 
 /* HEADER */
@@ -507,7 +506,7 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 .telegram-copy-btn:active { transform: scale(0.97); background: rgba(255,255,255,0.1); }
 
 /* ========================================= */
-/* 🌟 NEW: DUAL FILTER BOTTOM SHEET 🌟 */
+/* 🌟 NEW: DUAL FILTER BOTTOM SHEET (UPDATED)🌟 */
 /* ========================================= */
 .app-filter-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 12px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.12); flex-shrink: 0; }
 .app-filter-icon:active { transform: scale(0.9); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
@@ -515,39 +514,85 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 .filter-bottom-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 999999; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
 .filter-bottom-overlay.active { opacity: 1; pointer-events: all; }
 
-/* Enhanced Sheet for Dual Filters */
+/* Filter Sheet: auto height, sleek radius, no ugly scrollbar */
 .filter-bottom-sheet { 
-    width: 100%; background: #121212; border-radius: 28px 28px 0 0; padding: 15px 20px 20px; 
+    width: 100%; background: #121212; border-radius: 32px 32px 0 0; padding: 20px 20px 25px; 
     transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-    border-top: 1px solid rgba(255,255,255,0.15); height: 88vh; max-height: 88vh; display: flex; flex-direction: column; 
+    border-top: 1px solid rgba(255,255,255,0.15); height: auto; max-height: 85vh; display: flex; flex-direction: column; 
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
 }
 .filter-bottom-overlay.active .filter-bottom-sheet { transform: translateY(0); }
 
 .f-drag-handle { width: 45px; height: 5px; background: #3f3f46; border-radius: 10px; margin: 0 auto 20px; }
 .f-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
 .f-header h3 { color: #fff; font-size: 1.25rem; font-weight: 800; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; }
-.f-header-icon { width: 28px; height: 28px; background: transparent; display: flex; justify-content: center; align-items: center; color: #10b981; font-size: 22px; box-shadow: none; border: none; flex-shrink: 0; }
+.f-header-icon { width: 28px; height: 28px; background: transparent; display: flex; justify-content: center; align-items: center; color: #10b981; font-size: 22px; flex-shrink: 0; }
 .f-close { width: 34px; height: 34px; border-radius: 50%; background: transparent; display: flex; justify-content: center; align-items: center; color: #a1a1aa; cursor: pointer; border: 1px solid rgba(255,255,255,0.15); transition: 0.2s; }
 .f-close:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
 
-/* Custom Scroll for Dual Grids */
+/* Custom Scroll Area (Scrollbar Hidden) */
+.f-scroll-area {
+    flex: 1; overflow-y: auto; padding-bottom: 5px; display: flex; flex-direction: column; gap: 20px;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+.f-scroll-area::-webkit-scrollbar { display: none; /* Chrome, Safari, Opera */ }
 .f-options-grid::-webkit-scrollbar { display: none; }
 
-/* UPDATED: Professional dark solid pills */
 .f-pill { 
     display: block; width: 100%; height: 46px; line-height: 24px; text-align: center; padding: 10px 12px; 
-    background: #18181b; 
-    border: 1px solid #27272a; 
-    border-radius: 12px; color: #a1a1aa; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; 
+    background: #18181b; border: 1px solid #27272a; border-radius: 12px; color: #a1a1aa; 
+    font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; 
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; 
 }
-.f-pill:hover { background: #27272a; border-color: #3f3f46; color: #fff; }
+.f-pill:hover { background: #27272a; color: #ffffff; border-color: #3f3f46; }
 .f-pill:active { transform: scale(0.95); }
 
-/* Active States for Exam (Green) & Language (Blue) */
-.f-pill.active { background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15); font-weight: 800; }
-#languageFilterGrid .f-pill.active { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; color: #3b82f6; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15); }
-
+.f-pill.active { 
+    background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #10b981; font-weight: 800; 
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
+}
+#languageFilterGrid .f-pill.active { 
+    background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; color: #3b82f6; 
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+}
 #applyFiltersBtn:active { transform: scale(0.96); box-shadow: 0 2px 5px rgba(16, 185, 129, 0.4); }
+
+/* ========================================= */
+/* CUSTOM LOGOUT MODAL                       */
+/* ========================================= */
+.custom-logout-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+    display: none; justify-content: center; align-items: center; z-index: 99999999;
+    opacity: 0; transition: opacity 0.3s ease; padding: 20px;
+}
+.custom-logout-card {
+    background: #121212; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+    width: 100%; max-width: 320px; padding: 25px 20px; text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8); transform: scale(0.9); transition: transform 0.3s ease;
+}
+.custom-logout-overlay.show { display: flex; opacity: 1; }
+.custom-logout-overlay.show .custom-logout-card { transform: scale(1); }
+.logout-icon-wrapper {
+    width: 60px; height: 60px; background: rgba(239, 68, 68, 0.1); border-radius: 50%;
+    display: flex; justify-content: center; align-items: center; margin: 0 auto 15px;
+    color: #ef4444; font-size: 24px; border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+.logout-title { color: #fff; font-size: 18px; font-weight: 800; font-family: 'Poppins', sans-serif; margin-bottom: 8px; letter-spacing: 0.5px;}
+.logout-desc { color: #a1a1aa; font-size: 13px; font-weight: 500; margin-bottom: 25px; line-height: 1.5; }
+.logout-actions { display: flex; gap: 12px; }
+.btn-cancel-logout {
+    flex: 1; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1);
+    padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif;
+}
+.btn-cancel-logout:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+.btn-confirm-logout {
+    flex: 1; background: #ef4444; color: #fff; border: none;
+    padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); font-family: 'Inter', sans-serif;
+}
+.btn-confirm-logout:active { transform: scale(0.95); box-shadow: 0 2px 5px rgba(239, 68, 68, 0.4); }
 
 /* ========================================= */
 /* UG UPLOAD POPUP (Tutorial Modal)          */
