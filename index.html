@@ -10,8 +10,51 @@
     <!-- Main CSS File -->
     <link rel="stylesheet" href="./style.css">
     
-    <!-- CUSTOM LOGOUT MODAL CSS -->
+    <!-- CUSTOM LOGOUT MODAL & UPDATED FILTER CSS -->
     <style>
+        /* Filter Bottom Sheet Professional UI Updates */
+        .app-filter-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 12px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.12); flex-shrink: 0; }
+        .app-filter-icon:active { transform: scale(0.9); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
+
+        .filter-bottom-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 999999; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .filter-bottom-overlay.active { opacity: 1; pointer-events: all; }
+
+        .filter-bottom-sheet { 
+            width: 100%; background: #121212; border-radius: 28px 28px 0 0; padding: 15px 20px 20px; 
+            transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            border-top: 1px solid rgba(255,255,255,0.15); height: 88vh; max-height: 88vh; display: flex; flex-direction: column; 
+        }
+        .filter-bottom-overlay.active .filter-bottom-sheet { transform: translateY(0); }
+
+        .f-drag-handle { width: 45px; height: 5px; background: #3f3f46; border-radius: 10px; margin: 0 auto 20px; }
+        .f-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .f-header h3 { color: #fff; font-size: 1.25rem; font-weight: 800; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; }
+        .f-header-icon { width: 28px; height: 28px; background: transparent; display: flex; justify-content: center; align-items: center; color: #10b981; font-size: 22px; flex-shrink: 0; }
+        .f-close { width: 34px; height: 34px; border-radius: 50%; background: transparent; display: flex; justify-content: center; align-items: center; color: #a1a1aa; cursor: pointer; border: 1px solid rgba(255,255,255,0.15); transition: 0.2s; }
+        .f-close:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
+
+        .f-options-grid::-webkit-scrollbar { display: none; }
+        
+        .f-pill { 
+            display: block; width: 100%; height: 46px; line-height: 24px; text-align: center; padding: 10px 12px; 
+            background: #18181b; border: 1px solid #27272a; border-radius: 12px; color: #a1a1aa; 
+            font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: none; 
+        }
+        .f-pill:hover { background: #27272a; color: #ffffff; border-color: #3f3f46; }
+        .f-pill:active { transform: scale(0.95); }
+
+        .f-pill.active { 
+            background: rgba(16, 185, 129, 0.1); border-color: #10b981; color: #10b981; font-weight: 800; 
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
+        }
+        #languageFilterGrid .f-pill.active { 
+            background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; color: #3b82f6; 
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+        }
+        #applyFiltersBtn:active { transform: scale(0.96); box-shadow: 0 2px 5px rgba(16, 185, 129, 0.4); }
+
+        /* Custom Logout Modal */
         .custom-logout-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
             display: none; justify-content: center; align-items: center; z-index: 99999999;
@@ -69,11 +112,7 @@
 
     <!-- Login Overlay -->
     <div id="loginOverlay" class="login-container" style="display: none; opacity: 0;">
-        
-        <!-- CLOSE BUTTON -->
         <div class="close-login-btn" id="closeLoginBtn" style="position: absolute; top: 20px; right: 20px; z-index: 100000;"><i class="fas fa-times"></i></div>
-
-        <!-- Background Dots Decoration -->
         <div class="login-dots dot-top-left"></div>
         <div class="login-dots dot-bottom-right"></div>
         
@@ -407,11 +446,11 @@
                         <div>
                             <div style="font-size: 11px; font-weight: 800; color: #71717a; letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase;"><i class="fas fa-globe" style="margin-right: 5px;"></i> Select Medium</div>
                             <!-- Static Languages go here -->
-                            <div class="f-options-grid" id="languageFilterGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding-bottom: 5px;">
+                            <div class="f-options-grid" id="languageFilterGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding-bottom: 5px;">
                                 <div class="f-pill active" data-lang="All">All</div>
                                 <div class="f-pill" data-lang="Hindi">Hindi</div>
                                 <div class="f-pill" data-lang="English">English</div>
-                                <div class="f-pill" data-lang="Bilingual" style="grid-column: span 3;">Bilingual</div>
+                                <div class="f-pill" data-lang="Bilingual">Bilingual</div>
                             </div>
                         </div>
 
