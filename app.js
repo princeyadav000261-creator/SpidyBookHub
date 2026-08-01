@@ -25,7 +25,6 @@ const analytics = getAnalytics(app);
 // ==========================================
 // 2. CLOUDFLARE R2 DIRECT API CONFIGURATION
 // ==========================================
-// Bhai, jab tak backend nahi banta, apni R2 API details yahan daal do:
 const R2_UPLOAD_API_URL = "https://your-worker-name.your-subdomain.workers.dev/upload";
 const R2_API_TOKEN = "YOUR_SECURE_API_HASH_TOKEN";
 
@@ -330,15 +329,17 @@ document.getElementById('googleSignInBtn').addEventListener('click', async () =>
 // 🌟 ADVANCED DUAL FILTER SYSTEM (APPROACH B) 🌟
 // ==========================================
 
+// EXAM Categories updated to proper Title Case, Jee and Neet separated.
 const EXAM_CATEGORY_MAP = {
-    "SSC": ["SSC", "CGL", "CHSL", "MTS", "CPO", "GD", "STENOGRAPHER", "SELECTION POST"],
+    "Ssc": ["SSC", "CGL", "CHSL", "MTS", "CPO", "GD", "STENOGRAPHER", "SELECTION POST"],
     "Railway": ["RAILWAY", "RRB", "NTPC", "GROUP D", "ALP", "TECHNICIAN", "RPF"],
     "Defence": ["NDA", "CDS", "AFCAT", "NAVY", "ARMY", "AIRFORCE", "AGNIVEER"],
     "Banking": ["BANK", "IBPS", "SBI", "PO", "CLERK", "RBI", "LIC"],
     "Teaching": ["CTET", "STET", "UPTET", "KVS", "NVS", "BPSC TRE", "DSSSB"],
-    "State PSC & UPSC": ["UPSC", "BPSC", "UPPSC", "MPPSC", "STATE PSC", "PCS", "CIVIL SERVICES"],
+    "State psc & upsc": ["UPSC", "BPSC", "UPPSC", "MPPSC", "STATE PSC", "PCS", "CIVIL SERVICES"],
     "Police": ["POLICE", "UP POLICE", "DELHI POLICE", "BIHAR POLICE", "SI", "CONSTABLE", "DAROGA"],
-    "Engg & Medical": ["JEE", "NEET", "IIT", "GATE", "BITSAT", "MAINS", "ADVANCED"]
+    "Jee": ["JEE", "IIT", "MAINS", "ADVANCED", "BITSAT"],
+    "Neet": ["NEET", "MEDICAL", "AIIMS"]
 };
 
 let currentSelectedCategory = "All";
@@ -366,10 +367,11 @@ function updateDynamicFilters() {
         if (!matchedMainCategory) {
             let examsArray = book.exams.split(',');
             examsArray.forEach(exam => {
-                let cleanExam = exam.trim().toUpperCase();
-                // Add dynamically if it contains "CLASS", "BOARD" or is an unmapped string
+                let cleanExam = exam.trim();
+                // Formatting dynamically to Title Case (First letter capital, rest small)
                 if (cleanExam.length > 0) {
-                    activeCategories.add(cleanExam);
+                    let formattedExam = cleanExam.charAt(0).toUpperCase() + cleanExam.slice(1).toLowerCase();
+                    activeCategories.add(formattedExam);
                 }
             });
         }
@@ -389,7 +391,6 @@ function updateDynamicFilters() {
 // Click Listener for Categories
 document.getElementById('categoryFilterGrid').addEventListener('click', (e) => {
     if(e.target.classList.contains('f-pill')) {
-        // Remove active class from all, add to clicked
         document.querySelectorAll('#categoryFilterGrid .f-pill').forEach(el => el.classList.remove('active'));
         e.target.classList.add('active');
         currentSelectedCategory = e.target.getAttribute('data-category');
@@ -425,21 +426,18 @@ function applyMasterFilter() {
             matchesCategory = false; 
             if (book.exams) {
                 let bookExamsString = book.exams.toUpperCase();
-                let keywordsToCheck = EXAM_CATEGORY_MAP[currentSelectedCategory] || [currentSelectedCategory];
+                let keywordsToCheck = EXAM_CATEGORY_MAP[currentSelectedCategory] || [currentSelectedCategory.toUpperCase()];
                 matchesCategory = keywordsToCheck.some(keyword => bookExamsString.includes(keyword));
             }
         }
 
+        // STRICT Language Match Update
         let matchesLanguage = true;
         if (currentSelectedLanguage !== "All") {
-            let bookLang = (book.lang || "").toLowerCase();
-            let selectedLang = currentSelectedLanguage.toLowerCase();
-            // If user selects Hindi, show Hindi AND Bilingual. Same for English.
-            if(selectedLang === 'hindi' || selectedLang === 'english') {
-                matchesLanguage = bookLang.includes(selectedLang) || bookLang.includes('bilingual');
-            } else {
-                matchesLanguage = bookLang.includes(selectedLang);
-            }
+            let bookLang = (book.lang || "").toLowerCase().trim();
+            let selectedLang = currentSelectedLanguage.toLowerCase().trim();
+            // Sirf exact match hi display hoga (e.g. Hindi select pe sirf Hindi)
+            matchesLanguage = (bookLang === selectedLang); 
         }
 
         // 2. SEARCH BAR CHECK
