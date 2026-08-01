@@ -306,7 +306,7 @@ main::-webkit-scrollbar { display: none; }
 .hero-soc-btn .fa-instagram { color: #E1306C; }
 .hero-soc-btn .fa-youtube { color: #ef4444; }
 
-.premium-bio-section { padding: 25px 20px 10px; margin-top: 75px !important; text-align: center; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.premium-bio-section { padding: 25px 20px 10px; margin-top: 45px !important; text-align: center; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
 .bio-greeting { font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; letter-spacing: 0.5px; }
 .bio-greeting span.highlight-name { background: linear-gradient(135deg, #0ea5e9, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; font-family: 'Poppins', sans-serif; font-size: 1.4rem; }
 .bio-quote-container { position: relative; display: inline-block; padding: 0 15px; }
