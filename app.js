@@ -274,6 +274,37 @@ onAuthStateChanged(auth, async (user) => {
     });
 });
 
+// ==========================================
+// PROMPT COPY BUTTON FIX (Event Delegation)
+// ==========================================
+document.getElementById('promptsContainer').addEventListener('click', (e) => {
+    const copyBtn = e.target.closest('.telegram-copy-btn');
+    if (copyBtn) {
+        const textToCopy = decodeURIComponent(copyBtn.getAttribute('data-text'));
+        
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalHtml = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
+            copyBtn.style.background = 'rgba(16, 185, 129, 0.2)';
+            copyBtn.style.color = '#10b981';
+            copyBtn.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+            
+            setTimeout(() => {
+                copyBtn.innerHTML = originalHtml;
+                copyBtn.style.background = 'transparent';
+                copyBtn.style.color = '#ffffff';
+                copyBtn.style.border = 'none';
+            }, 2000);
+            
+            showToast("Prompt copied to clipboard!");
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            showToast("Failed to copy text!");
+        });
+    }
+});
+
+
 // LOGIN SYSTEM
 function closeLoginOverlayLocal() {
     const loginOverlay = document.getElementById('loginOverlay');
@@ -328,8 +359,6 @@ document.getElementById('googleSignInBtn').addEventListener('click', async () =>
 // ==========================================
 // 🌟 ADVANCED DUAL FILTER SYSTEM (APPROACH B) 🌟
 // ==========================================
-
-// EXAM Categories updated to proper Title Case, Jee and Neet separated.
 const EXAM_CATEGORY_MAP = {
     "Ssc": ["SSC", "CGL", "CHSL", "MTS", "CPO", "GD", "STENOGRAPHER", "SELECTION POST"],
     "Railway": ["RAILWAY", "RRB", "NTPC", "GROUP D", "ALP", "TECHNICIAN", "RPF"],
@@ -345,7 +374,6 @@ const EXAM_CATEGORY_MAP = {
 let currentSelectedCategory = "All";
 let currentSelectedLanguage = "All";
 
-// Auto-generate dynamic boards/categories
 function updateDynamicFilters() {
     const activeCategories = new Set();
     
@@ -354,7 +382,6 @@ function updateDynamicFilters() {
         let bookExamsString = book.exams.toUpperCase();
         let matchedMainCategory = false;
         
-        // 1. Check Smart Dictionary
         for (let mainCategory in EXAM_CATEGORY_MAP) {
             let keywords = EXAM_CATEGORY_MAP[mainCategory];
             if (keywords.some(keyword => bookExamsString.includes(keyword))) {
@@ -363,12 +390,10 @@ function updateDynamicFilters() {
             }
         }
         
-        // 2. Extract Dynamic Classes & Boards if not in Dictionary
         if (!matchedMainCategory) {
             let examsArray = book.exams.split(',');
             examsArray.forEach(exam => {
                 let cleanExam = exam.trim();
-                // Formatting dynamically to Title Case (First letter capital, rest small)
                 if (cleanExam.length > 0) {
                     let formattedExam = cleanExam.charAt(0).toUpperCase() + cleanExam.slice(1).toLowerCase();
                     activeCategories.add(formattedExam);
@@ -388,7 +413,6 @@ function updateDynamicFilters() {
     catGrid.innerHTML = html;
 }
 
-// Click Listener for Categories
 document.getElementById('categoryFilterGrid').addEventListener('click', (e) => {
     if(e.target.classList.contains('f-pill')) {
         document.querySelectorAll('#categoryFilterGrid .f-pill').forEach(el => el.classList.remove('active'));
@@ -397,7 +421,6 @@ document.getElementById('categoryFilterGrid').addEventListener('click', (e) => {
     }
 });
 
-// Click Listener for Languages
 document.getElementById('languageFilterGrid').addEventListener('click', (e) => {
     if(e.target.classList.contains('f-pill')) {
         document.querySelectorAll('#languageFilterGrid .f-pill').forEach(el => el.classList.remove('active'));
@@ -406,7 +429,6 @@ document.getElementById('languageFilterGrid').addEventListener('click', (e) => {
     }
 });
 
-// Apply Button Logic
 document.getElementById('applyFiltersBtn').addEventListener('click', () => {
     document.getElementById('filterBottomOverlay').classList.remove('active'); 
     applyMasterFilter();
@@ -419,8 +441,6 @@ function applyMasterFilter() {
     let searchTokens = normalizedSearch.split(/\s+/).filter(token => token.length > 0);
 
     mainFilteredData = booksData.filter(book => {
-        
-        // 1. DUAL FILTER CHECK (Category + Language)
         let matchesCategory = true;
         if (currentSelectedCategory !== "All") {
             matchesCategory = false; 
@@ -431,16 +451,13 @@ function applyMasterFilter() {
             }
         }
 
-        // STRICT Language Match Update
         let matchesLanguage = true;
         if (currentSelectedLanguage !== "All") {
             let bookLang = (book.lang || "").toLowerCase().trim();
             let selectedLang = currentSelectedLanguage.toLowerCase().trim();
-            // Sirf exact match hi display hoga (e.g. Hindi select pe sirf Hindi)
             matchesLanguage = (bookLang === selectedLang); 
         }
 
-        // 2. SEARCH BAR CHECK
         let matchesSearch = true;
         if (searchInputRaw.length > 0) {
             let textToSearch = (book.title + " " + (book.author || "") + " " + (book.exams || "")).toLowerCase().replace(/[^a-z0-9\s]/g, '');
@@ -454,12 +471,23 @@ function applyMasterFilter() {
     });
     
     loadedCount = 0; 
+    const infiniteLoader = document.getElementById('infinite-loader');
+    
     if(mainFilteredData.length > 0) { 
         document.getElementById('no-results-msg').style.display = 'none'; 
-        renderBooksUI(0, getBatchSize() * 2, mainFilteredData); 
+        
+        // Loader logic reset
+        if(infiniteLoader && mainFilteredData.length > getBatchSize()) {
+            infiniteLoader.style.display = 'flex';
+        } else if(infiniteLoader) {
+            infiniteLoader.style.display = 'none';
+        }
+        
+        renderBooksUI(0, getBatchSize(), mainFilteredData); 
     } else { 
         document.getElementById("bookContainer").innerHTML = ""; 
         document.getElementById('no-results-msg').style.display = 'flex'; 
+        if(infiniteLoader) infiniteLoader.style.display = 'none';
     }
 }
 
@@ -471,32 +499,59 @@ document.getElementById('openAuthorFilterBtn').addEventListener('click', () => {
 document.getElementById('closeAuthorFilterBtn').addEventListener('click', () => { document.getElementById('filterBottomOverlay').classList.remove('active'); });
 
 // ==========================================
-// RENDERING UI
+// RENDERING UI & INFINITE SCROLL (NEW)
 // ==========================================
+
+// Calculate dynamic batch size based on screen width
 function getBatchSize() {
-    let cols = 2; 
-    if (window.innerWidth >= 768) {
-        const container = document.getElementById("bookContainer");
-        if (container && container.clientWidth) { cols = Math.floor((container.clientWidth + 25) / 225) || 1; } else { cols = 4; }
-    }
-    return cols * 4; 
+    const screenWidth = window.innerWidth;
+    let columns = 2; // Default Mobile
+    
+    if (screenWidth >= 1200) columns = 5;
+    else if (screenWidth >= 900) columns = 4;
+    else if (screenWidth >= 600) columns = 3;
+    
+    return columns * 4; // Load 4 rows at a time
 }
 
-const mainElement = document.getElementById('mainContentArea');
-let scrollTimeout;
-mainElement.addEventListener('scroll', () => {
-    if(!scrollTimeout) {
-        scrollTimeout = setTimeout(() => {
-            if (mainElement.scrollTop + mainElement.clientHeight >= mainElement.scrollHeight - 100) {
-                const noResultsMsg = document.getElementById('no-results-msg');
-                if (loadedCount < mainFilteredData.length && !isLoadingMore && noResultsMsg.style.display !== 'flex') {
-                    isLoadingMore = true; renderBooksUI(loadedCount, getBatchSize(), mainFilteredData); isLoadingMore = false;
+// Set up Intersection Observer for Infinite Scrolling
+const infiniteLoader = document.getElementById('infinite-loader');
+const scrollSentinel = document.getElementById('scroll-sentinel');
+
+const observerOptions = {
+    root: document.getElementById('mainContentArea'),
+    rootMargin: '0px 0px 200px 0px', // Trigger 200px before reaching the bottom
+    threshold: 0.1
+};
+
+const infiniteScrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        const noResultsMsg = document.getElementById('no-results-msg');
+        
+        if (entry.isIntersecting && 
+            loadedCount < mainFilteredData.length && 
+            !isLoadingMore && 
+            noResultsMsg.style.display !== 'flex') 
+        {
+            isLoadingMore = true;
+            if(infiniteLoader) infiniteLoader.style.display = 'flex';
+            
+            // Add a small delay for smoother UX
+            setTimeout(() => {
+                renderBooksUI(loadedCount, getBatchSize(), mainFilteredData);
+                
+                if (loadedCount >= mainFilteredData.length && infiniteLoader) {
+                    infiniteLoader.style.display = 'none'; // Hide loader if everything is loaded
                 }
-            }
-            scrollTimeout = null;
-        }, 150); 
-    }
-}, { passive: true }); 
+                isLoadingMore = false;
+            }, 500);
+        }
+    });
+}, observerOptions);
+
+if (scrollSentinel) {
+    infiniteScrollObserver.observe(scrollSentinel);
+}
 
 function renderBooksUI(startIndex, count, customData = null) {
     const container = document.getElementById("bookContainer");
