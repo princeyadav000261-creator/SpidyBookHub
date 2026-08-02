@@ -165,6 +165,14 @@
                         </div>
                     </div>
                     
+                    <!-- INFINITE SCROLL LOADER -->
+                    <div id="infinite-loader" style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 20px 0; margin-bottom: 20px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 26px; color: #10b981;"></i>
+                        <span style="color: #a1a1aa; font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-top: 10px;">LOADING MORE BOOKS...</span>
+                    </div>
+                    <!-- SCROLL SENTINEL -->
+                    <div id="scroll-sentinel" style="height: 1px; width: 100%;"></div>
+                    
                     <div class="nav-scroll-spacer"></div>
                 </div>
 
@@ -338,7 +346,7 @@
                 </div>
             </nav>
 
-            <!-- 🌟 NEW: DUAL FILTER BOTTOM SHEET (APPROACH B) 🌟 -->
+            <!-- 🌟 NEW: DUAL FILTER BOTTOM SHEET 🌟 -->
             <div class="filter-bottom-overlay" id="filterBottomOverlay">
                 <div class="filter-bottom-sheet" id="filterBottomSheet">
                     <div class="f-drag-handle"></div>
@@ -350,24 +358,17 @@
                         <div class="f-close" id="closeAuthorFilterBtn"><i class="fas fa-times"></i></div>
                     </div>
                     
-                    <!-- WRAPPER FOR SCROLLABLE CONTENT (NO VISIBLE SCROLLBAR) -->
                     <div class="f-scroll-area">
-                        
-                        <!-- Section 1: Exams / Boards -->
                         <div>
                             <div style="font-size: 11px; font-weight: 800; color: #71717a; letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase;"><i class="fas fa-book" style="margin-right: 5px;"></i> Select Exam / Board</div>
-                            <!-- Dynamic Categories go here -->
                             <div class="f-options-grid" id="categoryFilterGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding-bottom: 5px;">
-                                <!-- To be injected by app.js -->
                             </div>
                         </div>
 
                         <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.08);"></div>
 
-                        <!-- Section 2: Medium / Language -->
                         <div>
                             <div style="font-size: 11px; font-weight: 800; color: #71717a; letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase;"><i class="fas fa-globe" style="margin-right: 5px;"></i> Select Medium</div>
-                            <!-- Static Languages go here -->
                             <div class="f-options-grid" id="languageFilterGrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding-bottom: 5px;">
                                 <div class="f-pill active" data-lang="All">All</div>
                                 <div class="f-pill" data-lang="Hindi">Hindi</div>
@@ -376,7 +377,6 @@
                             </div>
                         </div>
 
-                        <!-- Apply Button placed inside scroll area so it flows naturally and isn't fixed -->
                         <button id="applyFiltersBtn" style="width: 100%; background: #10b981; color: #fff; padding: 14px; border: none; border-radius: 16px; font-size: 16px; font-weight: 800; font-family: 'Poppins', sans-serif; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); margin-top: 15px; transition: 0.2s ease; flex-shrink: 0; outline: none;">
                             Apply Filters
                         </button>
@@ -404,13 +404,11 @@
                             </div>
                         </div>
 
-                        <!-- Spacing increased properly -->
                         <div class="premium-bio-section" style="margin-top: 60px; padding-bottom: 25px;">
                             <div class="bio-greeting" id="profile-name-ui" style="font-size: 1.6rem; font-family: 'Plus Jakarta Sans', sans-serif;">Loading...</div>
                             <div id="profile-email-ui" style="display: none; font-size: 0.95rem; color: #a1a1aa; font-weight: 600; margin-top: 2px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;"></div>
                         </div>
 
-                        <!-- Cleaned up Stats Container: CREDITS and RANK SWAPPED -->
                         <div class="stats-container">
                             <div class="stat-card card-download">
                                 <div class="icon-box" style="box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);"><i class="fas fa-cloud-download-alt"></i></div>
@@ -448,7 +446,6 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
                     <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: #000000; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
@@ -486,7 +483,6 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
                     <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
@@ -518,7 +514,6 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
                     <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
@@ -587,7 +582,6 @@
                         </div>
                     </div>
                     
-                    <!-- PERFECTLY FORMATTED INLINE BOTTOM FOOTER -->
                     <div style="margin-top: auto; width: 100%; padding: 20px 10px; background: transparent; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: center; align-items: center; font-size: clamp(8px, 2.5vw, 10px); font-weight: 800; color: #a1a1aa; letter-spacing: 0.5px; flex-shrink: 0; box-sizing: border-box; text-align: center;">
                         © 2026 SPIDY BOOK HUB <span style="color: #3f3f46; margin: 0 6px;">|</span> MADE WITH <i class="fas fa-heart" style="color: #ff4757; margin: 0 3px;"></i> BY MADxPRINCE
                     </div>
