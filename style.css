@@ -185,8 +185,13 @@ main::-webkit-scrollbar { display: none; }
 
 .section-header-title { font-size: 1.1rem; font-weight: 800; color: #fff; letter-spacing: 0.5px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
 
-/* Books Grid */
-.book-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 25px; }
+/* Books Grid - BASE MOBILE RULES */
+.book-container { 
+    display: grid; 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 15px; 
+    margin-bottom: 25px; 
+}
 .book-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.2s, box-shadow 0.2s; }
 .book-card:not(:has(.bookmark-btn:active)):not(:has(.bookmark-btn:hover)):active { transform: scale(0.98); }
 .card-img-wrapper { position: relative; width: 100%; height: 180px; background: #fff; transition: height 0.3s ease;}
@@ -649,7 +654,6 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 @media screen and (min-width: 768px) {
     .app-container { max-width: 100%; border-radius: 0; box-shadow: none; }
     .app-tab { padding: 20px 5%; }
-    .book-container { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
     .card-img-wrapper { height: 250px; }
     .book-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(255,255,255,0.1); }
     .download-modal .dl-content-wrapper, .overlay-panel .dev-scroll-area, .overlay-panel .dmca-content { max-width: 800px; margin: 0 auto; width: 100%; }
@@ -671,4 +675,17 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
     .tag { padding: 8px 10px; font-size: 10px; }
     .category-grid { gap: 10px; }
     .cat-icon-wrapper { width: 55px; height: 55px; font-size: 22px; }
+}
+
+/* ========================================= */
+/* DYNAMIC GRID FOR PERFECT PAGINATION       */
+/* ========================================= */
+@media screen and (min-width: 600px) {
+    .book-container { grid-template-columns: repeat(3, 1fr); }
+}
+@media screen and (min-width: 900px) {
+    .book-container { grid-template-columns: repeat(4, 1fr); }
+}
+@media screen and (min-width: 1200px) {
+    .book-container { grid-template-columns: repeat(5, 1fr); }
 }
