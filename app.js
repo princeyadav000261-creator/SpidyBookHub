@@ -284,11 +284,14 @@ document.getElementById('promptsContainer').addEventListener('click', (e) => {
         
         navigator.clipboard.writeText(textToCopy).then(() => {
             const originalHtml = copyBtn.innerHTML;
+            
+            // Yahan par button ka design change hoga green color mein
             copyBtn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
             copyBtn.style.background = 'rgba(16, 185, 129, 0.2)';
             copyBtn.style.color = '#10b981';
             copyBtn.style.border = '1px solid rgba(16, 185, 129, 0.4)';
             
+            // 2 second baad button wapas normal ho jayega
             setTimeout(() => {
                 copyBtn.innerHTML = originalHtml;
                 copyBtn.style.background = 'transparent';
@@ -296,10 +299,10 @@ document.getElementById('promptsContainer').addEventListener('click', (e) => {
                 copyBtn.style.border = 'none';
             }, 2000);
             
-            showToast("Prompt copied to clipboard!");
+            // showToast("Prompt copied to clipboard!"); // <--- Is line ko hata diya gaya hai popup rokne ke liye
         }).catch(err => {
             console.error('Failed to copy: ', err);
-            showToast("Failed to copy text!");
+            showToast("Failed to copy text!"); // Error aane par abhi bhi toast dikhega jo useful hai
         });
     }
 });
