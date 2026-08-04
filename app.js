@@ -167,10 +167,27 @@ document.getElementById('laterPopupBtn').addEventListener('click', () => { docum
 // QUOTE GENERATOR
 // ==========================================
 const quotes = [
-    { text: "Knowledge Builds Power, Hard Work Creates Success, Never Give Up!", author: "MADxPRINCE" },
-    { text: "I have not failed. I've just found 10,000 ways that won't work.", author: "Thomas A. Edison" },
     { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" }
+    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+    { text: "Be the change that you wish to see in the world.", author: "Mahatma Gandhi" },
+    { text: "Simplicity is the ultimate sophistication.", author: "Leonardo da Vinci" },
+    { text: "Whatever you are, be a good one.", author: "Abraham Lincoln" },
+    { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
+    { text: "Action is the foundational key to all success.", author: "Pablo Picasso" },
+    { text: "Happiness depends upon ourselves.", author: "Aristotle" },
+    { text: "Tough times never last, but tough people do.", author: "Robert H. Schuller" },
+    { text: "If you're going through hell, keep going.", author: "Winston Churchill" },
+    { text: "Every moment is a fresh beginning.", author: "T.S. Eliot" },    
+    { text: "A smooth sea never made a skilled sailor.", author: "Franklin D. Roosevelt" },    
+    { text: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+    { text: "The best revenge is massive success.", author: "Frank Sinatra" },
+    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+    { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+    { text: "Well done is better than well said.", author: "Benjamin Franklin" },
+    { text: "Everything you can imagine is real.", author: "Pablo Picasso" },
+    { text: "The purpose of our lives is to be happy.", author: "Dalai Lama" }  
 ];
 const todayDays = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
 const currentQuoteIndex = todayDays % quotes.length;
@@ -368,7 +385,7 @@ const EXAM_CATEGORY_MAP = {
     "Defence": ["NDA", "CDS", "AFCAT", "NAVY", "ARMY", "AIRFORCE", "AGNIVEER"],
     "Banking": ["BANK", "IBPS", "SBI", "PO", "CLERK", "RBI", "LIC"],
     "Teaching": ["CTET", "STET", "UPTET", "KVS", "NVS", "BPSC TRE", "DSSSB"],
-    "State psc & upsc": ["UPSC", "BPSC", "UPPSC", "MPPSC", "STATE PSC", "PCS", "CIVIL SERVICES"],
+    "Psc & Upsc": ["UPSC", "BPSC", "UPPSC", "MPPSC", "STATE PSC", "PCS", "CIVIL SERVICES"],
     "Police": ["POLICE", "UP POLICE", "DELHI POLICE", "BIHAR POLICE", "SI", "CONSTABLE", "DAROGA"],
     "Jee": ["JEE", "IIT", "MAINS", "ADVANCED", "BITSAT"],
     "Neet": ["NEET", "MEDICAL", "AIIMS"]
