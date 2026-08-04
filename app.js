@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, query, orderBy, setDoc, getDoc, increment, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
 
 // ==========================================
@@ -330,7 +330,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 // ==========================================
-// PROMPT COPY BUTTON FIX (Event Delegation)
+// PROMPT COPY BUTTON FIX
 // ==========================================
 document.getElementById('promptsContainer').addEventListener('click', (e) => {
     const copyBtn = e.target.closest('.telegram-copy-btn');
@@ -339,7 +339,6 @@ document.getElementById('promptsContainer').addEventListener('click', (e) => {
         
         navigator.clipboard.writeText(textToCopy).then(() => {
             const originalHtml = copyBtn.innerHTML;
-            
             copyBtn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
             copyBtn.style.background = 'rgba(16, 185, 129, 0.2)';
             copyBtn.style.color = '#10b981';
@@ -358,7 +357,9 @@ document.getElementById('promptsContainer').addEventListener('click', (e) => {
     }
 });
 
-// LOGIN SYSTEM
+// ==========================================
+// LOGIN & LOGOUT SYSTEM
+// ==========================================
 function closeLoginOverlayLocal() {
     const loginOverlay = document.getElementById('loginOverlay');
     loginOverlay.style.opacity = '0';
@@ -408,6 +409,51 @@ document.getElementById('googleSignInBtn').addEventListener('click', async () =>
         }
     } catch(err) { showToast("Failed: Google Sign-In Error."); btn.innerHTML = originalContent; } 
 });
+
+// LOGOUT LOGIC (Fixed)
+const logoutBtn = document.getElementById('admin-logout-btn');
+const logoutOverlay = document.getElementById('customLogoutOverlay');
+const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        if (logoutOverlay) {
+            logoutOverlay.style.display = 'flex';
+            setTimeout(() => logoutOverlay.classList.add('show'), 10);
+        }
+    });
+}
+
+if (cancelLogoutBtn) {
+    cancelLogoutBtn.addEventListener('click', () => {
+        if (logoutOverlay) {
+            logoutOverlay.classList.remove('show');
+            setTimeout(() => logoutOverlay.style.display = 'none', 300);
+        }
+    });
+}
+
+if (confirmLogoutBtn) {
+    confirmLogoutBtn.addEventListener('click', async () => {
+        confirmLogoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        try {
+            await signOut(auth);
+            localStorage.removeItem('isUserLoggedIn');
+            window.location.reload();
+        } catch (error) {
+            console.error("Logout Error:", error);
+            showToast("Error signing out!");
+            if (logoutOverlay) {
+                logoutOverlay.classList.remove('show');
+                setTimeout(() => { 
+                    logoutOverlay.style.display = 'none'; 
+                    confirmLogoutBtn.innerHTML = 'Yes, Log Out'; 
+                }, 300);
+            }
+        }
+    });
+}
 
 // ==========================================
 // 🌟 ADVANCED DUAL FILTER SYSTEM (APPROACH B) 🌟
@@ -971,4 +1017,3 @@ function switchAdminTabLocal(tabName) {
     if(tabName === 'add') { document.getElementById('sectionAddBook').classList.add('active'); document.getElementById('admTabAdd').classList.add('active'); }
     else if(tabName === 'prompt') { document.getElementById('sectionPrompt').classList.add('active'); document.getElementById('admTabPrompt').classList.add('active'); }
 }
-
