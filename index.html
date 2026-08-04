@@ -12,10 +12,9 @@
 
     <!-- Open Graph / Facebook / WhatsApp / Telegram -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://spidy-book-dbe32.firebaseapp.com/"> <!-- Aapna actual domain yahan replace kar sakte hain baad mein -->
+    <meta property="og:url" content="https://spidy-book-dbe32.firebaseapp.com/"> 
     <meta property="og:title" content="SPIDY BOOK HUB - Free Books & Premium Notes">
     <meta property="og:description" content="Study material ke liye idhar-udhar bhatakna chhodo! Ab milega saara content bilkul FREE. Aaj hi download karein!">
-    <!-- Image that will show when link is shared -->
     <meta property="og:image" content="https://i.postimg.cc/fygCB079/file-00000000d51c720780078a0d21adc0f6.png">
 
     <!-- Twitter -->
@@ -92,16 +91,46 @@
     <!-- Main App Wrapper -->
     <div id="mainAppWrapper" style="display: none; width: 100%; height: 100%;">
         
-        <!-- WhatsApp Popup -->
-        <div class="popup-overlay" id="popupOverlay">
-            <div class="popup">
-                <div class="popup-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" oncontextmenu="return false;" draggable="false"></div>
-                <h1> 𝗦𝗽𝗶𝗱𝘆 𝗕𝗼𝗼𝗸 𝗛𝘂𝗯 𝗢𝗳𝗳𝗶𝗰𝗶𝗮𝗹 <svg class="verified-badge-ui" viewBox="0 0 100 100"><defs><linearGradient id="pG1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#55bbf8" /><stop offset="100%" stop-color="#0a7bd2" /></linearGradient></defs><g fill="url(#pG1)"><circle cx="50" cy="15" r="14" /><circle cx="50" cy="15" r="14" transform="rotate(30 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(60 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(90 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(120 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(150 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(180 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(210 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(240 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(270 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(300 50 50)" /><circle cx="50" cy="15" r="14" transform="rotate(330 50 50)" /><circle cx="50" cy="50" r="33" /></g><path d="M33 52 L43 62 L67 36" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0px 3px 2px rgba(0,0,0,0.3))" /></svg></h1>
-                <p> 𝐒𝐭𝐮𝐝𝐲 𝐦𝐚𝐭𝐞𝐫𝐢𝐚𝐥 𝐤𝐞 𝐥𝐢𝐲𝐞 𝐢𝐝𝐡𝐚𝐫-𝐮𝐝𝐡𝐚𝐫 𝐛𝐡𝐚𝐭𝐚𝐤𝐧𝐚 𝐜𝐡𝐡𝐨𝐝𝐨! 📚 𝐀𝐛 𝐦𝐢𝐥𝐞𝐠𝐚 𝐬𝐚𝐚𝐫𝐚 𝐜𝐨𝐧𝐭𝐞𝐧𝐭 𝐛𝐢𝐥𝐤𝐮𝐥 𝐅𝐑𝐄𝐄. 𝐈𝐧𝐬𝐭𝐚𝐧𝐭 𝐮𝐩𝐝𝐚𝐭𝐞𝐬 𝐚𝐮𝐫 𝐛𝐞𝐬𝐭 𝐛𝐨𝐨𝐤𝐬 𝐩𝐚𝐚𝐧𝐞 𝐤𝐞 𝐥𝐢𝐲𝐞 𝐚𝐚𝐣 𝐡𝐢 𝐡𝐮𝐦𝐚𝐫𝐚 𝐖𝐡𝐚𝐭𝐬𝐀𝐩 𝐜𝐡𝐚𝐧𝐧𝐞𝐥 𝐣𝐨𝐢𝐧 𝐤𝐚𝐫𝐞. ☟☟</p>
-                <button class="join-btn" id="joinWhatsappBtn"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" oncontextmenu="return false;" draggable="false"> WhatsApp Channel</button>
-                <div class="later" id="laterPopupBtn">MAYBE LATER</div>
+        <!-- ============================================== -->
+        <!-- 🌟 NEW PREMIUM DUAL POPUPS (TELEGRAM & WA) 🌟 -->
+        <!-- ============================================== -->
+
+        <!-- 1. Telegram Premium Popup (Shows after 30s) -->
+        <div class="premium-popup-overlay hide" id="telegramPopup">
+            <div class="premium-popup-content">
+                <img src="https://i.postimg.cc/5N5hTMFM/file-00000000f48c81f88f72564d9597a12c.png" alt="Telegram Banner" class="premium-popup-image">
+                <div class="premium-popup-body">
+                    <h2 class="tg-heading">📢 𝐉𝐨𝐢𝐧 𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲</h2>
+                    <p>𝐒𝐭𝐮𝐝𝐲 𝐦𝐚𝐭𝐞𝐫𝐢𝐚𝐥 𝐤𝐞 𝐥𝐢𝐲𝐞 𝐢𝐝𝐡𝐚𝐫-𝐮𝐝𝐡𝐚𝐫 𝐛𝐡𝐚𝐭𝐚𝐤𝐧𝐚 𝐜𝐡𝐡𝐨𝐝𝐨! 📚 𝐀𝐛 𝐦𝐢𝐥𝐞𝐠𝐚 𝐬𝐚𝐚𝐫𝐚 𝐜𝐨𝐧𝐭𝐞𝐧𝐭 𝐛𝐢𝐥𝐤𝐮𝐥 𝐅𝐑𝐄𝐄. 𝐈𝐧𝐬𝐭𝐚𝐧𝐭 𝐮𝐩𝐝𝐚𝐭𝐞𝐬 𝐚𝐮𝐫 𝐛𝐞𝐬𝐭 𝐛𝐨𝐨𝐤𝐬 𝐩𝐚𝐚𝐧𝐞 𝐤𝐞 𝐥𝐢𝐲𝐞 𝐚𝐚𝐣 𝐡𝐢 𝐡𝐚𝐦𝐚𝐫𝐚 𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 𝐣𝐨𝐢𝐧 𝐤𝐚𝐫𝐞.</p>
+                    <a href="https://t.me/MultiverseBooks" target="_blank" class="premium-join-btn tg-btn">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm6.208 8.044l-2.032 9.566c-.149.664-.543.824-1.096.514l-3.033-2.235-1.462 1.408c-.161.16-.296.296-.607.296l.215-3.067 5.586-5.045c.243-.215-.053-.335-.376-.118l-6.903 4.35-2.973-.928c-.645-.202-.658-.645.135-.955l11.616-4.478c.538-.198 1.01.127.834.99z"/>
+                        </svg>
+                        Join Telegram Channel
+                    </a>
+                    <button class="premium-maybe-later" id="tgMaybeLaterBtn">Maybe later</button>
+                </div>
             </div>
         </div>
+
+        <!-- 2. WhatsApp Premium Popup (Shows after 1m 20s) -->
+        <div class="premium-popup-overlay hide" id="whatsappPopup">
+            <div class="premium-popup-content">
+                <img src="https://i.postimg.cc/wBrZLqn7/file-00000000c2a8821191496469bfe78b82.png" alt="WhatsApp Banner" class="premium-popup-image">
+                <div class="premium-popup-body">
+                    <h2 class="wa-heading">📢 𝐉𝐨𝐢𝐧 𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲</h2>
+                    <p>𝐒𝐭𝐮𝐝𝐲 𝐦𝐚𝐭𝐞𝐫𝐢𝐚𝐥 𝐤𝐞 𝐥𝐢𝐲𝐞 𝐢𝐝𝐡𝐚𝐫-𝐮𝐝𝐡𝐚𝐫 𝐛𝐡𝐚𝐭𝐚𝐤𝐧𝐚 𝐜𝐡𝐡𝐨𝐝𝐨! 📚 𝐀𝐛 𝐦𝐢𝐥𝐞𝐠𝐚 𝐬𝐚𝐚𝐫𝐚 𝐜𝐨𝐧𝐭𝐞𝐧𝐭 𝐛𝐢𝐥𝐤𝐮𝐥 𝐅𝐑𝐄𝐄. 𝐈𝐧𝐬𝐭𝐚𝐧𝐭 𝐮𝐩𝐝𝐚𝐭𝐞𝐬 𝐚𝐮𝐫 𝐛𝐞𝐬𝐭 𝐛𝐨𝐨𝐤𝐬 𝐩𝐚𝐚𝐧𝐞 𝐤𝐞 𝐥𝐢𝐲𝐞 𝐚𝐚𝐣 𝐡𝐢 𝐡𝐚𝐦𝐚𝐫𝐚 𝐖𝐡𝐚𝐭𝐬𝐀𝐩𝐩 𝐂𝐡𝐚𝐧𝐧𝐞𝐥 𝐣𝐨𝐢𝐧 𝐤𝐚𝐫𝐞.</p>
+                    <a href="https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A" target="_blank" class="premium-join-btn wa-btn">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.88 11.88 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413Z"/>
+                        </svg>
+                        Join WhatsApp Channel
+                    </a>
+                    <button class="premium-maybe-later" id="waMaybeLaterBtn">Maybe later</button>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================== -->
 
         <div class="app-container">
             <!-- PERSISTENT TOP HEADER -->
@@ -367,7 +396,7 @@
                 </div>
             </nav>
 
-            <!-- 🌟 NEW: DUAL FILTER BOTTOM SHEET 🌟 -->
+            <!-- DUAL FILTER BOTTOM SHEET -->
             <div class="filter-bottom-overlay" id="filterBottomOverlay">
                 <div class="filter-bottom-sheet" id="filterBottomSheet">
                     <div class="f-drag-handle"></div>
@@ -688,39 +717,6 @@
                 iconsEl.style.display = 'none';
             }
         }
-    </script>
-    
-    <!-- NEW LOGOUT SCRIPT INTEGRATED WITH CUSTOM MODAL -->
-    <script type="module">
-        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        
-        const logoutBtn = document.getElementById('admin-logout-btn');
-        const logoutOverlay = document.getElementById('customLogoutOverlay');
-        const cancelBtn = document.getElementById('cancelLogoutBtn');
-        const confirmBtn = document.getElementById('confirmLogoutBtn');
-
-        logoutBtn.addEventListener('click', () => {
-            logoutOverlay.style.display = 'flex';
-            setTimeout(() => { logoutOverlay.classList.add('show'); }, 10);
-        });
-
-        cancelBtn.addEventListener('click', () => {
-            logoutOverlay.classList.remove('show');
-            setTimeout(() => { logoutOverlay.style.display = 'none'; }, 300);
-        });
-
-        confirmBtn.addEventListener('click', () => {
-            const auth = getAuth();
-            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            signOut(auth).then(() => {
-                localStorage.removeItem('isUserLoggedIn');
-                window.location.reload();
-            }).catch((error) => {
-                alert("Error signing out!");
-                logoutOverlay.classList.remove('show');
-                setTimeout(() => { logoutOverlay.style.display = 'none'; confirmBtn.innerHTML = 'Yes, Log Out'; }, 300);
-            });
-        });
     </script>
 
     <!-- App Logic JS -->
