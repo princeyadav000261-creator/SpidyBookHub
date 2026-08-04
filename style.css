@@ -368,7 +368,7 @@ main::-webkit-scrollbar { display: none; }
 .dmca-contact-link:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.2); }
 
 /* ========================================= */
-/* LOADERS & WHATSAPP POPUP                  */
+/* LOADERS                                   */
 /* ========================================= */
 .loader-screen { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; flex-direction: column; background-color: #000000; z-index: 9999999; overflow: hidden; transition: opacity .3s; padding-bottom: 12vh; }
 .loader-logo { width: 115px; height: 115px; border-radius: 30px; overflow: hidden; border: 5px solid #71717a; z-index: 5; position: relative; background: transparent; }
@@ -395,19 +395,32 @@ main::-webkit-scrollbar { display: none; }
     z-index: 9999999; transition: opacity 0.3s ease;
 }
 .premium-popup-overlay.hide {
+    opacity: 0;
+    pointer-events: none;
     display: none !important;
 }
 .premium-popup-content {
     background: #000000;
-    border: 1px solid #1a1a1a;
     width: 90%; max-width: 420px;
     border-radius: 24px;
     position: relative;
     text-align: center;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
     animation: scaleUpPremium 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     overflow: hidden; 
 }
+
+/* Telegram Specific Glow */
+#telegramPopup .premium-popup-content {
+    box-shadow: 0 0 45px rgba(42, 171, 238, 0.25), 0 25px 50px rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(42, 171, 238, 0.15);
+}
+
+/* WhatsApp Specific Glow */
+#whatsappPopup .premium-popup-content {
+    box-shadow: 0 0 45px rgba(37, 211, 102, 0.25), 0 25px 50px rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(37, 211, 102, 0.15);
+}
+
 .premium-popup-image {
     width: 100%;
     display: block;
@@ -757,3 +770,4 @@ select.adm-input { appearance: none; -webkit-appearance: none; padding-right: 40
 @media screen and (min-width: 1200px) {
     .book-container { grid-template-columns: repeat(5, 1fr); }
 }
+
