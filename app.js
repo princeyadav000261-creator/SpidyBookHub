@@ -80,6 +80,56 @@ function showToast(message) {
 }
 
 // ==========================================
+// 🌟 PREMIUM DUAL POPUPS LOGIC 🌟
+// ==========================================
+let popupsInitialized = false;
+
+function initPremiumPopups() {
+    if(popupsInitialized) return; // Prevent multiple initializations
+    popupsInitialized = true;
+
+    const telegramPopup = document.getElementById('telegramPopup');
+    const whatsappPopup = document.getElementById('whatsappPopup');
+    
+    const tgMaybeLaterBtn = document.getElementById('tgMaybeLaterBtn');
+    const waMaybeLaterBtn = document.getElementById('waMaybeLaterBtn');
+
+    // Close logic
+    const closeTgPopup = () => { if(telegramPopup) telegramPopup.classList.add('hide'); };
+    const closeWaPopup = () => { if(whatsappPopup) whatsappPopup.classList.add('hide'); };
+
+    // Button Clicks
+    if(tgMaybeLaterBtn) tgMaybeLaterBtn.addEventListener('click', closeTgPopup);
+    if(waMaybeLaterBtn) waMaybeLaterBtn.addEventListener('click', closeWaPopup);
+
+    // Outside Overlay Clicks
+    if(telegramPopup) {
+        telegramPopup.addEventListener('click', (e) => {
+            if (e.target === telegramPopup) closeTgPopup();
+        });
+    }
+    if(whatsappPopup) {
+        whatsappPopup.addEventListener('click', (e) => {
+            if (e.target === whatsappPopup) closeWaPopup();
+        });
+    }
+
+    // Timers
+    // 1. Telegram Popup - Shows after 30 Seconds
+    setTimeout(() => {
+        if(telegramPopup && !telegramPopup.classList.contains('manually-closed')) {
+            telegramPopup.classList.remove('hide');
+        }
+    }, 30000);
+
+    // 2. WhatsApp Popup - Shows after 1 Minute 40 Seconds (100,000 ms)
+    setTimeout(() => {
+        if(telegramPopup) telegramPopup.classList.add('hide'); 
+        if(whatsappPopup) whatsappPopup.classList.remove('hide');
+    }, 100000); 
+}
+
+// ==========================================
 // INITIAL LOADER & DEEP LINKING
 // ==========================================
 const urlParamsCheck = new URLSearchParams(window.location.search);
@@ -93,7 +143,6 @@ if (isDeepLinkLoad) {
 
 let isAppReady = { auth: false, data: false }; 
 let hasTransitioned = false;
-let popupShown = false;
 let loadingProgress = 0;
 let loaderInterval;
 
@@ -142,12 +191,8 @@ function tryTransition() {
                             setTimeout(() => loginOverlay.style.opacity = '1', 10);
                         }
                     } else {
-                        setTimeout(() => {
-                            if(!popupShown && !isDeepLinkLoad) {
-                                popupShown = true;
-                                document.getElementById("popupOverlay").style.display = "flex";
-                            }
-                        }, 15000); 
+                        // Start popup timers when normal load finishes
+                        initPremiumPopups(); 
                     }
                     const loader = document.getElementById("loaderScreen");
                     loader.style.opacity = "0"; 
@@ -160,9 +205,6 @@ function tryTransition() {
     }
 }
 
-document.getElementById('joinWhatsappBtn').addEventListener('click', () => { window.open('https://whatsapp.com/channel/0029Vb6NBZx1yT2GByTTVf2A', '_blank'); });
-document.getElementById('laterPopupBtn').addEventListener('click', () => { document.getElementById("popupOverlay").style.display = "none"; });
-
 // ==========================================
 // QUOTE GENERATOR
 // ==========================================
@@ -172,14 +214,10 @@ const quotes = [
     { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
     { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
     { text: "Be the change that you wish to see in the world.", author: "Mahatma Gandhi" },
-    
     { text: "Whatever you are, be a good one.", author: "Abraham Lincoln" },
-   
     { text: "Action is the foundational key to all success.", author: "Pablo Picasso" },
-    
     { text: "Tough times never last, but tough people do.", author: "Robert H. Schuller" },
     { text: "If you're going through hell, keep going.", author: "Winston Churchill" },
-
     { text: "A smooth sea never made a skilled sailor.", author: "Franklin D. Roosevelt" },    
     { text: "Don't count the days, make the days count.", author: "Muhammad Ali" },
     { text: "The best revenge is massive success.", author: "Frank Sinatra" },
@@ -302,28 +340,23 @@ document.getElementById('promptsContainer').addEventListener('click', (e) => {
         navigator.clipboard.writeText(textToCopy).then(() => {
             const originalHtml = copyBtn.innerHTML;
             
-            // Yahan par button ka design change hoga green color mein
             copyBtn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
             copyBtn.style.background = 'rgba(16, 185, 129, 0.2)';
             copyBtn.style.color = '#10b981';
             copyBtn.style.border = '1px solid rgba(16, 185, 129, 0.4)';
             
-            // 2 second baad button wapas normal ho jayega
             setTimeout(() => {
                 copyBtn.innerHTML = originalHtml;
                 copyBtn.style.background = 'transparent';
                 copyBtn.style.color = '#ffffff';
                 copyBtn.style.border = 'none';
             }, 2000);
-            
-            // showToast("Prompt copied to clipboard!"); // <--- Is line ko hata diya gaya hai popup rokne ke liye
         }).catch(err => {
             console.error('Failed to copy: ', err);
-            showToast("Failed to copy text!"); // Error aane par abhi bhi toast dikhega jo useful hai
+            showToast("Failed to copy text!"); 
         });
     }
 });
-
 
 // LOGIN SYSTEM
 function closeLoginOverlayLocal() {
@@ -334,7 +367,7 @@ function closeLoginOverlayLocal() {
         if (isDeepLinkLoad && !isUserLoggedIn) {
             isDeepLinkLoad = false;
             window.history.replaceState({}, '', window.location.pathname);
-            document.getElementById("popupOverlay").style.display = "flex";
+            initPremiumPopups(); 
         }
     }, 500);
 }
@@ -496,7 +529,6 @@ function applyMasterFilter() {
     if(mainFilteredData.length > 0) { 
         document.getElementById('no-results-msg').style.display = 'none'; 
         
-        // Loader logic reset
         if(infiniteLoader && mainFilteredData.length > getBatchSize()) {
             infiniteLoader.style.display = 'flex';
         } else if(infiniteLoader) {
@@ -519,59 +551,42 @@ document.getElementById('openAuthorFilterBtn').addEventListener('click', () => {
 document.getElementById('closeAuthorFilterBtn').addEventListener('click', () => { document.getElementById('filterBottomOverlay').classList.remove('active'); });
 
 // ==========================================
-// RENDERING UI & INFINITE SCROLL (NEW)
+// RENDERING UI & INFINITE SCROLL
 // ==========================================
-
-// Calculate dynamic batch size based on screen width
 function getBatchSize() {
     const screenWidth = window.innerWidth;
     let columns = 2; // Default Mobile
-    
     if (screenWidth >= 1200) columns = 5;
     else if (screenWidth >= 900) columns = 4;
     else if (screenWidth >= 600) columns = 3;
-    
-    return columns * 4; // Load 4 rows at a time
+    return columns * 4; 
 }
 
-// Set up Intersection Observer for Infinite Scrolling
 const infiniteLoader = document.getElementById('infinite-loader');
 const scrollSentinel = document.getElementById('scroll-sentinel');
 
 const observerOptions = {
     root: document.getElementById('mainContentArea'),
-    rootMargin: '0px 0px 200px 0px', // Trigger 200px before reaching the bottom
+    rootMargin: '0px 0px 200px 0px', 
     threshold: 0.1
 };
 
 const infiniteScrollObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         const noResultsMsg = document.getElementById('no-results-msg');
-        
-        if (entry.isIntersecting && 
-            loadedCount < mainFilteredData.length && 
-            !isLoadingMore && 
-            noResultsMsg.style.display !== 'flex') 
-        {
+        if (entry.isIntersecting && loadedCount < mainFilteredData.length && !isLoadingMore && noResultsMsg.style.display !== 'flex') {
             isLoadingMore = true;
             if(infiniteLoader) infiniteLoader.style.display = 'flex';
-            
-            // Add a small delay for smoother UX
             setTimeout(() => {
                 renderBooksUI(loadedCount, getBatchSize(), mainFilteredData);
-                
-                if (loadedCount >= mainFilteredData.length && infiniteLoader) {
-                    infiniteLoader.style.display = 'none'; // Hide loader if everything is loaded
-                }
+                if (loadedCount >= mainFilteredData.length && infiniteLoader) infiniteLoader.style.display = 'none'; 
                 isLoadingMore = false;
             }, 500);
         }
     });
 }, observerOptions);
 
-if (scrollSentinel) {
-    infiniteScrollObserver.observe(scrollSentinel);
-}
+if (scrollSentinel) infiniteScrollObserver.observe(scrollSentinel);
 
 function renderBooksUI(startIndex, count, customData = null) {
     const container = document.getElementById("bookContainer");
@@ -596,8 +611,8 @@ document.getElementById('bookContainer').addEventListener('click', (e) => {
     if(card) {
         const slug = card.getAttribute('data-slug');
         const bookmarkBtn = e.target.closest('.bookmark-btn');
-        if(bookmarkBtn) { toggleBookmarkLocal(bookmarkBtn.querySelector('i'), slug); } 
-        else { openDownloadPageLocal(slug); }
+        if(bookmarkBtn) toggleBookmarkLocal(bookmarkBtn.querySelector('i'), slug); 
+        else openDownloadPageLocal(slug);
     }
 });
 
@@ -611,7 +626,7 @@ function toggleBookmarkLocal(iconElement, slug) {
         iconElement.className = "far fa-bookmark"; 
     }
     localStorage.setItem('spidy_saved_books', JSON.stringify(savedBooks));
-    if(document.getElementById('bookmarks-panel').classList.contains('active')) { renderSavedBooksUI(); }
+    if(document.getElementById('bookmarks-panel').classList.contains('active')) renderSavedBooksUI(); 
 }
 
 function renderSavedBooksUI() {
@@ -633,8 +648,8 @@ document.getElementById('savedBooksContainer').addEventListener('click', (e) => 
     if(card) {
         const slug = card.getAttribute('data-slug');
         const bookmarkBtn = e.target.closest('.bookmark-btn');
-        if(bookmarkBtn) { toggleBookmarkLocal(bookmarkBtn.querySelector('i'), slug); } 
-        else { openDownloadPageLocal(slug); }
+        if(bookmarkBtn) toggleBookmarkLocal(bookmarkBtn.querySelector('i'), slug); 
+        else openDownloadPageLocal(slug); 
     }
 });
 
@@ -794,7 +809,13 @@ function closeDownloadPageLocal() {
     else { document.getElementById("downloadModal").style.display = "none"; window.history.replaceState({}, '', window.location.pathname); }
     if(isDeepLinkLoad) {
         isDeepLinkLoad = false; const loader = document.getElementById("loaderScreen"); loader.style.display = "flex"; loader.style.opacity = "1"; updateLoaderUI(100);
-        setTimeout(() => { loader.style.opacity = "0"; setTimeout(() => { loader.style.display = "none"; document.getElementById("popupOverlay").style.display = "flex"; }, 300); }, 1500); 
+        setTimeout(() => { 
+            loader.style.opacity = "0"; 
+            setTimeout(() => { 
+                loader.style.display = "none"; 
+                initPremiumPopups(); 
+            }, 300); 
+        }, 1500); 
     }
 }
 document.getElementById('shareBookBtn').addEventListener('click', () => {
@@ -950,3 +971,4 @@ function switchAdminTabLocal(tabName) {
     if(tabName === 'add') { document.getElementById('sectionAddBook').classList.add('active'); document.getElementById('admTabAdd').classList.add('active'); }
     else if(tabName === 'prompt') { document.getElementById('sectionPrompt').classList.add('active'); document.getElementById('admTabPrompt').classList.add('active'); }
 }
+
